@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>私人藏書閣：個人閱讀書籍記錄庫</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --wood-dark: #23160e;
+      --wood-mid: #3a2518;
+      --wood-light: #523623;
+      --brass: #c89d58;
+      --brass-light: #e6c587;
+      --parchment: #f9f5ea;
+      --parchment-card: #fdfbf7;
+      --ink: #1f1d1a;
+      --ink-muted: #696259;
+      --stamp-red: #a82020;
+      --stamp-green: #1b6b3a;
+    }
+
+    body {
+      background-color: #170e08;
+      color: var(--ink);
+      font-family: 'Songti TC', 'Noto Serif TC', 'Baskerville', 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      background-image: radial-gradient(circle at 50% 20%, #2f1d13 0%, #170e08 100%);
+      min-height: 100vh;
+    }
+
+    .font-sans-ui {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* 書架擬真木紋與陰影 */
+    .bookshelf-row {
+      background: linear-gradient(180deg, #442a1b 0%, #2e1b11 75%, #1f120b 100%);
+      box-shadow: inset 0 8px 12px rgba(0,0,0,0.6), 0 10px 20px rgba(0,0,0,0.5);
+      border-bottom: 14px solid #1a0f0a;
+      position: relative;
+    }
+    .bookshelf-row::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #b38848 0%, #ecd093 50%, #b38848 100%);
+      opacity: 0.85;
+    }
+
+    /* 書脊設計 */
+    .book-spine {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: -2px 0 5px rgba(0,0,0,0.4), inset -2px 0 4px rgba(255,255,255,0.1), inset 2px 0 4px rgba(0,0,0,0.3);
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 3px 3px 1px 1px;
+    }
+    .book-spine:hover {
+      transform: translateY(-24px) scale(1.03);
+      box-shadow: -6px 12px 18px rgba(0,0,0,0.7), inset -2px 0 5px rgba(255,255,255,0.25);
+      z-index: 30;
+    }
+
+    /* 書脊肋紋 (Raised Bands) */
+    .spine-band {
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 215, 0, 0.45);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    /* 借閱戳印風格 */
+    .library-stamp {
+      border: 2px dashed var(--stamp-red);
+      color: var(--stamp-red);
+      transform: rotate(-4deg);
+      mask-image: radial-gradient(circle, rgba(0,0,0,1) 80%, rgba(0,0,0,0.7) 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .library-stamp-reading {
+      border: 2px dashed var(--stamp-green);
+      color: var(--stamp-green);
+      transform: rotate(3deg);
+    }
+
+    /* 羊皮紙索引卡片質感 */
+    .parchment-card {
+      background-color: var(--parchment-card);
+      border: 1px solid #dfd5c3;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 0 40px rgba(210, 190, 160, 0.18);
+      position: relative;
+    }
+    .parchment-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #c5a059, #e2c992, #c5a059);
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
+    }
+
+    /* 黃銅金屬銘牌 */
+    .brass-plate {
+      background: linear-gradient(135deg, #a47c36 0%, #e2c585 50%, #8e6826 100%);
+      color: #241505;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.6), 0 3px 6px rgba(0,0,0,0.5);
+      border: 1px solid #735118;
+    }
+
+    /* 捲軸自訂美化 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e130c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #5a3821;
+      border-radius: 4px;
+      border: 1px solid #7a4f30;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #7a4f30;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- 頂部圖書館迎賓與總覽匾額 -->
+  <header class="border-b border-[#4d321f] bg-[#1d120a] shadow-2xl relative z-10">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-6 border-b border-[#3b2516]">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-sm brass-plate font-sans-ui text-xs font-bold tracking-wider mb-2">
+            <span>PRIVATE LIBRARY ARCHIVE</span>
+            <span>•</span>
+            <span>館藏典據總編</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold tracking-wide text-[#f5ebd7] flex items-center gap-3">
+            <span>靜謐藏書閣</span>
+            <span class="text-lg md:text-xl font-normal text-[#c7a77b]">個人閱讀書籍紀錄檢索系統</span>
+          </h1>
+          <p class="text-[#b59e82] italic text-sm md:text-base mt-2">
+            「閱讀，是讓思緒在時空與宇宙間穿梭的最好方式。」
+          </p>
+        </div>
+
+        <!-- 快速功能鍵 -->
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="btnRandomPick" class="px-4 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            <span>館員隨機薦讀</span>
+          </button>
+          <button id="btnExportList" class="px-4 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span>複製書目報表</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 館藏數據盤點牌匾 -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-6 font-sans-ui text-center">
+        <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow">
+          <div class="text-[#967d64] text-xs font-medium">總藏書量</div>
+          <div id="statTotal" class="text-2xl font-bold text-[#f5ebd7] mt-1 font-serif">91 冊</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">2024 - 2026</div>
+        </div>
+        <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow">
+          <div class="text-[#967d64] text-xs font-medium">已完讀典藏</div>
+          <div id="statCompleted" class="text-2xl font-bold text-[#e6c587] mt-1 font-serif">90 冊</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">98.9% 完讀率</div>
+        </div>
+        <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow">
+          <div class="text-[#967d64] text-xs font-medium">現正借閱中</div>
+          <div id="statReading" class="text-2xl font-bold text-[#62c082] mt-1 font-serif">1 冊</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">進行中閱覽</div>
+        </div>
+        <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow">
+          <div class="text-[#967d64] text-xs font-medium">橫跨典藏學科</div>
+          <div class="text-2xl font-bold text-[#e2c585] mt-1 font-serif">9 大領域</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">科幻、哲學、繪本等</div>
+        </div>
+        <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow col-span-2 sm:col-span-1">
+          <div class="text-[#967d64] text-xs font-medium">成套系列叢書</div>
+          <div class="text-2xl font-bold text-[#f5ebd7] mt-1 font-serif">10 大系列</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">共 37 冊傳承脈絡</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 控制列：檢索台與視角切換器 -->
+  <nav class="sticky top-0 z-40 bg-[#251710] border-b border-[#4f3521] shadow-xl py-3 px-4">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+      
+      <!-- 檢索與多條件選單 -->
+      <div class="flex flex-wrap items-center gap-2 flex-grow">
+        <!-- 搜尋輸入框 -->
+        <div class="relative flex-grow sm:flex-grow-0 sm:w-64">
+          <input type="text" id="searchInput" placeholder="檢索書名、作者、摘要..." class="w-full pl-9 pr-3 py-1.5 bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] placeholder-[#7d6751] rounded text-sm focus:outline-none focus:border-[#e2c585]">
+          <svg class="w-4 h-4 text-[#8a6f52] absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+
+        <!-- 年度選單 -->
+        <select id="yearFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+          <option value="ALL">全部年度 (91 冊)</option>
+          <option value="2026">2026 年度 (21 冊)</option>
+          <option value="2025">2025 年度 (38 冊)</option>
+          <option value="2024">2024 年度 (32 冊)</option>
+        </select>
+
+        <!-- 領域學科分類 -->
+        <select id="categoryFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+          <option value="ALL">全部學科領域 (9 大類)</option>
+          <option value="科幻與奇幻小說">科幻與奇幻小說 (29 冊)</option>
+          <option value="哲學思辨、宗教與歷史社會">哲學思辨、宗教與社會 (16 冊)</option>
+          <option value="心理學、認知與決策思維">心理學與思維認知 (8 冊)</option>
+          <option value="商業理財、自我成長與生活哲學">商業理財與自我成長 (8 冊)</option>
+          <option value="海洋文學、鯨豚與自然生態">海洋文學與生態自然 (7 冊)</option>
+          <option value="繪本與圖文創作">繪本與圖文創作 (7 冊)</option>
+          <option value="世界文學、小說與傳記">世界文學與傳記 (6 冊)</option>
+          <option value="科普、物理天文與生命科學">科普與物理天文 (5 冊)</option>
+          <option value="親職教育與育兒家庭">親職教育與家庭 (5 冊)</option>
+        </select>
+
+        <!-- 系列作品篩選 -->
+        <select id="seriesFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+          <option value="ALL">全部叢書系列</option>
+          <option value="艾西莫夫：基地系列">艾西莫夫：基地系列 (7 冊)</option>
+          <option value="艾西莫夫：機器人系列">艾西莫夫：機器人系列 (5 冊)</option>
+          <option value="艾西莫夫：銀河帝國三部曲">艾西莫夫：銀河帝國三部曲 (3 冊)</option>
+          <option value="三體三部曲">三體三部曲 (3 冊)</option>
+          <option value="沙丘系列">沙丘系列 (3 冊)</option>
+          <option value="《地。-關於地球的運動-》">《地。-關於地球的運動-》 (8 冊)</option>
+          <option value="monpoké 皮卡丘幼兒繪本">monpoké 皮卡丘繪本 (3 冊)</option>
+          <option value="40堂公開課系列">40堂公開課系列 (2 冊)</option>
+          <option value="艾西莫夫科普教室">艾西莫夫科普教室 (2 冊)</option>
+          <option value="廖鴻基海洋尋鯨文學">廖鴻基海洋尋鯨文學 (2 冊)</option>
+        </select>
+
+        <!-- 借閱狀態選單 -->
+        <select id="statusFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+          <option value="ALL">全部流通狀態</option>
+          <option value="completed">已完讀歸架 (90 冊)</option>
+          <option value="reading">正在借閱中 (1 冊)</option>
+        </select>
+
+        <!-- 只看已收藏 -->
+        <button id="btnFavOnly" class="px-3 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-sm font-sans-ui flex items-center gap-1.5">
+          <svg id="favIcon" class="w-4 h-4 text-[#8a6f52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+          <span>已標記珍藏 (<span id="favCount">0</span>)</span>
+        </button>
+
+        <button id="btnResetFilter" class="px-3 py-1.5 text-xs text-[#a88a6d] hover:text-[#f5ebd7] underline">
+          重設篩選
+        </button>
+      </div>
+
+      <!-- 視角切換器 -->
+      <div class="flex items-center gap-1 bg-[#150d07] p-1 border border-[#482d19] rounded self-start lg:self-auto font-sans-ui">
+        <button id="viewCardBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          <span>索書卡目錄</span>
+        </button>
+        <button id="viewShelfBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span>典藏原木書架</span>
+        </button>
+        <button id="viewStatsBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <span>學科年報統計</span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- 主內容呈現區 -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+
+    <!-- 篩選結果計數摘要 -->
+    <div class="flex items-center justify-between text-xs text-[#aa9176] font-sans-ui mb-6 pb-2 border-b border-[#362215]">
+      <div>
+        檢索比對結果：共檢出 <span id="filteredCount" class="font-bold text-[#f5ebd7] font-serif text-sm">91</span> 冊符合條件
+      </div>
+      <div id="activeFilterTags" class="flex items-center gap-2"></div>
+    </div>
+
+    <!-- 視角一：索書卡目錄 (Card Catalog View) -->
+    <section id="cardCatalogView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 卡片內容將由 JavaScript 動態生成渲染 -->
+    </section>
+
+    <!-- 視角二：典藏原木書架 (Bookshelf View) -->
+    <section id="bookshelfView" class="hidden space-y-12">
+      <!-- 2026 年度書架 -->
+      <div>
+        <div class="flex items-center justify-between mb-3 px-2">
+          <div class="brass-plate px-4 py-1.5 rounded-t font-sans-ui text-xs font-bold tracking-wider inline-flex items-center gap-2">
+            <span>SHELF I</span>
+            <span>•</span>
+            <span>2026 年度進行中藏書 (共 21 冊)</span>
+          </div>
+          <span class="text-xs text-[#a4886e] font-sans-ui">點擊書脊可抽出查看完整借閱記錄</span>
+        </div>
+        <div class="bookshelf-row p-6 pt-10 min-h-[340px] flex items-end gap-2 overflow-x-auto" id="shelf2026">
+          <!-- 書脊動態填入 -->
+        </div>
+      </div>
+
+      <!-- 2025 年度書架 -->
+      <div>
+        <div class="flex items-center justify-between mb-3 px-2">
+          <div class="brass-plate px-4 py-1.5 rounded-t font-sans-ui text-xs font-bold tracking-wider inline-flex items-center gap-2">
+            <span>SHELF II</span>
+            <span>•</span>
+            <span>2025 年度典藏架 (共 38 冊)</span>
+          </div>
+          <span class="text-xs text-[#a4886e] font-sans-ui">點擊書脊可抽出查看完整借閱記錄</span>
+        </div>
+        <div class="bookshelf-row p-6 pt-10 min-h-[340px] flex items-end gap-2 overflow-x-auto" id="shelf2025">
+          <!-- 書脊動態填入 -->
+        </div>
+      </div>
+
+      <!-- 2024 年度書架 -->
+      <div>
+        <div class="flex items-center justify-between mb-3 px-2">
+          <div class="brass-plate px-4 py-1.5 rounded-t font-sans-ui text-xs font-bold tracking-wider inline-flex items-center gap-2">
+            <span>SHELF III</span>
+            <span>•</span>
+            <span>2024 年度奠基架 (共 32 冊)</span>
+          </div>
+          <span class="text-xs text-[#a4886e] font-sans-ui">點擊書脊可抽出查看完整借閱記錄</span>
+        </div>
+        <div class="bookshelf-row p-6 pt-10 min-h-[340px] flex items-end gap-2 overflow-x-auto" id="shelf2024">
+          <!-- 書脊動態填入 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 視角三：學科與系列年報統計 (Analytics View) -->
+    <section id="statsView" class="hidden space-y-10">
+      
+      <!-- 9 大領域分類比例板塊 -->
+      <div class="parchment-card p-6 md:p-8 rounded-lg">
+        <h2 class="text-xl md:text-2xl font-bold text-[#2a1b11] mb-2 flex items-center justify-between border-b border-[#dfd2be] pb-3">
+          <span>館藏九大學科分類典藏佔比與分析</span>
+          <span class="text-xs font-sans-ui font-normal px-2.5 py-1 bg-[#ecd9bd] text-[#5c3e23] rounded">總量：91 冊</span>
+        </h2>
+        <p class="text-sm text-[#735942] mb-6 font-sans-ui">
+          依據各學門進行分類編目，涵蓋科幻奇幻、哲學宗教、心理決策、商業成長、海洋生態、幼兒心靈繪本等領域。
+        </p>
+
+        <div class="space-y-4 font-sans-ui" id="categoryStatsList">
+          <!-- 動態填入分類統計長條 -->
+        </div>
+      </div>
+
+      <!-- 10 大系列書籍專題典藏 -->
+      <div class="parchment-card p-6 md:p-8 rounded-lg">
+        <h2 class="text-xl md:text-2xl font-bold text-[#2a1b11] mb-2 flex items-center justify-between border-b border-[#dfd2be] pb-3">
+          <span>十大系列專題套書典藏進度表</span>
+          <span class="text-xs font-sans-ui font-normal px-2.5 py-1 bg-[#ecd9bd] text-[#5c3e23] rounded">成套率：37 冊 (40.7%)</span>
+        </h2>
+        <p class="text-sm text-[#735942] mb-6 font-sans-ui">
+          在您的 91 本閱讀紀錄中，共有 10 大專題具備成套脈絡與思想傳承。
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans-ui" id="seriesStatsList">
+          <!-- 動態填入系列套書卡片 -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 圖書館借閱卡浮層 (Library Due Date Slip Modal) -->
+  <div id="bookModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="relative w-full max-w-2xl parchment-card rounded-lg p-6 md:p-8 shadow-2xl border-2 border-[#b5925a] max-h-[90vh] overflow-y-auto">
+      
+      <!-- 關閉按鈕 -->
+      <button id="modalCloseBtn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#dfd2be] text-[#3e2717] hover:bg-[#c9b79d] flex items-center justify-center font-bold font-sans-ui">
+        ✕
+      </button>
+
+      <!-- 借閱卡頂部裝飾 -->
+      <div class="text-center pb-4 border-b-2 border-[#3b2414] mb-6">
+        <div class="font-sans-ui text-xs font-bold tracking-widest text-[#7a5839]">SPECIAL COLLECTION ARCHIVE</div>
+        <h3 class="text-2xl font-bold text-[#24150b] mt-1 font-serif">圖書館借閱流通憑證</h3>
+        <div class="text-xs text-[#8c6b4b] mt-0.5 font-sans-ui">CALL SLIP & CIRCULATION RECORD</div>
+      </div>
+
+      <!-- 書目基礎元數據 -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-4 border-b border-[#dfd2be] text-sm">
+        <div>
+          <div class="text-xs text-[#7e6248] font-sans-ui font-semibold">索書代號 (Call No.)</div>
+          <div id="modalCallNo" class="font-bold text-[#24150b] font-mono mt-0.5">SF-2026-021</div>
+        </div>
+        <div>
+          <div class="text-xs text-[#7e6248] font-sans-ui font-semibold">典藏學科 (Class)</div>
+          <div id="modalCategory" class="font-bold text-[#24150b] mt-0.5">科幻與奇幻小說</div>
+        </div>
+        <div>
+          <div class="text-xs text-[#7e6248] font-sans-ui font-semibold">登錄年度 (Year)</div>
+          <div id="modalYear" class="font-bold text-[#24150b] mt-0.5">2026 年度</div>
+        </div>
+      </div>
+
+      <!-- 書名與作者 -->
+      <div class="my-5">
+        <h4 id="modalTitle" class="text-2xl md:text-3xl font-bold text-[#1f1208] leading-snug">
+          《沙丘3：沙丘之子》
+        </h4>
+        <div id="modalAuthor" class="text-base text-[#5c3e23] font-medium mt-1">
+          法蘭克・赫伯特 Frank Herbert
+        </div>
+        <div id="modalSeriesBadge" class="inline-block mt-2 px-2.5 py-0.5 rounded text-xs font-sans-ui bg-[#e8dac2] text-[#482f1b] border border-[#cfbe9f]">
+          所屬系列：沙丘系列
+        </div>
+      </div>
+
+      <!-- 典藏提要與館藏筆記 -->
+      <div class="bg-[#f2e7d3] p-4 rounded border border-[#dac7a8] my-4">
+        <div class="text-xs font-bold text-[#6a4c30] font-sans-ui mb-1">館藏提要與閱讀筆記</div>
+        <p id="modalDesc" class="text-sm md:text-base text-[#2e1d10] leading-relaxed">
+          保羅雙胞胎兒女的覺醒，厄拉科斯生態質變與帝國命運轉折。
+        </p>
+      </div>
+
+      <!-- 借閱章戳格 -->
+      <div class="mt-6 pt-4 border-t-2 border-[#3b2414]">
+        <div class="flex items-center justify-between">
+          <div class="font-sans-ui text-xs text-[#735338]">
+            <div>流通認證狀態：<span id="modalStatusText" class="font-bold">借出閱覽中</span></div>
+            <div class="text-[11px] text-[#917154] mt-0.5">典藏單位：私人專題藏書閣</div>
+          </div>
+          <div id="modalStamp" class="library-stamp px-4 py-2 text-xs font-bold font-sans-ui">
+            RETURNED 完讀
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部互動列 -->
+      <div class="flex items-center justify-between mt-8 pt-4 border-t border-[#dfd2be] font-sans-ui text-xs">
+        <button id="modalFavBtn" class="px-4 py-2 rounded bg-[#dfd2be] hover:bg-[#cfbda4] text-[#342012] flex items-center gap-1.5 font-medium transition">
+          <svg class="w-4 h-4 text-[#8a653f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+          <span id="modalFavBtnText">加入珍藏標記</span>
+        </button>
+
+        <button id="modalCopyCitationBtn" class="px-4 py-2 rounded bg-[#3d2719] hover:bg-[#523522] text-[#f7eedf] flex items-center gap-1.5 font-medium transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+          <span>複製標準書目引文</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 資料與前端互動腳本 -->
+  <script>
+    // 完整 91 冊圖書數據庫 (2024: 32本, 2025: 38本, 2026: 21本)
+    const booksDatabase = [
+      // 2026 年度 (21 冊)
+      { id: 1, year: 2026, callNo: "PHI-2026-001", title: "宗教的40堂公開課", author: "理查・哈洛威 Richard Holloway", category: "哲學思辨、宗教與歷史社會", series: "40堂公開課系列", desc: "梳理世界各大信仰起源與核心教義。", status: "completed" },
+      { id: 2, year: 2026, callNo: "BIZ-2026-002", title: "我決定簡單生活：從斷捨離到極簡主義，丟東西後改變我的12件事！", author: "佐佐木典士", category: "商業理財、自我成長與生活哲學", series: "", desc: "透過減物捨棄雜念，重獲心靈自由。", status: "completed" },
+      { id: 3, year: 2026, callNo: "LIT-2026-003", title: "明日，明日，又明日", author: "嘉布莉・麗文 Gabrielle Zevin", category: "世界文學、小說與傳記", series: "", desc: "描寫遊戲設計師跨越數十年的愛與創作。", status: "completed" },
+      { id: 4, year: 2026, callNo: "SF-2026-004", title: "基地邊緣", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "基地第四部，尋找地球與人類未來的真相。", status: "completed" },
+      { id: 5, year: 2026, callNo: "OCE-2026-005", title: "座頭鯨赫連麼麼 小說繪本", author: "廖鴻基 著／達姆 繪", category: "海洋文學、鯨豚與自然生態", series: "廖鴻基海洋尋鯨文學", desc: "以溫柔圖文描繪座頭鯨的大洋漫遊旅程。", status: "completed" },
+      { id: 6, year: 2026, callNo: "OCE-2026-006", title: "黑潮尋鯨：遇見噴風的抹香鯨", author: "廖鴻基", category: "海洋文學、鯨豚與自然生態", series: "廖鴻基海洋尋鯨文學", desc: "記錄臺灣東海岸與巨鯨相遇的真實震撼。", status: "completed" },
+      { id: 7, year: 2026, callNo: "BIZ-2026-007", title: "那瓦爾寶典", author: "艾力克・佐漢 Eric Jorgenson", category: "商業理財、自我成長與生活哲學", series: "", desc: "矽谷投資大師關於財富自由與快樂的指南。", status: "completed" },
+      { id: 8, year: 2026, callNo: "PSY-2026-008", title: "魅力學", author: "奧麗薇亞・福克斯・卡本尼 Olivia Fox Cabane", category: "心理學、認知與決策思維", series: "", desc: "拆解個人氣場與吸引力背後的行為科學。", status: "completed" },
+      { id: 9, year: 2026, callNo: "EDU-2026-009", title: "愛上當爸媽這件事：0到3歲嬰幼兒心理學", author: "孫明儀", category: "親職教育與育兒家庭", series: "", desc: "從嬰幼兒心理學與映射式互動出發，陪伴新手爸媽讀懂寶寶情緒密碼。", status: "completed" },
+      { id: 10, year: 2026, callNo: "SF-2026-010", title: "基地與地球", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "基地系列完結篇，解開人類最初起源之謎。", status: "completed" },
+      { id: 11, year: 2026, callNo: "SCI-2026-011", title: "多重宇宙、平行世界是可能的嗎？", author: "日本 Newton Press", category: "科普、物理天文與生命科學", series: "", desc: "前沿理論物理對多元宇宙假說的科普剖析。", status: "completed" },
+      { id: 12, year: 2026, callNo: "PHI-2026-012", title: "少年臺灣史", author: "周婉窈", category: "哲學思辨、宗教與歷史社會", series: "", desc: "寫給青年世代、溫柔扎實的臺灣通史。", status: "completed" },
+      { id: 13, year: 2026, callNo: "SF-2026-013", title: "神也鬥不過愚蠢", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "", desc: "艾西莫夫神作，探討人類固執與平行宇宙。", status: "completed" },
+      { id: 14, year: 2026, callNo: "PSY-2026-014", title: "你的人生，他們六個說了算！決定你一生的六種物質", author: "大衛・J・林登 David J. Linden", category: "心理學、認知與決策思維", series: "", desc: "解析多巴胺等六大神經物質如何主宰行為。", status: "completed" },
+      { id: 15, year: 2026, callNo: "SF-2026-015", title: "機器人四部曲之IV：機器人與帝國", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "確立機器人第零法則與銀河帝國的奠基。", status: "completed" },
+      { id: 16, year: 2026, callNo: "SF-2026-016", title: "沙丘", author: "法蘭克・赫伯特 Frank Herbert", category: "科幻與奇幻小說", series: "沙丘系列", desc: "經典科幻史詩，沙漠星球上的政治宗教鬥爭。", status: "completed" },
+      { id: 17, year: 2026, callNo: "SF-2026-017", title: "沙丘2：救世主", author: "法蘭克・赫伯特 Frank Herbert", category: "科幻與奇幻小說", series: "沙丘系列", desc: "保羅成為皇帝後的悲劇命運與權力省思。", status: "completed" },
+      { id: 18, year: 2026, callNo: "PIC-2026-018", title: "皮卡丘的好朋友", author: "松尾里佳子", category: "繪本與圖文創作", series: "monpoké 皮卡丘幼兒繪本", desc: "monpoké 幼兒繪本，以溫柔手繪筆觸學習打招呼與結交朋友。", status: "completed" },
+      { id: 19, year: 2026, callNo: "PIC-2026-019", title: "皮卡丘的夜晚大冒險", author: "松尾里佳子", category: "繪本與圖文創作", series: "monpoké 皮卡丘幼兒繪本", desc: "探索夜晚的神祕森林，學會互助合作與勇敢面對未知。", status: "completed" },
+      { id: 20, year: 2026, callNo: "PIC-2026-020", title: "皮卡丘的海洋尋寶記", author: "松尾里佳子", category: "繪本與圖文創作", series: "monpoké 皮卡丘幼兒繪本", desc: "與寶可夢夥伴一同出海探險，在尋寶旅程中體會友誼的珍貴。", status: "completed" },
+      { id: 21, year: 2026, callNo: "SF-2026-021", title: "沙丘3：沙丘之子", author: "法蘭克・赫伯特 Frank Herbert", category: "科幻與奇幻小說", series: "沙丘系列", desc: "保羅雙胞胎兒女的覺醒，厄拉科斯生態質變與帝國命運轉折。", status: "reading" },
+
+      // 2025 年度 (38 冊)
+      { id: 22, year: 2025, callNo: "LIT-2025-001", title: "強風吹拂", author: "三浦紫苑", category: "世界文學、小說與傳記", series: "", desc: "十名青年挑戰箱根驛傳的極致熱血長跑。", status: "completed" },
+      { id: 23, year: 2025, callNo: "SF-2025-002", title: "基地前奏", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "心理史學大師謝頓年輕時逃亡與建構歷程。", status: "completed" },
+      { id: 24, year: 2025, callNo: "BIZ-2025-003", title: "持續買進", author: "尼克・馬朱利 Nick Maggiulli", category: "商業理財、自我成長與生活哲學", series: "", desc: "用扎實數據證明「持續定期定額」的力量。", status: "completed" },
+      { id: 25, year: 2025, callNo: "PHI-2025-004", title: "悲劇哲學家尼采", author: "劉昌元", category: "哲學思辨、宗教與歷史社會", series: "", desc: "通俗解析尼采對抗虛無、擁抱生命的哲思。", status: "completed" },
+      { id: 26, year: 2025, callNo: "EDU-2025-005", title: "父產科：孩子的健康不能只靠卵子，男性生殖醫學重磅登場", author: "蕾妮・阿伯拉姆 Rene Almeling", category: "親職教育與育兒家庭", series: "", desc: "打破刻板印象，探討男性生殖與遺傳真相。", status: "completed" },
+      { id: 27, year: 2025, callNo: "PHI-2025-006", title: "台灣地方政治讀本", author: "思想者工作室／王宏仁 等", category: "哲學思辨、宗教與歷史社會", series: "", desc: "深入剖析臺灣地方派系與選民結構的演變。", status: "completed" },
+      { id: 28, year: 2025, callNo: "SF-2025-007", title: "基地締造者", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "謝頓晚年奮鬥，見證心理史學正式成形。", status: "completed" },
+      { id: 29, year: 2025, callNo: "BIZ-2025-008", title: "致富心態", author: "摩根・豪瑟 Morgan Housel", category: "商業理財、自我成長與生活哲學", series: "", desc: "探討金錢背後的心態，教人財富與心靈自由。", status: "completed" },
+      { id: 30, year: 2025, callNo: "SF-2025-009", title: "銀河帝國三部曲之I：繁星若塵", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：銀河帝國三部曲", desc: "落難王子尋找古老憲章、對抗霸權的故事。", status: "completed" },
+      { id: 31, year: 2025, callNo: "PIC-2025-010", title: "影子馬戲團", author: "莉迪亞・布蘭科維琪 Lidia Branković", category: "繪本與圖文創作", series: "", desc: "探討自我接納與面對內心陰影的奇幻心理繪本。", status: "completed" },
+      { id: 32, year: 2025, callNo: "PIC-2025-011", title: "鯨鯊", author: "新宮晉 Susumu Shingu", category: "繪本與圖文創作", series: "", desc: "日本動力雕塑大師以詩意筆觸與深邃藍黑光影，展現溫柔巨獸漫遊深海的經典繪本。", status: "completed" },
+      { id: 33, year: 2025, callNo: "PIC-2025-012", title: "牆外的牆", author: "太迪了", category: "繪本與圖文創作", series: "", desc: "榮獲人權教育繪本佳作，從孩童視角凝視監獄牢籠與高牆，探尋自由與時代記憶。", status: "completed" },
+      { id: 34, year: 2025, callNo: "PHI-2025-013", title: "文明的躍昇", author: "雅各布・布朗諾夫斯基 Jacob Bronowski", category: "哲學思辨、宗教與歷史社會", series: "", desc: "從科學與藝術視角回顧人類知識躍進史。", status: "completed" },
+      { id: 35, year: 2025, callNo: "LIT-2025-014", title: "炒飯狙擊手", author: "張國立", category: "世界文學、小說與傳記", series: "", desc: "結合臺灣在地飲食與冷酷特務的動作小說。", status: "completed" },
+      { id: 36, year: 2025, callNo: "PHI-2025-015", title: "武士道", author: "新渡戶稻造", category: "哲學思辨、宗教與歷史社會", series: "", desc: "新渡戶稻造名作，闡釋日本傳統靈魂核心。", status: "completed" },
+      { id: 37, year: 2025, callNo: "SF-2025-016", title: "機器人四部曲之I：鋼穴", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "科幻推理開山之作，人類與機器人攜手查案。", status: "completed" },
+      { id: 38, year: 2025, callNo: "EDU-2025-017", title: "當我再次是個孩子：波蘭兒童文學之父選集", author: "雅奴什・柯札克 Janusz Korczak", category: "親職教育與育兒家庭", series: "", desc: "波蘭教育大師柯札克溫柔且深邃的兒童文學。", status: "completed" },
+      { id: 39, year: 2025, callNo: "SCI-2025-018", title: "薛丁格生命物理學講義：生命是什麼？", author: "埃爾溫・薛丁格 Erwin Schrödinger", category: "科普、物理天文與生命科學", series: "", desc: "物理大師從熱力學解密生命與遺傳奧秘。", status: "completed" },
+      { id: 40, year: 2025, callNo: "SCI-2025-019", title: "艾西莫夫科普教室（上）跟隨大師遨遊知識殿堂", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科普、物理天文與生命科學", series: "艾西莫夫科普教室", desc: "大師親自帶領，以淺白文字漫遊自然科學。", status: "completed" },
+      { id: 41, year: 2025, callNo: "SF-2025-020", title: "2001太空漫遊", author: "亞瑟・克拉克 Arthur C. Clarke", category: "科幻與奇幻小說", series: "", desc: "克拉克太空科幻頂峰，探討AI與人類起源。", status: "completed" },
+      { id: 42, year: 2025, callNo: "BIZ-2025-021", title: "原則：屬於你的引導式筆記", author: "瑞・達利歐 Ray Dalio", category: "商業理財、自我成長與生活哲學", series: "", desc: "瑞·達利歐引導讀者沉澱思考的人生手冊。", status: "completed" },
+      { id: 43, year: 2025, callNo: "SF-2025-022", title: "我們", author: "葉夫根尼・薩米爾欽 Yevgeny Zamyatin", category: "科幻與奇幻小說", series: "", desc: "極權反烏托邦鼻祖，數字化世界的控制寓言。", status: "completed" },
+      { id: 44, year: 2025, callNo: "SF-2025-023", title: "銀河帝國三部曲之II：星空暗流", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：銀河帝國三部曲", desc: "圍繞神秘太空物質與帝國擴張的政治懸疑。", status: "completed" },
+      { id: 45, year: 2025, callNo: "SF-2025-024", title: "機器人四部曲之II：裸陽", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "外星世界密室謀殺案，探討疏離社會人際。", status: "completed" },
+      { id: 46, year: 2025, callNo: "SCI-2025-025", title: "時間的形狀-相對論史話", author: "汪潔", category: "科普、物理天文與生命科學", series: "", desc: "以極富幽默感的筆觸，講透愛因斯坦相對論。", status: "completed" },
+      { id: 47, year: 2025, callNo: "SCI-2025-026", title: "艾西莫夫科普教室（中）暴龍的處方簽", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科普、物理天文與生命科學", series: "艾西莫夫科普教室", desc: "艾西莫夫談恐龍、演化與奇趣科學知識。", status: "completed" },
+      { id: 48, year: 2025, callNo: "LIT-2025-027", title: "月亮與六便士", author: "威廉・薩默塞特・毛姆 W. Somerset Maugham", category: "世界文學、小說與傳記", series: "", desc: "以高更為藍本，追尋藝術狂熱與靈魂解放。", status: "completed" },
+      { id: 49, year: 2025, callNo: "EDU-2025-028", title: "預備教育的未來", author: "黛安・塔芬納 Diane Tavenner", category: "親職教育與育兒家庭", series: "", desc: "反思傳統教育盲點，探討未來人才培育之道。", status: "completed" },
+      { id: 50, year: 2025, callNo: "BIZ-2025-029", title: "第二座山", author: "大衛・布魯克斯 David Brooks", category: "商業理財、自我成長與生活哲學", series: "", desc: "從追求自我成就，走向奉獻與深度承諾。", status: "completed" },
+      { id: 51, year: 2025, callNo: "BIZ-2025-030", title: "變成自己想望的大人", author: "侯文詠", category: "商業理財、自我成長與生活哲學", series: "", desc: "侯文詠分享走出迷惘、活出真實自我的隨筆。", status: "completed" },
+      { id: 52, year: 2025, callNo: "BIZ-2025-031", title: "如果停不下來，就先學會慢下來", author: "葛倫・庫許納 Glen R. Cuschieri", category: "商業理財、自我成長與生活哲學", series: "", desc: "教人放下焦慮、重獲呼吸節奏的心靈處方。", status: "completed" },
+      { id: 53, year: 2025, callNo: "PSY-2025-032", title: "我們為何相信", author: "麥可・謝爾默 Michael Shermer", category: "心理學、認知與決策思維", series: "", desc: "認知科學視角探討人類迷信與信念的成因。", status: "completed" },
+      { id: 54, year: 2025, callNo: "SF-2025-033", title: "機器人四部曲之III：曙光中的機器人", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "探討人機情感界線與太空殖民政策角力。", status: "completed" },
+      { id: 55, year: 2025, callNo: "OCE-2025-034", title: "女子山海", author: "張卉君、劉崇鳳", category: "海洋文學、鯨豚與自然生態", series: "", desc: "兩位女性走入山林與海洋的生命書寫。", status: "completed" },
+      { id: 56, year: 2025, callNo: "SF-2025-035", title: "銀河帝國三部曲之III：蒼穹一粟", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：銀河帝國三部曲", desc: "核污染後的地球少年捲入帝國陰謀的傳奇。", status: "completed" },
+      { id: 57, year: 2025, callNo: "LIT-2025-036", title: "絕無僅有：Kershaw的傳奇之路", author: "柴克・卡普蘭 Zac Candelario", category: "世界文學、小說與傳記", series: "", desc: "傳奇賽揚左投克蕭的職棒生涯奮鬥史。", status: "completed" },
+      { id: 58, year: 2025, callNo: "SF-2025-037", title: "我，機器人", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "確立「機器人三大法則」的劃時代短篇集。", status: "completed" },
+      { id: 59, year: 2025, callNo: "PIC-2025-038", title: "情緒大飯店", author: "莉迪亞・布蘭科維琪 Lidia Branković", category: "繪本與圖文創作", series: "", desc: "將喜怒哀樂擬人化為飯店旅客，引導讀者覺察、理解與接納多元情緒的心靈繪本。", status: "completed" },
+
+      // 2024 年度 (32 冊)
+      { id: 60, year: 2024, callNo: "SF-2024-001", title: "三體", author: "劉慈欣", category: "科幻與奇幻小說", series: "三體三部曲", desc: "文革創傷引發的三體外星文明接觸紀事。", status: "completed" },
+      { id: 61, year: 2024, callNo: "SF-2024-002", title: "三體2：黑暗森林", author: "劉慈欣", category: "科幻與奇幻小說", series: "三體三部曲", desc: "揭開殘酷宇宙黑暗森林法則的科幻史詩。", status: "completed" },
+      { id: 62, year: 2024, callNo: "SF-2024-003", title: "三體3：死神永生", author: "劉慈欣", category: "科幻與奇幻小說", series: "三體三部曲", desc: "跨越億萬年的降維打擊與宏大宇宙終局。", status: "completed" },
+      { id: 63, year: 2024, callNo: "SF-2024-004", title: "FINAL FANTASY VII REMAKE Traces of Two Pasts", author: "野島一成", category: "科幻與奇幻小說", series: "", desc: "描繪蒂法與艾莉絲成長過往的官方外傳。", status: "completed" },
+      { id: 64, year: 2024, callNo: "EDU-2024-005", title: "PBL", author: "約翰・拉默 John Larmer 等", category: "親職教育與育兒家庭", series: "", desc: "專題導向學習法的實作策略與教育核心。", status: "completed" },
+      { id: 65, year: 2024, callNo: "LIT-2024-006", title: "62：Aaron Judge", author: "布萊恩・霍克 Bryan Hoch", category: "世界文學、小說與傳記", series: "", desc: "洋基重砲賈吉單季62轟破美聯紀錄傳奇。", status: "completed" },
+      { id: 66, year: 2024, callNo: "OCE-2024-007", title: "52赫茲的鯨魚們", author: "町田苑香", category: "海洋文學、鯨豚與自然生態", series: "", desc: "在孤獨世界中渴望被聽見的救贖小說。", status: "completed" },
+      { id: 67, year: 2024, callNo: "SF-2024-008", title: "獵魔士：最後的願望", author: "安傑・薩普科夫斯基 Andrzej Sapkowski", category: "科幻與奇幻小說", series: "", desc: "傑洛特初登場的短篇奇幻冒險故事集。", status: "completed" },
+      { id: 68, year: 2024, callNo: "SF-2024-009", title: "人生副本", author: "布萊克・克勞奇 Blake Crouch", category: "科幻與奇幻小說", series: "", desc: "量子多重世界中的身分奪取與摯愛追尋。", status: "completed" },
+      { id: 69, year: 2024, callNo: "PHI-2024-010", title: "地。-關於地球的運動- (第1集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "神童拉法爾遇見異端學者，萌生地動說信仰。", status: "completed" },
+      { id: 70, year: 2024, callNo: "PHI-2024-011", title: "地。-關於地球的運動- (第2集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "決鬥者奧克茲與學者巴德尼，接下真理火種。", status: "completed" },
+      { id: 71, year: 2024, callNo: "PHI-2024-012", title: "地。-關於地球的運動- (第3集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "在審判所陰影下，巴德尼以理性推導行星軌道。", status: "completed" },
+      { id: 72, year: 2024, callNo: "PHI-2024-013", title: "地。-關於地球的運動- (第4集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "皮亞斯特伯爵重燃熱情，驗證完美金星逆行。", status: "completed" },
+      { id: 73, year: 2024, callNo: "PHI-2024-014", title: "地。-關於地球的運動- (第5集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "真理之血代代流淌，異端審問官諾瓦克追緝。", status: "completed" },
+      { id: 74, year: 2024, callNo: "PHI-2024-015", title: "地。-關於地球的運動- (第6集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "信念傳至約蘭達，誓將地動研究成果公諸於世。", status: "completed" },
+      { id: 75, year: 2024, callNo: "PHI-2024-016", title: "地。-關於地球的運動- (第7集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "活字印刷術登場，真理化為火把照亮黑暗。", status: "completed" },
+      { id: 76, year: 2024, callNo: "PHI-2024-017", title: "地。-關於地球的運動- (第8集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "歷史巨輪滾動，即便生命消逝地球依然轉動。", status: "completed" },
+      { id: 77, year: 2024, callNo: "PSY-2024-018", title: "莫非定律", author: "亞瑟・布洛赫 Arthur Bloch", category: "心理學、認知與決策思維", series: "", desc: "幽默又殘酷的生活規律，提醒凡事做好準備。", status: "completed" },
+      { id: 78, year: 2024, callNo: "PHI-2024-019", title: "向下紮根！德國最受歡迎的思辨讀本", author: "克莉絲汀・史坦萊恩 Christine Steinlein 等", category: "哲學思辨、宗教與歷史社會", series: "", desc: "培養公民思辨能力與批判獨立思考的讀本。", status: "completed" },
+      { id: 79, year: 2024, callNo: "SF-2024-020", title: "美麗新世界", author: "阿道斯・赫胥黎 Aldous Huxley", category: "科幻與奇幻小說", series: "", desc: "透過藥物與享樂製造虛偽幸福的反烏托邦。", status: "completed" },
+      { id: 80, year: 2024, callNo: "SF-2024-021", title: "基地", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "心理史學誕生，預見帝國崩潰與重生的開篇。", status: "completed" },
+      { id: 81, year: 2024, callNo: "SF-2024-022", title: "基地與帝國", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "神祕異能者「騾」崛起打破謝頓計畫的危機。", status: "completed" },
+      { id: 82, year: 2024, callNo: "SF-2024-023", title: "第二基地", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "隱於暗處的精神力學者與第一基地的智鬥。", status: "completed" },
+      { id: 83, year: 2024, callNo: "SF-2024-024", title: "永恆終結", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "", desc: "穿梭時空的時空修正機構與愛情自由抗爭。", status: "completed" },
+      { id: 84, year: 2024, callNo: "OCE-2024-025", title: "台灣π：發現太平洋抹香鯨", author: "廖鴻基 等人", category: "海洋文學、鯨豚與自然生態", series: "", desc: "以影像與文字記錄臺灣東岸抹香鯨的傳奇。", status: "completed" },
+      { id: 85, year: 2024, callNo: "PSY-2024-026", title: "真確", author: "漢斯・羅斯林 Hans Rosling", category: "心理學、認知與決策思維", series: "", desc: "用數據破除對世界的十大偏見與認知盲點。", status: "completed" },
+      { id: 86, year: 2024, callNo: "OCE-2024-027", title: "傾聽地球之聲：生物學家帶你聽見生命的創意與斷裂", author: "大衛・喬治・哈思克 David George Haskell", category: "海洋文學、鯨豚與自然生態", series: "", desc: "用聲音生態學帶讀者傾聽大自然的呼吸節奏。", status: "completed" },
+      { id: 87, year: 2024, callNo: "PSY-2024-028", title: "象與騎象人", author: "強納森・海特 Jonathan Haidt", category: "心理學、認知與決策思維", series: "", desc: "結合古典哲學與心理學探討人類幸福本質。", status: "completed" },
+      { id: 88, year: 2024, callNo: "PSY-2024-029", title: "思維誤判", author: "羅爾夫・杜伯里 Rolf Dobelli", category: "心理學、認知與決策思維", series: "", desc: "解析大腦認知偏誤，避免常見決策陷阱。", status: "completed" },
+      { id: 89, year: 2024, callNo: "PHI-2024-030", title: "哲學的40堂公開課", author: "奈傑爾・華伯頓 Nigel Warburton", category: "哲學思辨、宗教與歷史社會", series: "40堂公開課系列", desc: "從蘇格拉底到當代的西方哲學簡明通識。", status: "completed" },
+      { id: 90, year: 2024, callNo: "PSY-2024-031", title: "內向心理學", author: "瑪蒂・蘭妮 Marti Olsen Laney", category: "心理學、認知與決策思維", series: "", desc: "挖掘內向者的獨特力量與社交能量管理。", status: "completed" },
+      { id: 91, year: 2024, callNo: "LIT-2024-032", title: "白鯨記", author: "赫爾曼・梅爾維爾 Herman Melville", category: "海洋文學、鯨豚與自然生態", series: "", desc: "亞哈船長與莫比迪克在大洋搏鬥的世界名著。", status: "completed" }
+    ];
+
+    // 系列套書專題數據
+    const seriesDatabase = [
+      { name: "艾西莫夫：基地系列", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 7, books: ["基地前奏", "基地締造者", "基地", "基地與帝國", "第二基地", "基地邊緣", "基地與地球"], desc: "哈里·謝頓開創心理史學，在銀河帝國分崩離析之際，跨越千年建立新文明的壯闊科幻史詩。" },
+      { name: "艾西莫夫：機器人系列", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 5, books: ["我，機器人", "鋼穴", "裸陽", "曙光中的機器人", "機器人與帝國"], desc: "開創三大法則與第零法則，藉便衣刑警與機器人搭檔探案，奠定人類與AI共存哲學。" },
+      { name: "艾西莫夫：銀河帝國三部曲", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 3, books: ["繁星若塵", "星空暗流", "蒼穹一粟"], desc: "承接機器人與基地時代，描繪銀河帝國崛起過程中的星際角力、背叛與自由追尋。" },
+      { name: "三體三部曲", author: "劉慈欣", count: 3, books: ["三體", "三體2：黑暗森林", "三體3：死神永生"], desc: "從文革接觸外星文明到宇宙黑暗森林法則，描寫人類文明與三體對抗至宇宙終局的硬科幻巔峰。" },
+      { name: "沙丘系列", author: "法蘭克・赫伯特 Frank Herbert", count: 3, books: ["沙丘", "沙丘2：救世主", "沙丘3：沙丘之子"], desc: "圍繞沙漠行星厄拉科斯與香料爭奪，融匯政治陰謀、生態哲學與救世主神話的太空史詩。" },
+      { name: "《地。-關於地球的運動-》", author: "魚豊", count: 8, books: ["第 1 集", "第 2 集", "第 3 集", "第 4 集", "第 5 集", "第 6 集", "第 7 集", "第 8 集"], desc: "描繪15世紀歐洲先驅者跨越世代、賭上性命與宗教審判所對抗，追求「地動說」真理的動人篇章。" },
+      { name: "monpoké 皮卡丘幼兒繪本", author: "松尾里佳子", count: 3, books: ["皮卡丘的好朋友", "皮卡丘的夜晚大冒險", "皮卡丘的海洋尋寶記"], desc: "寶可夢官方幼兒品牌授權，以柔和溫暖的手繪筆觸，陪伴孩子學習人際社交、互助與勇敢。" },
+      { name: "40堂公開課系列", author: "奈傑爾・華伯頓／理查・哈洛威", count: 2, books: ["哲學的40堂公開課", "宗教的40堂公開課"], desc: "以簡明優雅的短篇隨筆，回溯西方哲學源流與世界主要宗教信仰發展的經典通識入門。" },
+      { name: "艾西莫夫科普教室", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 2, books: ["科普教室（上）", "科普教室（中）"], desc: "科幻大師化身博學導師，以生動風趣的筆觸深入淺出漫談天文、古生物與物理奧妙。" },
+      { name: "廖鴻基海洋尋鯨文學", author: "廖鴻基", count: 2, books: ["座頭鯨赫連麼麼", "黑潮尋鯨"], desc: "臺灣海洋文學旗手長年航行於太平洋黑潮，以深情視角記錄巨鯨生態與人海對話的經典散文。" }
+    ];
+
+    // 書脊色彩庫（皮革與布面圖書館經典色系）
+    const spineColors = [
+      { bg: "linear-gradient(180deg, #1d3323 0%, #102115 100%)", text: "#d4af37", border: "#2f573b" }, // 墨綠燙金
+      { bg: "linear-gradient(180deg, #5c1818 0%, #360a0a 100%)", text: "#e8c872", border: "#8c2727" }, // 勃根地紅
+      { bg: "linear-gradient(180deg, #192742 0%, #0d1627 100%)", text: "#e2c585", border: "#2d4470" }, // 普魯士藍
+      { bg: "linear-gradient(180deg, #4f331e 0%, #2e1c0e 100%)", text: "#f0d59e", border: "#734c2d" }, // 胡桃琥珀
+      { bg: "linear-gradient(180deg, #242220 0%, #121110 100%)", text: "#dfb76c", border: "#403d39" }, // 玄鐵黑
+      { bg: "linear-gradient(180deg, #614022 0%, #3d2511 100%)", text: "#f5e2be", border: "#8a5c32" }, // 赭石褐
+      { bg: "linear-gradient(180deg, #1b3d45 0%, #0d2126 100%)", text: "#d9be79", border: "#2c5b66" }  // 深湖藍
+    ];
+
+    // 本地最愛儲存機制
+    let favoriteBookIds = new Set(JSON.parse(localStorage.getItem('lib_reading_favs') || '[]'));
+    let currentActiveBook = null;
+    let onlyShowFavorites = false;
+
+    // DOM 元素引用
+    const searchInput = document.getElementById('searchInput');
+    const yearFilter = document.getElementById('yearFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const seriesFilter = document.getElementById('seriesFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const btnFavOnly = document.getElementById('btnFavOnly');
+    const btnResetFilter = document.getElementById('btnResetFilter');
+    const filteredCount = document.getElementById('filteredCount');
+    const favCountSpan = document.getElementById('favCount');
+    const favIcon = document.getElementById('favIcon');
+
+    const cardCatalogView = document.getElementById('cardCatalogView');
+    const bookshelfView = document.getElementById('bookshelfView');
+    const statsView = document.getElementById('statsView');
+
+    const viewCardBtn = document.getElementById('viewCardBtn');
+    const viewShelfBtn = document.getElementById('viewShelfBtn');
+    const viewStatsBtn = document.getElementById('viewStatsBtn');
+
+    const bookModal = document.getElementById('bookModal');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const btnRandomPick = document.getElementById('btnRandomPick');
+    const btnExportList = document.getElementById('btnExportList');
+
+    // 視角切換控制
+    function setView(viewName) {
+      cardCatalogView.classList.add('hidden');
+      bookshelfView.classList.add('hidden');
+      statsView.classList.add('hidden');
+
+      viewCardBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      viewShelfBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      viewStatsBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+
+      if (viewName === 'card') {
+        cardCatalogView.classList.remove('hidden');
+        viewCardBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+      } else if (viewName === 'shelf') {
+        bookshelfView.classList.remove('hidden');
+        viewShelfBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        renderBookshelves();
+      } else if (viewName === 'stats') {
+        statsView.classList.remove('hidden');
+        viewStatsBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        renderStats();
+      }
+    }
+
+    viewCardBtn.addEventListener('click', () => setView('card'));
+    viewShelfBtn.addEventListener('click', () => setView('shelf'));
+    viewStatsBtn.addEventListener('click', () => setView('stats'));
+
+    // 資料篩選核心邏輯
+    function getFilteredBooks() {
+      const q = searchInput.value.trim().toLowerCase();
+      const yr = yearFilter.value;
+      const cat = categoryFilter.value;
+      const ser = seriesFilter.value;
+      const st = statusFilter.value;
+
+      return booksDatabase.filter(book => {
+        if (onlyShowFavorites && !favoriteBookIds.has(book.id)) return false;
+        if (yr !== 'ALL' && book.year.toString() !== yr) return false;
+        if (cat !== 'ALL' && book.category !== cat) return false;
+        if (ser !== 'ALL' && book.series !== ser) return false;
+        if (st !== 'ALL' && book.status !== st) return false;
+
+        if (q) {
+          const matchTitle = book.title.toLowerCase().includes(q);
+          const matchAuthor = book.author.toLowerCase().includes(q);
+          const matchDesc = book.desc.toLowerCase().includes(q);
+          const matchCallNo = book.callNo.toLowerCase().includes(q);
+          const matchSeries = (book.series || '').toLowerCase().includes(q);
+          return matchTitle || matchAuthor || matchDesc || matchCallNo || matchSeries;
+        }
+
+        return true;
+      });
+    }
+
+    // 渲染索書卡目錄 (Card Catalog View)
+    function renderCardCatalog() {
+      const filtered = getFilteredBooks();
+      filteredCount.textContent = filtered.length;
+      favCountSpan.textContent = favoriteBookIds.size;
+
+      if (filtered.length === 0) {
+        cardCatalogView.innerHTML = `
+          <div class="col-span-full py-16 text-center parchment-card rounded-lg p-8">
+            <div class="text-3xl text-[#876543] mb-2 font-serif">無符合條件之藏書紀錄</div>
+            <p class="text-sm text-[#735a43] font-sans-ui">請嘗試調整搜尋字詞、放寬學科或重設篩選條件。</p>
+            <button onclick="resetAllFilters()" class="mt-4 px-4 py-2 bg-[#3b2516] text-[#f2e6cf] rounded text-xs font-sans-ui hover:bg-[#523521]">重設所有條件</button>
+          </div>
+        `;
+        return;
+      }
+
+      cardCatalogView.innerHTML = filtered.map(book => {
+        const isFav = favoriteBookIds.has(book.id);
+        const isReading = book.status === 'reading';
+
+        return `
+          <article class="parchment-card rounded-md p-5 flex flex-col justify-between hover:shadow-xl transition-all duration-200 group border border-[#dfd5c3]">
+            <div>
+              <!-- 頂部：索書號與戳印 -->
+              <div class="flex items-start justify-between gap-2 border-b border-[#e5dcce] pb-3 mb-3">
+                <div class="font-mono text-xs font-bold text-[#5c3e23] tracking-wide bg-[#f0e6d6] px-2 py-0.5 rounded">
+                  ${book.callNo}
+                </div>
+                <div class="flex items-center gap-1.5">
+                  ${isReading 
+                    ? `<span class="library-stamp library-stamp-reading text-[11px] px-2 py-0.5 font-bold font-sans-ui">借出閱覽</span>`
+                    : `<span class="library-stamp text-[11px] px-2 py-0.5 font-bold font-sans-ui">已完讀</span>`
+                  }
+                  <button onclick="toggleFavorite(${book.id})" title="${isFav ? '取消珍藏' : '加入珍藏'}" class="p-1 text-[#8f7457] hover:text-[#c48e35] transition">
+                    <svg class="w-4 h-4 ${isFav ? 'text-[#c48e35] fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 書名與作者 -->
+              <h3 class="text-lg font-bold text-[#22140a] group-hover:text-[#6e411b] transition leading-snug cursor-pointer font-serif" onclick="openBookModal(${book.id})">
+                ${book.title}
+              </h3>
+              <div class="text-xs text-[#6e5035] font-medium mt-1 font-sans-ui">
+                ${book.author}
+              </div>
+
+              <!-- 學科標籤與系列 -->
+              <div class="flex flex-wrap items-center gap-1.5 my-3 font-sans-ui text-[11px]">
+                <span class="px-2 py-0.5 rounded bg-[#ebdcc4] text-[#4f3219] font-medium">
+                  ${book.category}
+                </span>
+                ${book.series ? `<span class="px-2 py-0.5 rounded bg-[#dfcfb5] text-[#3e2714] font-medium border border-[#cfbd9f]">${book.series}</span>` : ''}
+                <span class="text-[#8c745c] ml-auto font-mono">${book.year} 年錄</span>
+              </div>
+
+              <!-- 藏書摘要 -->
+              <p class="text-xs text-[#4d3623] leading-relaxed line-clamp-3 bg-[#f5ede0] p-2.5 rounded border border-[#e4d6bf] italic">
+                「${book.desc}」
+              </p>
+            </div>
+
+            <!-- 卡片底欄操作 -->
+            <div class="mt-4 pt-3 border-t border-[#dfd2be] flex items-center justify-between font-sans-ui text-xs">
+              <button onclick="openBookModal(${book.id})" class="text-[#784e2a] hover:text-[#2d1b0f] font-semibold flex items-center gap-1">
+                <span>調閱借閱紀錄卡</span>
+                <span>→</span>
+              </button>
+              <button onclick="copyCitation(${book.id})" class="text-[#8a6e55] hover:text-[#382313] text-[11px]">
+                複製引文
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // 渲染典藏原木書架模式 (Bookshelf View)
+    function renderBookshelves() {
+      const filtered = getFilteredBooks();
+      const shelf2026 = document.getElementById('shelf2026');
+      const shelf2025 = document.getElementById('shelf2025');
+      const shelf2024 = document.getElementById('shelf2024');
+
+      const byYear = { 2026: [], 2025: [], 2024: [] };
+      filtered.forEach(book => {
+        if (byYear[book.year]) byYear[book.year].push(book);
+      });
+
+      function generateShelfSpines(books) {
+        if (books.length === 0) {
+          return `<div class="text-sm text-[#8c6b4e] font-sans-ui italic p-6">此架暫無符合條件之藏書</div>`;
+        }
+
+        return books.map((book, idx) => {
+          const colorTheme = spineColors[book.id % spineColors.length];
+          const isReading = book.status === 'reading';
+          // 隨機計算書本寬度與高度以模擬真實書脊參差感
+          const spineWidth = 32 + ((book.id * 7) % 18); // 32px ~ 50px
+          const spineHeight = 240 + ((book.id * 11) % 45); // 240px ~ 285px
+
+          return `
+            <div class="book-spine" 
+                 onclick="openBookModal(${book.id})" 
+                 title="《${book.title}》- ${book.author} (點擊抽閱)"
+                 style="width: ${spineWidth}px; height: ${spineHeight}px; background: ${colorTheme.bg}; color: ${colorTheme.text}; border-left: 1px solid ${colorTheme.border}; border-right: 1px solid ${colorTheme.border};">
+              
+              <!-- 頂部裝飾金線 -->
+              <div class="w-full pt-2 flex flex-col items-center gap-1">
+                <div class="spine-band"></div>
+                <div class="spine-band"></div>
+                ${isReading ? `<div class="w-full text-center py-1 bg-[#1a6e38] text-white text-[10px] font-sans-ui font-bold">在讀</div>` : ''}
+              </div>
+
+              <!-- 書脊垂直標題文字 -->
+              <div class="py-2 text-xs font-serif font-bold tracking-wider leading-none text-center truncate max-h-[160px] overflow-hidden" style="text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
+                ${book.title}
+              </div>
+
+              <!-- 底部索書號標籤 -->
+              <div class="w-full pb-2 flex flex-col items-center gap-1 font-mono text-[9px] text-center">
+                <div class="spine-band"></div>
+                <div class="bg-[#140e08]/80 text-[#e8caa0] px-1 py-0.5 rounded text-[8px] transform rotate-90 my-1">
+                  ${book.callNo.split('-')[0]}
+                </div>
+              </div>
+
+            </div>
+          `;
+        }).join('');
+      }
+
+      shelf2026.innerHTML = generateShelfSpines(byYear[2026]);
+      shelf2025.innerHTML = generateShelfSpines(byYear[2025]);
+      shelf2024.innerHTML = generateShelfSpines(byYear[2024]);
+    }
+
+    // 渲染統計年報分析 (Stats View)
+    function renderStats() {
+      const categoryStatsList = document.getElementById('categoryStatsList');
+      const seriesStatsList = document.getElementById('seriesStatsList');
+
+      // 統計分類
+      const catCount = {};
+      booksDatabase.forEach(b => {
+        catCount[b.category] = (catCount[b.category] || 0) + 1;
+      });
+
+      const total = booksDatabase.length;
+      const sortedCats = Object.entries(catCount).sort((a,b) => b[1] - a[1]);
+
+      categoryStatsList.innerHTML = sortedCats.map(([cat, count]) => {
+        const pct = ((count / total) * 100).toFixed(1);
+        return `
+          <div>
+            <div class="flex items-center justify-between text-xs font-medium text-[#2d1b0f] mb-1">
+              <span class="font-bold">${cat}</span>
+              <span class="text-[#694c33] font-mono">${count} 冊 (${pct}%)</span>
+            </div>
+            <div class="w-full bg-[#e8dac5] rounded-full h-3 overflow-hidden border border-[#d2bea4]">
+              <div class="bg-gradient-to-r from-[#7a4c28] to-[#b38848] h-full rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 統計 10 大系列
+      seriesStatsList.innerHTML = seriesDatabase.map(ser => {
+        return `
+          <div class="bg-[#f3e9d8] p-4 rounded border border-[#dfcfb5] flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between">
+                <h4 class="font-bold text-[#221307] text-base">${ser.name}</h4>
+                <span class="text-xs px-2 py-0.5 rounded bg-[#e0ceb1] font-mono text-[#52351c] font-bold">${ser.count} 冊全</span>
+              </div>
+              <div class="text-xs text-[#705238] mt-0.5 font-medium">${ser.author}</div>
+              <p class="text-xs text-[#483321] mt-2 italic leading-relaxed bg-[#fbf6ed] p-2 rounded border border-[#e8dbc6]">
+                ${ser.desc}
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-[#dfcfb5] text-[11px] text-[#78593f]">
+              <span class="font-semibold">收錄書目：</span>${ser.books.join('、')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 書目彈窗 Modal 控制
+    function openBookModal(bookId) {
+      const book = booksDatabase.find(b => b.id === bookId);
+      if (!book) return;
+      currentActiveBook = book;
+
+      document.getElementById('modalCallNo').textContent = book.callNo;
+      document.getElementById('modalCategory').textContent = book.category;
+      document.getElementById('modalYear').textContent = `${book.year} 年度典藏`;
+      document.getElementById('modalTitle').textContent = `《${book.title}》`;
+      document.getElementById('modalAuthor').textContent = book.author;
+      document.getElementById('modalDesc').textContent = book.desc;
+
+      const badge = document.getElementById('modalSeriesBadge');
+      if (book.series) {
+        badge.textContent = `所屬系列：${book.series}`;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      const stamp = document.getElementById('modalStamp');
+      const statusText = document.getElementById('modalStatusText');
+      if (book.status === 'reading') {
+        stamp.className = "library-stamp library-stamp-reading px-4 py-2 text-xs font-bold font-sans-ui";
+        stamp.textContent = "BORROWED 借出中";
+        statusText.textContent = "借閱中（預計持續研讀）";
+        statusText.className = "font-bold text-[#1b6b3a]";
+      } else {
+        stamp.className = "library-stamp px-4 py-2 text-xs font-bold font-sans-ui";
+        stamp.textContent = "RETURNED 完讀歸還";
+        statusText.textContent = "完讀已歸架 (已登記)";
+        statusText.className = "font-bold text-[#802424]";
+      }
+
+      updateModalFavBtnState();
+      bookModal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      bookModal.classList.add('hidden');
+      currentActiveBook = null;
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    bookModal.addEventListener('click', (e) => {
+      if (e.target === bookModal) closeModal();
+    });
+
+    // 收藏書目邏輯
+    function toggleFavorite(bookId) {
+      if (favoriteBookIds.has(bookId)) {
+        favoriteBookIds.delete(bookId);
+      } else {
+        favoriteBookIds.add(bookId);
+      }
+      localStorage.setItem('lib_reading_favs', JSON.stringify([...favoriteBookIds]));
+      favCountSpan.textContent = favoriteBookIds.size;
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+      if (currentActiveBook && currentActiveBook.id === bookId) updateModalFavBtnState();
+    }
+
+    function updateModalFavBtnState() {
+      if (!currentActiveBook) return;
+      const isFav = favoriteBookIds.has(currentActiveBook.id);
+      const text = document.getElementById('modalFavBtnText');
+      text.textContent = isFav ? "已收藏（點擊取消）" : "加入珍藏標記";
+    }
+
+    document.getElementById('modalFavBtn').addEventListener('click', () => {
+      if (currentActiveBook) toggleFavorite(currentActiveBook.id);
+    });
+
+    // 只看已收藏切換
+    btnFavOnly.addEventListener('click', () => {
+      onlyShowFavorites = !onlyShowFavorites;
+      if (onlyShowFavorites) {
+        btnFavOnly.className = "px-3 py-1.5 bg-[#6b4528] text-[#fbf6ed] border border-[#a87449] rounded text-sm font-sans-ui flex items-center gap-1.5 shadow";
+        favIcon.className = "w-4 h-4 text-[#ffd17d] fill-current";
+      } else {
+        btnFavOnly.className = "px-3 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-sm font-sans-ui flex items-center gap-1.5";
+        favIcon.className = "w-4 h-4 text-[#8a6f52]";
+      }
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    });
+
+    // 館員隨機薦讀
+    btnRandomPick.addEventListener('click', () => {
+      const candidates = getFilteredBooks();
+      if (candidates.length === 0) return;
+      const randomBook = candidates[Math.floor(Math.random() * candidates.length)];
+      openBookModal(randomBook.id);
+    });
+
+    // 引文複製功能
+    function copyCitation(bookId) {
+      const book = booksDatabase.find(b => b.id === bookId);
+      if (!book) return;
+      const citation = `《${book.title}》（${book.author}）—— ${book.desc} [${book.category}，${book.year} 年度讀物]`;
+      navigator.clipboard.writeText(citation).then(() => {
+        alert(`已複製書目引文至剪貼簿：\n\n${citation}`);
+      });
+    }
+
+    document.getElementById('modalCopyCitationBtn').addEventListener('click', () => {
+      if (currentActiveBook) copyCitation(currentActiveBook.id);
+    });
+
+    // 匯出全部篩選書目清單
+    btnExportList.addEventListener('click', () => {
+      const list = getFilteredBooks();
+      let text = `# 私人藏書閣：書目匯出清單 (共 ${list.length} 冊)\n\n`;
+      list.forEach((b, i) => {
+        text += `${i+1}. 《${b.title}》（${b.author}）- ${b.category} (${b.year}年，狀態：${b.status === 'reading' ? '閱覽中' : '已完讀'})\n   提要：${b.desc}\n\n`;
+      });
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`已成功匯出當前篩選之 ${list.length} 冊書目清單至剪貼簿！`);
+      });
+    });
+
+    // 重設篩選器
+    function resetAllFilters() {
+      searchInput.value = '';
+      yearFilter.value = 'ALL';
+      categoryFilter.value = 'ALL';
+      seriesFilter.value = 'ALL';
+      statusFilter.value = 'ALL';
+      onlyShowFavorites = false;
+      btnFavOnly.className = "px-3 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-sm font-sans-ui flex items-center gap-1.5";
+      favIcon.className = "w-4 h-4 text-[#8a6f52]";
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    }
+    btnResetFilter.addEventListener('click', resetAllFilters);
+
+    // 事件監聽
+    searchInput.addEventListener('input', () => {
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    });
+    yearFilter.addEventListener('change', () => {
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    });
+    categoryFilter.addEventListener('change', () => {
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    });
+    seriesFilter.addEventListener('change', () => {
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    });
+    statusFilter.addEventListener('change', () => {
+      renderCardCatalog();
+      if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+    });
+
+    // 初始化渲染
+    renderCardCatalog();
+  </script>
+
+</body>
+</html>
