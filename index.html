@@ -483,117 +483,1146 @@
   <script>
     // 完整 91 冊圖書數據庫 (2024: 32本, 2025: 38本, 2026: 21本)
     const booksDatabase = [
-      // 2026 年度 (21 冊)
-      { id: 1, year: 2026, callNo: "PHI-2026-001", title: "宗教的40堂公開課", author: "理查・哈洛威 Richard Holloway", category: "哲學思辨、宗教與歷史社會", series: "40堂公開課系列", desc: "梳理世界各大信仰起源與核心教義。", status: "completed" },
-      { id: 2, year: 2026, callNo: "BIZ-2026-002", title: "我決定簡單生活：從斷捨離到極簡主義，丟東西後改變我的12件事！", author: "佐佐木典士", category: "商業理財、自我成長與生活哲學", series: "", desc: "透過減物捨棄雜念，重獲心靈自由。", status: "completed" },
-      { id: 3, year: 2026, callNo: "LIT-2026-003", title: "明日，明日，又明日", author: "嘉布莉・麗文 Gabrielle Zevin", category: "世界文學、小說與傳記", series: "", desc: "描寫遊戲設計師跨越數十年的愛與創作。", status: "completed" },
-      { id: 4, year: 2026, callNo: "SF-2026-004", title: "基地邊緣", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "基地第四部，尋找地球與人類未來的真相。", status: "completed" },
-      { id: 5, year: 2026, callNo: "OCE-2026-005", title: "座頭鯨赫連麼麼 小說繪本", author: "廖鴻基 著／達姆 繪", category: "海洋文學、鯨豚與自然生態", series: "廖鴻基海洋尋鯨文學", desc: "以溫柔圖文描繪座頭鯨的大洋漫遊旅程。", status: "completed" },
-      { id: 6, year: 2026, callNo: "OCE-2026-006", title: "黑潮尋鯨：遇見噴風的抹香鯨", author: "廖鴻基", category: "海洋文學、鯨豚與自然生態", series: "廖鴻基海洋尋鯨文學", desc: "記錄臺灣東海岸與巨鯨相遇的真實震撼。", status: "completed" },
-      { id: 7, year: 2026, callNo: "BIZ-2026-007", title: "那瓦爾寶典", author: "艾力克・佐漢 Eric Jorgenson", category: "商業理財、自我成長與生活哲學", series: "", desc: "矽谷投資大師關於財富自由與快樂的指南。", status: "completed" },
-      { id: 8, year: 2026, callNo: "PSY-2026-008", title: "魅力學", author: "奧麗薇亞・福克斯・卡本尼 Olivia Fox Cabane", category: "心理學、認知與決策思維", series: "", desc: "拆解個人氣場與吸引力背後的行為科學。", status: "completed" },
-      { id: 9, year: 2026, callNo: "EDU-2026-009", title: "愛上當爸媽這件事：0到3歲嬰幼兒心理學", author: "孫明儀", category: "親職教育與育兒家庭", series: "", desc: "從嬰幼兒心理學與映射式互動出發，陪伴新手爸媽讀懂寶寶情緒密碼。", status: "completed" },
-      { id: 10, year: 2026, callNo: "SF-2026-010", title: "基地與地球", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "基地系列完結篇，解開人類最初起源之謎。", status: "completed" },
-      { id: 11, year: 2026, callNo: "SCI-2026-011", title: "多重宇宙、平行世界是可能的嗎？", author: "日本 Newton Press", category: "科普、物理天文與生命科學", series: "", desc: "前沿理論物理對多元宇宙假說的科普剖析。", status: "completed" },
-      { id: 12, year: 2026, callNo: "PHI-2026-012", title: "少年臺灣史", author: "周婉窈", category: "哲學思辨、宗教與歷史社會", series: "", desc: "寫給青年世代、溫柔扎實的臺灣通史。", status: "completed" },
-      { id: 13, year: 2026, callNo: "SF-2026-013", title: "神也鬥不過愚蠢", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "", desc: "艾西莫夫神作，探討人類固執與平行宇宙。", status: "completed" },
-      { id: 14, year: 2026, callNo: "PSY-2026-014", title: "你的人生，他們六個說了算！決定你一生的六種物質", author: "大衛・J・林登 David J. Linden", category: "心理學、認知與決策思維", series: "", desc: "解析多巴胺等六大神經物質如何主宰行為。", status: "completed" },
-      { id: 15, year: 2026, callNo: "SF-2026-015", title: "機器人四部曲之IV：機器人與帝國", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "確立機器人第零法則與銀河帝國的奠基。", status: "completed" },
-      { id: 16, year: 2026, callNo: "SF-2026-016", title: "沙丘", author: "法蘭克・赫伯特 Frank Herbert", category: "科幻與奇幻小說", series: "沙丘系列", desc: "經典科幻史詩，沙漠星球上的政治宗教鬥爭。", status: "completed" },
-      { id: 17, year: 2026, callNo: "SF-2026-017", title: "沙丘2：救世主", author: "法蘭克・赫伯特 Frank Herbert", category: "科幻與奇幻小說", series: "沙丘系列", desc: "保羅成為皇帝後的悲劇命運與權力省思。", status: "completed" },
-      { id: 18, year: 2026, callNo: "PIC-2026-018", title: "皮卡丘的好朋友", author: "松尾里佳子", category: "繪本與圖文創作", series: "monpoké 皮卡丘幼兒繪本", desc: "monpoké 幼兒繪本，以溫柔手繪筆觸學習打招呼與結交朋友。", status: "completed" },
-      { id: 19, year: 2026, callNo: "PIC-2026-019", title: "皮卡丘的夜晚大冒險", author: "松尾里佳子", category: "繪本與圖文創作", series: "monpoké 皮卡丘幼兒繪本", desc: "探索夜晚的神祕森林，學會互助合作與勇敢面對未知。", status: "completed" },
-      { id: 20, year: 2026, callNo: "PIC-2026-020", title: "皮卡丘的海洋尋寶記", author: "松尾里佳子", category: "繪本與圖文創作", series: "monpoké 皮卡丘幼兒繪本", desc: "與寶可夢夥伴一同出海探險，在尋寶旅程中體會友誼的珍貴。", status: "completed" },
-      { id: 21, year: 2026, callNo: "SF-2026-021", title: "沙丘3：沙丘之子", author: "法蘭克・赫伯特 Frank Herbert", category: "科幻與奇幻小說", series: "沙丘系列", desc: "保羅雙胞胎兒女的覺醒，厄拉科斯生態質變與帝國命運轉折。", status: "reading" },
-
-      // 2025 年度 (38 冊)
-      { id: 22, year: 2025, callNo: "LIT-2025-001", title: "強風吹拂", author: "三浦紫苑", category: "世界文學、小說與傳記", series: "", desc: "十名青年挑戰箱根驛傳的極致熱血長跑。", status: "completed" },
-      { id: 23, year: 2025, callNo: "SF-2025-002", title: "基地前奏", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "心理史學大師謝頓年輕時逃亡與建構歷程。", status: "completed" },
-      { id: 24, year: 2025, callNo: "BIZ-2025-003", title: "持續買進", author: "尼克・馬朱利 Nick Maggiulli", category: "商業理財、自我成長與生活哲學", series: "", desc: "用扎實數據證明「持續定期定額」的力量。", status: "completed" },
-      { id: 25, year: 2025, callNo: "PHI-2025-004", title: "悲劇哲學家尼采", author: "劉昌元", category: "哲學思辨、宗教與歷史社會", series: "", desc: "通俗解析尼采對抗虛無、擁抱生命的哲思。", status: "completed" },
-      { id: 26, year: 2025, callNo: "EDU-2025-005", title: "父產科：孩子的健康不能只靠卵子，男性生殖醫學重磅登場", author: "蕾妮・阿伯拉姆 Rene Almeling", category: "親職教育與育兒家庭", series: "", desc: "打破刻板印象，探討男性生殖與遺傳真相。", status: "completed" },
-      { id: 27, year: 2025, callNo: "PHI-2025-006", title: "台灣地方政治讀本", author: "思想者工作室／王宏仁 等", category: "哲學思辨、宗教與歷史社會", series: "", desc: "深入剖析臺灣地方派系與選民結構的演變。", status: "completed" },
-      { id: 28, year: 2025, callNo: "SF-2025-007", title: "基地締造者", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "謝頓晚年奮鬥，見證心理史學正式成形。", status: "completed" },
-      { id: 29, year: 2025, callNo: "BIZ-2025-008", title: "致富心態", author: "摩根・豪瑟 Morgan Housel", category: "商業理財、自我成長與生活哲學", series: "", desc: "探討金錢背後的心態，教人財富與心靈自由。", status: "completed" },
-      { id: 30, year: 2025, callNo: "SF-2025-009", title: "銀河帝國三部曲之I：繁星若塵", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：銀河帝國三部曲", desc: "落難王子尋找古老憲章、對抗霸權的故事。", status: "completed" },
-      { id: 31, year: 2025, callNo: "PIC-2025-010", title: "影子馬戲團", author: "莉迪亞・布蘭科維琪 Lidia Branković", category: "繪本與圖文創作", series: "", desc: "探討自我接納與面對內心陰影的奇幻心理繪本。", status: "completed" },
-      { id: 32, year: 2025, callNo: "PIC-2025-011", title: "鯨鯊", author: "新宮晉 Susumu Shingu", category: "繪本與圖文創作", series: "", desc: "日本動力雕塑大師以詩意筆觸與深邃藍黑光影，展現溫柔巨獸漫遊深海的經典繪本。", status: "completed" },
-      { id: 33, year: 2025, callNo: "PIC-2025-012", title: "牆外的牆", author: "太迪了", category: "繪本與圖文創作", series: "", desc: "榮獲人權教育繪本佳作，從孩童視角凝視監獄牢籠與高牆，探尋自由與時代記憶。", status: "completed" },
-      { id: 34, year: 2025, callNo: "PHI-2025-013", title: "文明的躍昇", author: "雅各布・布朗諾夫斯基 Jacob Bronowski", category: "哲學思辨、宗教與歷史社會", series: "", desc: "從科學與藝術視角回顧人類知識躍進史。", status: "completed" },
-      { id: 35, year: 2025, callNo: "LIT-2025-014", title: "炒飯狙擊手", author: "張國立", category: "世界文學、小說與傳記", series: "", desc: "結合臺灣在地飲食與冷酷特務的動作小說。", status: "completed" },
-      { id: 36, year: 2025, callNo: "PHI-2025-015", title: "武士道", author: "新渡戶稻造", category: "哲學思辨、宗教與歷史社會", series: "", desc: "新渡戶稻造名作，闡釋日本傳統靈魂核心。", status: "completed" },
-      { id: 37, year: 2025, callNo: "SF-2025-016", title: "機器人四部曲之I：鋼穴", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "科幻推理開山之作，人類與機器人攜手查案。", status: "completed" },
-      { id: 38, year: 2025, callNo: "EDU-2025-017", title: "當我再次是個孩子：波蘭兒童文學之父選集", author: "雅奴什・柯札克 Janusz Korczak", category: "親職教育與育兒家庭", series: "", desc: "波蘭教育大師柯札克溫柔且深邃的兒童文學。", status: "completed" },
-      { id: 39, year: 2025, callNo: "SCI-2025-018", title: "薛丁格生命物理學講義：生命是什麼？", author: "埃爾溫・薛丁格 Erwin Schrödinger", category: "科普、物理天文與生命科學", series: "", desc: "物理大師從熱力學解密生命與遺傳奧秘。", status: "completed" },
-      { id: 40, year: 2025, callNo: "SCI-2025-019", title: "艾西莫夫科普教室（上）跟隨大師遨遊知識殿堂", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科普、物理天文與生命科學", series: "艾西莫夫科普教室", desc: "大師親自帶領，以淺白文字漫遊自然科學。", status: "completed" },
-      { id: 41, year: 2025, callNo: "SF-2025-020", title: "2001太空漫遊", author: "亞瑟・克拉克 Arthur C. Clarke", category: "科幻與奇幻小說", series: "", desc: "克拉克太空科幻頂峰，探討AI與人類起源。", status: "completed" },
-      { id: 42, year: 2025, callNo: "BIZ-2025-021", title: "原則：屬於你的引導式筆記", author: "瑞・達利歐 Ray Dalio", category: "商業理財、自我成長與生活哲學", series: "", desc: "瑞·達利歐引導讀者沉澱思考的人生手冊。", status: "completed" },
-      { id: 43, year: 2025, callNo: "SF-2025-022", title: "我們", author: "葉夫根尼・薩米爾欽 Yevgeny Zamyatin", category: "科幻與奇幻小說", series: "", desc: "極權反烏托邦鼻祖，數字化世界的控制寓言。", status: "completed" },
-      { id: 44, year: 2025, callNo: "SF-2025-023", title: "銀河帝國三部曲之II：星空暗流", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：銀河帝國三部曲", desc: "圍繞神秘太空物質與帝國擴張的政治懸疑。", status: "completed" },
-      { id: 45, year: 2025, callNo: "SF-2025-024", title: "機器人四部曲之II：裸陽", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "外星世界密室謀殺案，探討疏離社會人際。", status: "completed" },
-      { id: 46, year: 2025, callNo: "SCI-2025-025", title: "時間的形狀-相對論史話", author: "汪潔", category: "科普、物理天文與生命科學", series: "", desc: "以極富幽默感的筆觸，講透愛因斯坦相對論。", status: "completed" },
-      { id: 47, year: 2025, callNo: "SCI-2025-026", title: "艾西莫夫科普教室（中）暴龍的處方簽", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科普、物理天文與生命科學", series: "艾西莫夫科普教室", desc: "艾西莫夫談恐龍、演化與奇趣科學知識。", status: "completed" },
-      { id: 48, year: 2025, callNo: "LIT-2025-027", title: "月亮與六便士", author: "威廉・薩默塞特・毛姆 W. Somerset Maugham", category: "世界文學、小說與傳記", series: "", desc: "以高更為藍本，追尋藝術狂熱與靈魂解放。", status: "completed" },
-      { id: 49, year: 2025, callNo: "EDU-2025-028", title: "預備教育的未來", author: "黛安・塔芬納 Diane Tavenner", category: "親職教育與育兒家庭", series: "", desc: "反思傳統教育盲點，探討未來人才培育之道。", status: "completed" },
-      { id: 50, year: 2025, callNo: "BIZ-2025-029", title: "第二座山", author: "大衛・布魯克斯 David Brooks", category: "商業理財、自我成長與生活哲學", series: "", desc: "從追求自我成就，走向奉獻與深度承諾。", status: "completed" },
-      { id: 51, year: 2025, callNo: "BIZ-2025-030", title: "變成自己想望的大人", author: "侯文詠", category: "商業理財、自我成長與生活哲學", series: "", desc: "侯文詠分享走出迷惘、活出真實自我的隨筆。", status: "completed" },
-      { id: 52, year: 2025, callNo: "BIZ-2025-031", title: "如果停不下來，就先學會慢下來", author: "葛倫・庫許納 Glen R. Cuschieri", category: "商業理財、自我成長與生活哲學", series: "", desc: "教人放下焦慮、重獲呼吸節奏的心靈處方。", status: "completed" },
-      { id: 53, year: 2025, callNo: "PSY-2025-032", title: "我們為何相信", author: "麥可・謝爾默 Michael Shermer", category: "心理學、認知與決策思維", series: "", desc: "認知科學視角探討人類迷信與信念的成因。", status: "completed" },
-      { id: 54, year: 2025, callNo: "SF-2025-033", title: "機器人四部曲之III：曙光中的機器人", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "探討人機情感界線與太空殖民政策角力。", status: "completed" },
-      { id: 55, year: 2025, callNo: "OCE-2025-034", title: "女子山海", author: "張卉君、劉崇鳳", category: "海洋文學、鯨豚與自然生態", series: "", desc: "兩位女性走入山林與海洋的生命書寫。", status: "completed" },
-      { id: 56, year: 2025, callNo: "SF-2025-035", title: "銀河帝國三部曲之III：蒼穹一粟", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：銀河帝國三部曲", desc: "核污染後的地球少年捲入帝國陰謀的傳奇。", status: "completed" },
-      { id: 57, year: 2025, callNo: "LIT-2025-036", title: "絕無僅有：Kershaw的傳奇之路", author: "柴克・卡普蘭 Zac Candelario", category: "世界文學、小說與傳記", series: "", desc: "傳奇賽揚左投克蕭的職棒生涯奮鬥史。", status: "completed" },
-      { id: 58, year: 2025, callNo: "SF-2025-037", title: "我，機器人", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：機器人系列", desc: "確立「機器人三大法則」的劃時代短篇集。", status: "completed" },
-      { id: 59, year: 2025, callNo: "PIC-2025-038", title: "情緒大飯店", author: "莉迪亞・布蘭科維琪 Lidia Branković", category: "繪本與圖文創作", series: "", desc: "將喜怒哀樂擬人化為飯店旅客，引導讀者覺察、理解與接納多元情緒的心靈繪本。", status: "completed" },
-
-      // 2024 年度 (32 冊)
-      { id: 60, year: 2024, callNo: "SF-2024-001", title: "三體", author: "劉慈欣", category: "科幻與奇幻小說", series: "三體三部曲", desc: "文革創傷引發的三體外星文明接觸紀事。", status: "completed" },
-      { id: 61, year: 2024, callNo: "SF-2024-002", title: "三體2：黑暗森林", author: "劉慈欣", category: "科幻與奇幻小說", series: "三體三部曲", desc: "揭開殘酷宇宙黑暗森林法則的科幻史詩。", status: "completed" },
-      { id: 62, year: 2024, callNo: "SF-2024-003", title: "三體3：死神永生", author: "劉慈欣", category: "科幻與奇幻小說", series: "三體三部曲", desc: "跨越億萬年的降維打擊與宏大宇宙終局。", status: "completed" },
-      { id: 63, year: 2024, callNo: "SF-2024-004", title: "FINAL FANTASY VII REMAKE Traces of Two Pasts", author: "野島一成", category: "科幻與奇幻小說", series: "", desc: "描繪蒂法與艾莉絲成長過往的官方外傳。", status: "completed" },
-      { id: 64, year: 2024, callNo: "EDU-2024-005", title: "PBL", author: "約翰・拉默 John Larmer 等", category: "親職教育與育兒家庭", series: "", desc: "專題導向學習法的實作策略與教育核心。", status: "completed" },
-      { id: 65, year: 2024, callNo: "LIT-2024-006", title: "62：Aaron Judge", author: "布萊恩・霍克 Bryan Hoch", category: "世界文學、小說與傳記", series: "", desc: "洋基重砲賈吉單季62轟破美聯紀錄傳奇。", status: "completed" },
-      { id: 66, year: 2024, callNo: "OCE-2024-007", title: "52赫茲的鯨魚們", author: "町田苑香", category: "海洋文學、鯨豚與自然生態", series: "", desc: "在孤獨世界中渴望被聽見的救贖小說。", status: "completed" },
-      { id: 67, year: 2024, callNo: "SF-2024-008", title: "獵魔士：最後的願望", author: "安傑・薩普科夫斯基 Andrzej Sapkowski", category: "科幻與奇幻小說", series: "", desc: "傑洛特初登場的短篇奇幻冒險故事集。", status: "completed" },
-      { id: 68, year: 2024, callNo: "SF-2024-009", title: "人生副本", author: "布萊克・克勞奇 Blake Crouch", category: "科幻與奇幻小說", series: "", desc: "量子多重世界中的身分奪取與摯愛追尋。", status: "completed" },
-      { id: 69, year: 2024, callNo: "PHI-2024-010", title: "地。-關於地球的運動- (第1集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "神童拉法爾遇見異端學者，萌生地動說信仰。", status: "completed" },
-      { id: 70, year: 2024, callNo: "PHI-2024-011", title: "地。-關於地球的運動- (第2集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "決鬥者奧克茲與學者巴德尼，接下真理火種。", status: "completed" },
-      { id: 71, year: 2024, callNo: "PHI-2024-012", title: "地。-關於地球的運動- (第3集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "在審判所陰影下，巴德尼以理性推導行星軌道。", status: "completed" },
-      { id: 72, year: 2024, callNo: "PHI-2024-013", title: "地。-關於地球的運動- (第4集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "皮亞斯特伯爵重燃熱情，驗證完美金星逆行。", status: "completed" },
-      { id: 73, year: 2024, callNo: "PHI-2024-014", title: "地。-關於地球的運動- (第5集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "真理之血代代流淌，異端審問官諾瓦克追緝。", status: "completed" },
-      { id: 74, year: 2024, callNo: "PHI-2024-015", title: "地。-關於地球的運動- (第6集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "信念傳至約蘭達，誓將地動研究成果公諸於世。", status: "completed" },
-      { id: 75, year: 2024, callNo: "PHI-2024-016", title: "地。-關於地球的運動- (第7集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "活字印刷術登場，真理化為火把照亮黑暗。", status: "completed" },
-      { id: 76, year: 2024, callNo: "PHI-2024-017", title: "地。-關於地球的運動- (第8集)", author: "魚豊", category: "哲學思辨、宗教與歷史社會", series: "《地。-關於地球的運動-》", desc: "歷史巨輪滾動，即便生命消逝地球依然轉動。", status: "completed" },
-      { id: 77, year: 2024, callNo: "PSY-2024-018", title: "莫非定律", author: "亞瑟・布洛赫 Arthur Bloch", category: "心理學、認知與決策思維", series: "", desc: "幽默又殘酷的生活規律，提醒凡事做好準備。", status: "completed" },
-      { id: 78, year: 2024, callNo: "PHI-2024-019", title: "向下紮根！德國最受歡迎的思辨讀本", author: "克莉絲汀・史坦萊恩 Christine Steinlein 等", category: "哲學思辨、宗教與歷史社會", series: "", desc: "培養公民思辨能力與批判獨立思考的讀本。", status: "completed" },
-      { id: 79, year: 2024, callNo: "SF-2024-020", title: "美麗新世界", author: "阿道斯・赫胥黎 Aldous Huxley", category: "科幻與奇幻小說", series: "", desc: "透過藥物與享樂製造虛偽幸福的反烏托邦。", status: "completed" },
-      { id: 80, year: 2024, callNo: "SF-2024-021", title: "基地", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "心理史學誕生，預見帝國崩潰與重生的開篇。", status: "completed" },
-      { id: 81, year: 2024, callNo: "SF-2024-022", title: "基地與帝國", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "神祕異能者「騾」崛起打破謝頓計畫的危機。", status: "completed" },
-      { id: 82, year: 2024, callNo: "SF-2024-023", title: "第二基地", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "艾西莫夫：基地系列", desc: "隱於暗處的精神力學者與第一基地的智鬥。", status: "completed" },
-      { id: 83, year: 2024, callNo: "SF-2024-024", title: "永恆終結", author: "艾薩克・艾西莫夫 Isaac Asimov", category: "科幻與奇幻小說", series: "", desc: "穿梭時空的時空修正機構與愛情自由抗爭。", status: "completed" },
-      { id: 84, year: 2024, callNo: "OCE-2024-025", title: "台灣π：發現太平洋抹香鯨", author: "廖鴻基 等人", category: "海洋文學、鯨豚與自然生態", series: "", desc: "以影像與文字記錄臺灣東岸抹香鯨的傳奇。", status: "completed" },
-      { id: 85, year: 2024, callNo: "PSY-2024-026", title: "真確", author: "漢斯・羅斯林 Hans Rosling", category: "心理學、認知與決策思維", series: "", desc: "用數據破除對世界的十大偏見與認知盲點。", status: "completed" },
-      { id: 86, year: 2024, callNo: "OCE-2024-027", title: "傾聽地球之聲：生物學家帶你聽見生命的創意與斷裂", author: "大衛・喬治・哈思克 David George Haskell", category: "海洋文學、鯨豚與自然生態", series: "", desc: "用聲音生態學帶讀者傾聽大自然的呼吸節奏。", status: "completed" },
-      { id: 87, year: 2024, callNo: "PSY-2024-028", title: "象與騎象人", author: "強納森・海特 Jonathan Haidt", category: "心理學、認知與決策思維", series: "", desc: "結合古典哲學與心理學探討人類幸福本質。", status: "completed" },
-      { id: 88, year: 2024, callNo: "PSY-2024-029", title: "思維誤判", author: "羅爾夫・杜伯里 Rolf Dobelli", category: "心理學、認知與決策思維", series: "", desc: "解析大腦認知偏誤，避免常見決策陷阱。", status: "completed" },
-      { id: 89, year: 2024, callNo: "PHI-2024-030", title: "哲學的40堂公開課", author: "奈傑爾・華伯頓 Nigel Warburton", category: "哲學思辨、宗教與歷史社會", series: "40堂公開課系列", desc: "從蘇格拉底到當代的西方哲學簡明通識。", status: "completed" },
-      { id: 90, year: 2024, callNo: "PSY-2024-031", title: "內向心理學", author: "瑪蒂・蘭妮 Marti Olsen Laney", category: "心理學、認知與決策思維", series: "", desc: "挖掘內向者的獨特力量與社交能量管理。", status: "completed" },
-      { id: 91, year: 2024, callNo: "LIT-2024-032", title: "白鯨記", author: "赫爾曼・梅爾維爾 Herman Melville", category: "海洋文學、鯨豚與自然生態", series: "", desc: "亞哈船長與莫比迪克在大洋搏鬥的世界名著。", status: "completed" }
-    ];
+      {
+            "id": 1,
+            "year": 2026,
+            "callNo": "PHI-2026-001",
+            "title": "宗教的40堂公開課",
+            "author": "理查・哈洛威 Richard Holloway",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "40堂公開課系列",
+            "desc": "梳理世界各大信仰起源與核心教義。",
+            "status": "completed"
+      },
+      {
+            "id": 2,
+            "year": 2026,
+            "callNo": "SF-2026-002",
+            "title": "我決定簡單生活：從斷捨離到極簡主義，丟東西後改變我的12件事！",
+            "author": "佐佐木典士",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "透過減物捨棄雜念，重獲心靈自由。",
+            "status": "completed"
+      },
+      {
+            "id": 3,
+            "year": 2026,
+            "callNo": "LIT-2026-003",
+            "title": "明日，明日，又明日",
+            "author": "嘉布莉・麗文 Gabrielle Zevin",
+            "category": "世界文學、小說與傳記",
+            "series": "",
+            "desc": "描寫遊戲設計師跨越數十年的愛與創作。",
+            "status": "completed"
+      },
+      {
+            "id": 4,
+            "year": 2026,
+            "callNo": "SF-2026-004",
+            "title": "基地邊緣",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：基地系列",
+            "desc": "基地第四部，尋找地球與人類未來的真相。",
+            "status": "completed"
+      },
+      {
+            "id": 5,
+            "year": 2026,
+            "callNo": "OCE-2026-005",
+            "title": "座頭鯨赫連麼麼 小說繪本",
+            "author": "廖鴻基 著／達姆 繪",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "廖鴻基海洋尋鯨文學",
+            "desc": "以溫柔圖文描繪座頭鯨的大洋漫遊旅程。",
+            "status": "completed"
+      },
+      {
+            "id": 6,
+            "year": 2026,
+            "callNo": "OCE-2026-006",
+            "title": "黑潮尋鯨：遇見噴風的抹香鯨",
+            "author": "廖鴻基",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "廖鴻基海洋尋鯨文學",
+            "desc": "記錄臺灣東海岸與巨鯨相遇的真實震撼。",
+            "status": "completed"
+      },
+      {
+            "id": 7,
+            "year": 2026,
+            "callNo": "BIZ-2026-007",
+            "title": "那瓦爾寶典",
+            "author": "艾力克・佐漢 Eric Jorgenson",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "矽谷投資大師關於財富自由與快樂的指南。",
+            "status": "completed"
+      },
+      {
+            "id": 8,
+            "year": 2026,
+            "callNo": "PSY-2026-008",
+            "title": "魅力學",
+            "author": "奧麗薇亞・福克斯・卡本尼 Olivia Fox Cabane",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "拆解個人氣場與吸引力背後的行為科學。",
+            "status": "completed"
+      },
+      {
+            "id": 9,
+            "year": 2026,
+            "callNo": "EDU-2026-009",
+            "title": "愛上當爸媽這件事：0到3歲嬰幼兒心理學",
+            "author": "孫明儀",
+            "category": "親職教育與育兒家庭",
+            "series": "",
+            "desc": "從嬰幼兒心理學與映射式互動出發，陪伴新手爸媽讀懂寶寶情緒密碼。",
+            "status": "completed"
+      },
+      {
+            "id": 10,
+            "year": 2026,
+            "callNo": "SF-2026-010",
+            "title": "基地與地球",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "2026",
+            "desc": "基地系列完結篇，解開人類最初起源之謎。",
+            "status": "completed"
+      },
+      {
+            "id": 11,
+            "year": 2026,
+            "callNo": "SCI-2026-011",
+            "title": "多重宇宙、平行世界是可能的嗎？",
+            "author": "日本 Newton Press",
+            "category": "科普、物理天文與生命科學",
+            "series": "",
+            "desc": "前沿理論物理對多元宇宙假說的科普剖析。",
+            "status": "completed"
+      },
+      {
+            "id": 12,
+            "year": 2026,
+            "callNo": "PHI-2026-012",
+            "title": "少年臺灣史",
+            "author": "周婉窈",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "",
+            "desc": "寫給青年世代、溫柔扎實的臺灣通史。",
+            "status": "completed"
+      },
+      {
+            "id": 13,
+            "year": 2026,
+            "callNo": "SF-2026-013",
+            "title": "神也鬥不過愚蠢",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "艾西莫夫神作，探討人類固執與平行宇宙。",
+            "status": "completed"
+      },
+      {
+            "id": 14,
+            "year": 2026,
+            "callNo": "PSY-2026-014",
+            "title": "你的人生，他們六個說了算！決定你一生的六種物質",
+            "author": "大衛・J・林登 David J. Linden",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "解析多巴胺等六大神經物質如何主宰行為。",
+            "status": "completed"
+      },
+      {
+            "id": 15,
+            "year": 2026,
+            "callNo": "SF-2026-015",
+            "title": "機器人四部曲之IV：機器人與帝國",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：機器人系列",
+            "desc": "確立機器人第零法則與銀河帝國的奠基。",
+            "status": "completed"
+      },
+      {
+            "id": 16,
+            "year": 2026,
+            "callNo": "SF-2026-016",
+            "title": "沙丘",
+            "author": "法蘭克・赫伯特 Frank Herbert",
+            "category": "科幻與奇幻小說",
+            "series": "2026",
+            "desc": "經典科幻史詩，沙漠星球上的政治宗教鬥爭。",
+            "status": "completed"
+      },
+      {
+            "id": 17,
+            "year": 2026,
+            "callNo": "SF-2026-017",
+            "title": "沙丘2：救世主",
+            "author": "法蘭克・赫伯特 Frank Herbert",
+            "category": "科幻與奇幻小說",
+            "series": "沙丘系列",
+            "desc": "保羅成為皇帝後的悲劇命運與權力省思。",
+            "status": "completed"
+      },
+      {
+            "id": 18,
+            "year": 2026,
+            "callNo": "PIC-2026-018",
+            "title": "皮卡丘的好朋友",
+            "author": "松尾里佳子",
+            "category": "繪本與圖文創作",
+            "series": "monpoké 皮卡丘幼兒繪本",
+            "desc": "monpoké 幼兒繪本，以溫柔手繪筆觸學習打招呼與結交朋友。",
+            "status": "completed"
+      },
+      {
+            "id": 19,
+            "year": 2026,
+            "callNo": "PIC-2026-019",
+            "title": "皮卡丘的夜晚大冒險",
+            "author": "松尾里佳子",
+            "category": "繪本與圖文創作",
+            "series": "monpoké 皮卡丘幼兒繪本",
+            "desc": "探索夜晚的神祕森林，學會互助合作與勇敢面對未知。",
+            "status": "completed"
+      },
+      {
+            "id": 20,
+            "year": 2026,
+            "callNo": "PIC-2026-020",
+            "title": "皮卡丘的海洋尋寶記",
+            "author": "松尾里佳子",
+            "category": "繪本與圖文創作",
+            "series": "monpoké 皮卡丘幼兒繪本",
+            "desc": "與寶可夢夥伴一同出海探險，在尋寶旅程中體會友誼的珍貴。",
+            "status": "completed"
+      },
+      {
+            "id": 21,
+            "year": 2026,
+            "callNo": "SF-2026-021",
+            "title": "沙丘3：沙丘之子",
+            "author": "法蘭克・赫伯特 Frank Herbert",
+            "category": "科幻與奇幻小說",
+            "series": "沙丘系列",
+            "desc": "保羅雙胞胎兒女的覺醒，厄拉科斯生態質變與帝國命運轉折。",
+            "status": "reading"
+      },
+      {
+            "id": 22,
+            "year": 2025,
+            "callNo": "LIT-2025-001",
+            "title": "強風吹拂",
+            "author": "三浦紫苑",
+            "category": "世界文學、小說與傳記",
+            "series": "",
+            "desc": "十名青年挑戰箱根驛傳的極致熱血長跑。",
+            "status": "completed"
+      },
+      {
+            "id": 23,
+            "year": 2025,
+            "callNo": "SF-2025-002",
+            "title": "基地前奏",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：基地系列",
+            "desc": "心理史學大師謝頓年輕時逃亡與建構歷程。",
+            "status": "completed"
+      },
+      {
+            "id": 24,
+            "year": 2025,
+            "callNo": "BIZ-2025-003",
+            "title": "持續買進",
+            "author": "尼克・馬朱利 Nick Maggiulli",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "用扎實數據證明「持續定期定額」的力量。",
+            "status": "completed"
+      },
+      {
+            "id": 25,
+            "year": 2025,
+            "callNo": "PHI-2025-004",
+            "title": "悲劇哲學家尼采",
+            "author": "劉昌元",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "",
+            "desc": "通俗解析尼采對抗虛無、擁抱生命的哲思。",
+            "status": "completed"
+      },
+      {
+            "id": 26,
+            "year": 2025,
+            "callNo": "EDU-2025-005",
+            "title": "父產科：孩子的健康不能只靠卵子，男性生殖醫學重磅登場",
+            "author": "蕾妮・阿伯拉姆 Rene Almeling",
+            "category": "親職教育與育兒家庭",
+            "series": "",
+            "desc": "打破刻板印象，探討男性生殖與遺傳真相。",
+            "status": "completed"
+      },
+      {
+            "id": 27,
+            "year": 2025,
+            "callNo": "PHI-2025-006",
+            "title": "台灣地方政治讀本",
+            "author": "思想者工作室／王宏仁 等",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "",
+            "desc": "深入剖析臺灣地方派系與選民結構的演變。",
+            "status": "completed"
+      },
+      {
+            "id": 28,
+            "year": 2025,
+            "callNo": "SF-2025-007",
+            "title": "基地締造者",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：基地系列",
+            "desc": "謝頓晚年奮鬥，見證心理史學正式成形。",
+            "status": "completed"
+      },
+      {
+            "id": 29,
+            "year": 2025,
+            "callNo": "BIZ-2025-008",
+            "title": "致富心態",
+            "author": "摩根・豪瑟 Morgan Housel",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "探討金錢背後的心態，教人財富與心靈自由。",
+            "status": "completed"
+      },
+      {
+            "id": 30,
+            "year": 2025,
+            "callNo": "SF-2025-009",
+            "title": "銀河帝國三部曲之I：繁星若塵",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：銀河帝國三部曲",
+            "desc": "落難王子尋找古老憲章、對抗霸權的故事。",
+            "status": "completed"
+      },
+      {
+            "id": 31,
+            "year": 2025,
+            "callNo": "PIC-2025-010",
+            "title": "影子馬戲團",
+            "author": "莉迪亞・布蘭科維琪 Lidia Branković",
+            "category": "繪本與圖文創作",
+            "series": "",
+            "desc": "探討自我接納與面對內心陰影的奇幻心理繪本。",
+            "status": "completed"
+      },
+      {
+            "id": 32,
+            "year": 2025,
+            "callNo": "PIC-2025-011",
+            "title": "鯨鯊",
+            "author": "新宮晉 Susumu Shingu",
+            "category": "繪本與圖文創作",
+            "series": "",
+            "desc": "日本動力雕塑大師以詩意筆觸與深邃藍黑光影，展現溫柔巨獸漫遊深海的經典繪本。",
+            "status": "completed"
+      },
+      {
+            "id": 33,
+            "year": 2025,
+            "callNo": "PIC-2025-012",
+            "title": "牆外的牆",
+            "author": "太迪了",
+            "category": "繪本與圖文創作",
+            "series": "",
+            "desc": "榮獲人權教育繪本佳作，從孩童視角凝視監獄牢籠與高牆，探尋自由與時代記憶。",
+            "status": "completed"
+      },
+      {
+            "id": 34,
+            "year": 2025,
+            "callNo": "PHI-2025-013",
+            "title": "文明的躍昇",
+            "author": "雅各布・布朗諾夫斯基 Jacob Bronowski",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "",
+            "desc": "從科學與藝術視角回顧人類知識躍進史。",
+            "status": "completed"
+      },
+      {
+            "id": 35,
+            "year": 2025,
+            "callNo": "LIT-2025-014",
+            "title": "炒飯狙擊手",
+            "author": "張國立",
+            "category": "世界文學、小說與傳記",
+            "series": "",
+            "desc": "結合臺灣在地飲食與冷酷特務的動作小說。",
+            "status": "completed"
+      },
+      {
+            "id": 36,
+            "year": 2025,
+            "callNo": "PHI-2025-015",
+            "title": "武士道",
+            "author": "新渡戶稻造",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "",
+            "desc": "新渡戶稻造名作，闡釋日本傳統靈魂核心。",
+            "status": "completed"
+      },
+      {
+            "id": 37,
+            "year": 2025,
+            "callNo": "SF-2025-016",
+            "title": "機器人四部曲之I：鋼穴",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：機器人系列",
+            "desc": "科幻推理開山之作，人類與機器人攜手查案。",
+            "status": "completed"
+      },
+      {
+            "id": 38,
+            "year": 2025,
+            "callNo": "SF-2025-017",
+            "title": "當我再次是個孩子：波蘭兒童文學之父選集",
+            "author": "雅奴什・柯札克 Janusz Korczak",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "波蘭教育大師柯札克溫柔且深邃的兒童文學。",
+            "status": "completed"
+      },
+      {
+            "id": 39,
+            "year": 2025,
+            "callNo": "SCI-2025-018",
+            "title": "薛丁格生命物理學講義：生命是什麼？",
+            "author": "埃爾溫・薛丁格 Erwin Schrödinger",
+            "category": "科普、物理天文與生命科學",
+            "series": "",
+            "desc": "物理大師從熱力學解密生命與遺傳奧秘。",
+            "status": "completed"
+      },
+      {
+            "id": 40,
+            "year": 2025,
+            "callNo": "SCI-2025-019",
+            "title": "艾西莫夫科普教室（上）跟隨大師遨遊知識殿堂",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科普、物理天文與生命科學",
+            "series": "艾西莫夫科普教室",
+            "desc": "大師親自帶領，以淺白文字漫遊自然科學。",
+            "status": "completed"
+      },
+      {
+            "id": 41,
+            "year": 2025,
+            "callNo": "SF-2025-020",
+            "title": "2001太空漫遊",
+            "author": "亞瑟・克拉克 Arthur C. Clarke",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "克拉克太空科幻頂峰，探討AI與人類起源。",
+            "status": "completed"
+      },
+      {
+            "id": 42,
+            "year": 2025,
+            "callNo": "BIZ-2025-021",
+            "title": "原則：屬於你的引導式筆記",
+            "author": "瑞・達利歐 Ray Dalio",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "瑞·達利歐引導讀者沉澱思考的人生手冊。",
+            "status": "completed"
+      },
+      {
+            "id": 43,
+            "year": 2025,
+            "callNo": "SF-2025-022",
+            "title": "我們",
+            "author": "葉夫根尼・薩米爾欽 Yevgeny Zamyatin",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "極權反烏托邦鼻祖，數字化世界的控制寓言。",
+            "status": "completed"
+      },
+      {
+            "id": 44,
+            "year": 2025,
+            "callNo": "SF-2025-023",
+            "title": "銀河帝國三部曲之II：星空暗流",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：銀河帝國三部曲",
+            "desc": "圍繞神秘太空物質與帝國擴張的政治懸疑。",
+            "status": "completed"
+      },
+      {
+            "id": 45,
+            "year": 2025,
+            "callNo": "SF-2025-024",
+            "title": "機器人四部曲之II：裸陽",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：機器人系列",
+            "desc": "外星世界密室謀殺案，探討疏離社會人際。",
+            "status": "completed"
+      },
+      {
+            "id": 46,
+            "year": 2025,
+            "callNo": "SCI-2025-025",
+            "title": "時間的形狀-相對論史話",
+            "author": "汪潔",
+            "category": "科普、物理天文與生命科學",
+            "series": "",
+            "desc": "以極富幽默感的筆觸，講透愛因斯坦相對論。",
+            "status": "completed"
+      },
+      {
+            "id": 47,
+            "year": 2025,
+            "callNo": "SCI-2025-026",
+            "title": "艾西莫夫科普教室（中）暴龍的處方簽",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科普、物理天文與生命科學",
+            "series": "艾西莫夫科普教室",
+            "desc": "艾西莫夫談恐龍、演化與奇趣科學知識。",
+            "status": "completed"
+      },
+      {
+            "id": 48,
+            "year": 2025,
+            "callNo": "LIT-2025-027",
+            "title": "月亮與六便士",
+            "author": "威廉・薩默塞特・毛姆 W. Somerset Maugham",
+            "category": "世界文學、小說與傳記",
+            "series": "",
+            "desc": "以高更為藍本，追尋藝術狂熱與靈魂解放。",
+            "status": "completed"
+      },
+      {
+            "id": 49,
+            "year": 2025,
+            "callNo": "EDU-2025-028",
+            "title": "預備教育的未來",
+            "author": "黛安・塔芬納 Diane Tavenner",
+            "category": "親職教育與育兒家庭",
+            "series": "",
+            "desc": "反思傳統教育盲點，探討未來人才培育之道。",
+            "status": "completed"
+      },
+      {
+            "id": 50,
+            "year": 2025,
+            "callNo": "BIZ-2025-029",
+            "title": "第二座山",
+            "author": "大衛・布魯克斯 David Brooks",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "從追求自我成就，走向奉獻與深度承諾。",
+            "status": "completed"
+      },
+      {
+            "id": 51,
+            "year": 2025,
+            "callNo": "BIZ-2025-030",
+            "title": "變成自己想望的大人",
+            "author": "侯文詠",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "侯文詠分享走出迷惘、活出真實自我的隨筆。",
+            "status": "completed"
+      },
+      {
+            "id": 52,
+            "year": 2025,
+            "callNo": "BIZ-2025-031",
+            "title": "如果停不下來，就先學會慢下來",
+            "author": "葛倫・庫許納 Glen R. Cuschieri",
+            "category": "商業理財、自我成長與生活哲學",
+            "series": "",
+            "desc": "教人放下焦慮、重獲呼吸節奏的心靈處方。",
+            "status": "completed"
+      },
+      {
+            "id": 53,
+            "year": 2025,
+            "callNo": "SF-2025-032",
+            "title": "我們為何相信",
+            "author": "麥可・謝爾默 Michael Shermer",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "認知科學視角探討人類迷信與信念的成因。",
+            "status": "completed"
+      },
+      {
+            "id": 54,
+            "year": 2025,
+            "callNo": "SF-2025-033",
+            "title": "機器人四部曲之III：曙光中的機器人",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：機器人系列",
+            "desc": "探討人機情感界線與太空殖民政策角力。",
+            "status": "completed"
+      },
+      {
+            "id": 55,
+            "year": 2025,
+            "callNo": "OCE-2025-034",
+            "title": "女子山海",
+            "author": "張卉君、劉崇鳳",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "",
+            "desc": "兩位女性走入山林與海洋的生命書寫。",
+            "status": "completed"
+      },
+      {
+            "id": 56,
+            "year": 2025,
+            "callNo": "SF-2025-035",
+            "title": "銀河帝國三部曲之III：蒼穹一粟",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：銀河帝國三部曲",
+            "desc": "核污染後的地球少年捲入帝國陰謀的傳奇。",
+            "status": "completed"
+      },
+      {
+            "id": 57,
+            "year": 2025,
+            "callNo": "LIT-2025-036",
+            "title": "絕無僅有：Kershaw的傳奇之路",
+            "author": "柴克・卡普蘭 Zac Candelario",
+            "category": "世界文學、小說與傳記",
+            "series": "",
+            "desc": "傳奇賽揚左投克蕭的職棒生涯奮鬥史。",
+            "status": "completed"
+      },
+      {
+            "id": 58,
+            "year": 2025,
+            "callNo": "SF-2025-037",
+            "title": "我，機器人",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：機器人系列",
+            "desc": "確立「機器人三大法則」的劃時代短篇集。",
+            "status": "completed"
+      },
+      {
+            "id": 59,
+            "year": 2025,
+            "callNo": "PIC-2025-038",
+            "title": "情緒大飯店",
+            "author": "莉迪亞・布蘭科維琪 Lidia Branković",
+            "category": "繪本與圖文創作",
+            "series": "",
+            "desc": "將喜怒哀樂擬人化為飯店旅客，引導讀者覺察、理解與接納多元情緒的心靈繪本。",
+            "status": "completed"
+      },
+      {
+            "id": 60,
+            "year": 2024,
+            "callNo": "SF-2024-001",
+            "title": "三體",
+            "author": "劉慈欣",
+            "category": "科幻與奇幻小說",
+            "series": "三體三部曲",
+            "desc": "文革創傷引發的三體外星文明接觸紀事。",
+            "status": "completed"
+      },
+      {
+            "id": 61,
+            "year": 2024,
+            "callNo": "SF-2024-002",
+            "title": "三體2：黑暗森林",
+            "author": "劉慈欣",
+            "category": "科幻與奇幻小說",
+            "series": "三體三部曲",
+            "desc": "揭開殘酷宇宙黑暗森林法則的科幻史詩。",
+            "status": "completed"
+      },
+      {
+            "id": 62,
+            "year": 2024,
+            "callNo": "SF-2024-003",
+            "title": "三體3：死神永生",
+            "author": "劉慈欣",
+            "category": "科幻與奇幻小說",
+            "series": "三體三部曲",
+            "desc": "跨越億萬年的降維打擊與宏大宇宙終局。",
+            "status": "completed"
+      },
+      {
+            "id": 63,
+            "year": 2024,
+            "callNo": "SF-2024-004",
+            "title": "FINAL FANTASY VII REMAKE Traces of Two Pasts",
+            "author": "野島一成",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "描繪蒂法與艾莉絲成長過往的官方外傳。",
+            "status": "completed"
+      },
+      {
+            "id": 64,
+            "year": 2024,
+            "callNo": "EDU-2024-005",
+            "title": "PBL",
+            "author": "約翰・拉默 John Larmer 等",
+            "category": "親職教育與育兒家庭",
+            "series": "",
+            "desc": "專題導向學習法的實作策略與教育核心。",
+            "status": "completed"
+      },
+      {
+            "id": 65,
+            "year": 2024,
+            "callNo": "LIT-2024-006",
+            "title": "62：Aaron Judge",
+            "author": "布萊恩・霍克 Bryan Hoch",
+            "category": "世界文學、小說與傳記",
+            "series": "",
+            "desc": "洋基重砲賈吉單季62轟破美聯紀錄傳奇。",
+            "status": "completed"
+      },
+      {
+            "id": 66,
+            "year": 2024,
+            "callNo": "OCE-2024-007",
+            "title": "52赫茲的鯨魚們",
+            "author": "町田苑香",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "",
+            "desc": "在孤獨世界中渴望被聽見的救贖小說。",
+            "status": "completed"
+      },
+      {
+            "id": 67,
+            "year": 2024,
+            "callNo": "SF-2024-008",
+            "title": "獵魔士：最後的願望",
+            "author": "安傑・薩普科夫斯基 Andrzej Sapkowski",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "傑洛特初登場的短篇奇幻冒險故事集。",
+            "status": "completed"
+      },
+      {
+            "id": 68,
+            "year": 2024,
+            "callNo": "SF-2024-009",
+            "title": "人生副本",
+            "author": "布萊克・克勞奇 Blake Crouch",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "量子多重世界中的身分奪取與摯愛追尋。",
+            "status": "completed"
+      },
+      {
+            "id": 69,
+            "year": 2024,
+            "callNo": "PHI-2024-010",
+            "title": "地。-關於地球的運動- (第1集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "神童拉法爾遇見異端學者，萌生地動說信仰。",
+            "status": "completed"
+      },
+      {
+            "id": 70,
+            "year": 2024,
+            "callNo": "PHI-2024-011",
+            "title": "地。-關於地球的運動- (第2集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "決鬥者奧克茲與學者巴德尼，接下真理火種。",
+            "status": "completed"
+      },
+      {
+            "id": 71,
+            "year": 2024,
+            "callNo": "PHI-2024-012",
+            "title": "地。-關於地球的運動- (第3集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "在審判所陰影下，巴德尼以理性推導行星軌道。",
+            "status": "completed"
+      },
+      {
+            "id": 72,
+            "year": 2024,
+            "callNo": "PHI-2024-013",
+            "title": "地。-關於地球的運動- (第4集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "皮亞斯特伯爵重燃熱情，驗證完美金星逆行。",
+            "status": "completed"
+      },
+      {
+            "id": 73,
+            "year": 2024,
+            "callNo": "PHI-2024-014",
+            "title": "地。-關於地球的運動- (第5集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "真理之血代代流淌，異端審問官諾瓦克追緝。",
+            "status": "completed"
+      },
+      {
+            "id": 74,
+            "year": 2024,
+            "callNo": "PHI-2024-015",
+            "title": "地。-關於地球的運動- (第6集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "信念傳至約蘭達，誓將地動研究成果公諸於世。",
+            "status": "completed"
+      },
+      {
+            "id": 75,
+            "year": 2024,
+            "callNo": "PHI-2024-016",
+            "title": "地。-關於地球的運動- (第7集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "活字印刷術登場，真理化為火把照亮黑暗。",
+            "status": "completed"
+      },
+      {
+            "id": 76,
+            "year": 2024,
+            "callNo": "PHI-2024-017",
+            "title": "地。-關於地球的運動- (第8集)",
+            "author": "魚豊",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "2024",
+            "desc": "歷史巨輪滾動，即便生命消逝地球依然轉動。",
+            "status": "completed"
+      },
+      {
+            "id": 77,
+            "year": 2024,
+            "callNo": "PSY-2024-018",
+            "title": "莫非定律",
+            "author": "亞瑟・布洛赫 Arthur Bloch",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "幽默又殘酷的生活規律，提醒凡事做好準備。",
+            "status": "completed"
+      },
+      {
+            "id": 78,
+            "year": 2024,
+            "callNo": "PHI-2024-019",
+            "title": "向下紮根！德國最受歡迎的思辨讀本",
+            "author": "克莉絲汀・史坦萊恩 Christine Steinlein 等",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "",
+            "desc": "培養公民思辨能力與批判獨立思考的讀本。",
+            "status": "completed"
+      },
+      {
+            "id": 79,
+            "year": 2024,
+            "callNo": "SF-2024-020",
+            "title": "美麗新世界",
+            "author": "阿道斯・赫胥黎 Aldous Huxley",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "透過藥物與享樂製造虛偽幸福的反烏托邦。",
+            "status": "completed"
+      },
+      {
+            "id": 80,
+            "year": 2024,
+            "callNo": "SF-2024-021",
+            "title": "基地",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "2026",
+            "desc": "心理史學誕生，預見帝國崩潰與重生的開篇。",
+            "status": "completed"
+      },
+      {
+            "id": 81,
+            "year": 2024,
+            "callNo": "SF-2024-022",
+            "title": "基地與帝國",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：基地系列",
+            "desc": "神祕異能者「騾」崛起打破謝頓計畫的危機。",
+            "status": "completed"
+      },
+      {
+            "id": 82,
+            "year": 2024,
+            "callNo": "SF-2024-023",
+            "title": "第二基地",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "艾西莫夫：基地系列",
+            "desc": "隱於暗處的精神力學者與第一基地的智鬥。",
+            "status": "completed"
+      },
+      {
+            "id": 83,
+            "year": 2024,
+            "callNo": "SF-2024-024",
+            "title": "永恆終結",
+            "author": "艾薩克・艾西莫夫 Isaac Asimov",
+            "category": "科幻與奇幻小說",
+            "series": "",
+            "desc": "穿梭時空的時空修正機構與愛情自由抗爭。",
+            "status": "completed"
+      },
+      {
+            "id": 84,
+            "year": 2024,
+            "callNo": "OCE-2024-025",
+            "title": "台灣π：發現太平洋抹香鯨",
+            "author": "廖鴻基 等人",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "",
+            "desc": "以影像與文字記錄臺灣東岸抹香鯨的傳奇。",
+            "status": "completed"
+      },
+      {
+            "id": 85,
+            "year": 2024,
+            "callNo": "PSY-2024-026",
+            "title": "真確",
+            "author": "漢斯・羅斯林 Hans Rosling",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "用數據破除對世界的十大偏見與認知盲點。",
+            "status": "completed"
+      },
+      {
+            "id": 86,
+            "year": 2024,
+            "callNo": "OCE-2024-027",
+            "title": "傾聽地球之聲：生物學家帶你聽見生命的創意與斷裂",
+            "author": "大衛・喬治・哈思克 David George Haskell",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "",
+            "desc": "用聲音生態學帶讀者傾聽大自然的呼吸節奏。",
+            "status": "completed"
+      },
+      {
+            "id": 87,
+            "year": 2024,
+            "callNo": "PSY-2024-028",
+            "title": "象與騎象人",
+            "author": "強納森・海特 Jonathan Haidt",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "結合古典哲學與心理學探討人類幸福本質。",
+            "status": "completed"
+      },
+      {
+            "id": 88,
+            "year": 2024,
+            "callNo": "PSY-2024-029",
+            "title": "思維誤判",
+            "author": "羅爾夫・杜伯里 Rolf Dobelli",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "解析大腦認知偏誤，避免常見決策陷阱。",
+            "status": "completed"
+      },
+      {
+            "id": 89,
+            "year": 2024,
+            "callNo": "PHI-2024-030",
+            "title": "哲學的40堂公開課",
+            "author": "奈傑爾・華伯頓 Nigel Warburton",
+            "category": "哲學思辨、宗教與歷史社會",
+            "series": "40堂公開課系列",
+            "desc": "從蘇格拉底到當代的西方哲學簡明通識。",
+            "status": "completed"
+      },
+      {
+            "id": 90,
+            "year": 2024,
+            "callNo": "PSY-2024-031",
+            "title": "內向心理學",
+            "author": "瑪蒂・蘭妮 Marti Olsen Laney",
+            "category": "心理學、認知與決策思維",
+            "series": "",
+            "desc": "挖掘內向者的獨特力量與社交能量管理。",
+            "status": "completed"
+      },
+      {
+            "id": 91,
+            "year": 2024,
+            "callNo": "OCE-2024-032",
+            "title": "白鯨記",
+            "author": "赫爾曼・梅爾維爾 Herman Melville",
+            "category": "海洋文學、鯨豚與自然生態",
+            "series": "",
+            "desc": "亞哈船長與莫比迪克在大洋搏鬥的世界名著。",
+            "status": "completed"
+      }
+];
 
     // 系列套書專題數據
     const seriesDatabase = [
-      { name: "艾西莫夫：基地系列", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 7, books: ["基地前奏", "基地締造者", "基地", "基地與帝國", "第二基地", "基地邊緣", "基地與地球"], desc: "哈里·謝頓開創心理史學，在銀河帝國分崩離析之際，跨越千年建立新文明的壯闊科幻史詩。" },
-      { name: "艾西莫夫：機器人系列", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 5, books: ["我，機器人", "鋼穴", "裸陽", "曙光中的機器人", "機器人與帝國"], desc: "開創三大法則與第零法則，藉便衣刑警與機器人搭檔探案，奠定人類與AI共存哲學。" },
-      { name: "艾西莫夫：銀河帝國三部曲", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 3, books: ["繁星若塵", "星空暗流", "蒼穹一粟"], desc: "承接機器人與基地時代，描繪銀河帝國崛起過程中的星際角力、背叛與自由追尋。" },
-      { name: "三體三部曲", author: "劉慈欣", count: 3, books: ["三體", "三體2：黑暗森林", "三體3：死神永生"], desc: "從文革接觸外星文明到宇宙黑暗森林法則，描寫人類文明與三體對抗至宇宙終局的硬科幻巔峰。" },
-      { name: "沙丘系列", author: "法蘭克・赫伯特 Frank Herbert", count: 3, books: ["沙丘", "沙丘2：救世主", "沙丘3：沙丘之子"], desc: "圍繞沙漠行星厄拉科斯與香料爭奪，融匯政治陰謀、生態哲學與救世主神話的太空史詩。" },
-      { name: "《地。-關於地球的運動-》", author: "魚豊", count: 8, books: ["第 1 集", "第 2 集", "第 3 集", "第 4 集", "第 5 集", "第 6 集", "第 7 集", "第 8 集"], desc: "描繪15世紀歐洲先驅者跨越世代、賭上性命與宗教審判所對抗，追求「地動說」真理的動人篇章。" },
-      { name: "monpoké 皮卡丘幼兒繪本", author: "松尾里佳子", count: 3, books: ["皮卡丘的好朋友", "皮卡丘的夜晚大冒險", "皮卡丘的海洋尋寶記"], desc: "寶可夢官方幼兒品牌授權，以柔和溫暖的手繪筆觸，陪伴孩子學習人際社交、互助與勇敢。" },
-      { name: "40堂公開課系列", author: "奈傑爾・華伯頓／理查・哈洛威", count: 2, books: ["哲學的40堂公開課", "宗教的40堂公開課"], desc: "以簡明優雅的短篇隨筆，回溯西方哲學源流與世界主要宗教信仰發展的經典通識入門。" },
-      { name: "艾西莫夫科普教室", author: "艾薩克・艾西莫夫 Isaac Asimov", count: 2, books: ["科普教室（上）", "科普教室（中）"], desc: "科幻大師化身博學導師，以生動風趣的筆觸深入淺出漫談天文、古生物與物理奧妙。" },
-      { name: "廖鴻基海洋尋鯨文學", author: "廖鴻基", count: 2, books: ["座頭鯨赫連麼麼", "黑潮尋鯨"], desc: "臺灣海洋文學旗手長年航行於太平洋黑潮，以深情視角記錄巨鯨生態與人海對話的經典散文。" }
-    ];
+      {
+            "name": "2024",
+            "author": "✅ 已完成",
+            "count": 32,
+            "books": [
+                  "地。"
+            ],
+            "desc": ""
+      },
+      {
+            "name": "2026",
+            "author": "📖 進行中",
+            "count": 20,
+            "books": [
+                  "經典科幻（沙丘",
+                  "基地與地球）",
+                  "哲學思辨",
+                  "親職育兒",
+                  "海洋尋鯨",
+                  "幼兒繪本"
+            ],
+            "desc": ""
+      },
+      {
+            "name": "艾西莫夫：基地系列",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "count": 7,
+            "books": [
+                  "基地前奏",
+                  "基地締造者",
+                  "基地",
+                  "基地與帝國",
+                  "第二基地",
+                  "基地邊緣",
+                  "基地與地球"
+            ],
+            "desc": "哈里·謝頓開創心理史學，在銀河帝國分崩離析之際，跨越千年建立新文明的壯闊科幻史詩。"
+      },
+      {
+            "name": "艾西莫夫：機器人系列",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "count": 5,
+            "books": [
+                  "我，機器人",
+                  "鋼穴",
+                  "裸陽",
+                  "曙光中的機器人",
+                  "機器人與帝國"
+            ],
+            "desc": "開創三大法則與第零法則，藉便衣刑警與機器人搭檔探案，奠定人類與AI共存哲學。"
+      },
+      {
+            "name": "艾西莫夫：銀河帝國三部曲",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "count": 3,
+            "books": [
+                  "繁星若塵",
+                  "星空暗流",
+                  "蒼穹一粟"
+            ],
+            "desc": "承接機器人與基地時代，描繪銀河帝國崛起過程中的星際角力、背叛與自由追尋。"
+      },
+      {
+            "name": "三體三部曲",
+            "author": "劉慈欣",
+            "count": 3,
+            "books": [
+                  "三體",
+                  "三體2：黑暗森林",
+                  "三體3：死神永生"
+            ],
+            "desc": "從文革接觸外星文明到宇宙黑暗森林法則，描寫人類文明與三體對抗至宇宙終局的硬科幻巔峰。"
+      },
+      {
+            "name": "沙丘系列",
+            "author": "法蘭克・赫伯特 (Frank Herbert",
+            "count": 2,
+            "books": [
+                  "沙丘",
+                  "沙丘2：救世主"
+            ],
+            "desc": "圍繞沙漠行星厄拉科斯與香料爭奪，融匯政治陰謀、生態哲學與救世主神話的太空史詩。"
+      },
+      {
+            "name": "《地。-關於地球的運動-》",
+            "author": "魚豊",
+            "count": 8,
+            "books": [
+                  "第 1 集",
+                  "第 8 集"
+            ],
+            "desc": "描繪15世紀歐洲先驅者跨越世代、賭上性命與宗教審判所對抗，追求「地動說」真理的動人篇章。"
+      },
+      {
+            "name": "monpoké 皮卡丘幼兒繪本",
+            "author": "松尾里佳子",
+            "count": 3,
+            "books": [
+                  "皮卡丘的好朋友",
+                  "皮卡丘的夜晚大冒險",
+                  "皮卡丘的海洋尋寶記"
+            ],
+            "desc": "寶可夢官方幼兒品牌授權，以柔和溫暖的手繪筆觸，陪伴孩子學習人際社交、互助與勇敢。"
+      },
+      {
+            "name": "40堂公開課系列",
+            "author": "奈傑爾・華伯頓 理查・哈洛威",
+            "count": 2,
+            "books": [
+                  "哲學的40堂公開課",
+                  "宗教的40堂公開課"
+            ],
+            "desc": "以簡明優雅的短篇隨筆，回溯西方哲學源流與世界主要宗教信仰發展的經典通識入門。"
+      },
+      {
+            "name": "艾西莫夫科普教室",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "count": 2,
+            "books": [
+                  "科普教室（上）",
+                  "科普教室（中）"
+            ],
+            "desc": "科幻大師化身博學導師，以生動風趣的筆觸深入淺出漫談天文、古生物與物理奧妙。"
+      },
+      {
+            "name": "廖鴻基海洋尋鯨文學",
+            "author": "廖鴻基",
+            "count": 2,
+            "books": [
+                  "座頭鯨赫連麼麼",
+                  "黑潮尋鯨"
+            ],
+            "desc": "臺灣海洋文學旗手長年航行於太平洋黑潮，以深情視角記錄巨鯨生態與人海對話的經典散文。"
+      }
+];
 
     // 書脊色彩庫（皮革與布面圖書館經典色系）
     const spineColors = [
