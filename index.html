@@ -146,6 +146,15 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #7a4f30;
     }
+    /* 行動版檢索面板折疊與過渡控制 */
+    @media (max-width: 1023px) {
+      #filterControlsWrapper.mobile-collapsed {
+        display: none !important;
+      }
+      #filterControlsWrapper.mobile-expanded {
+        display: flex !important;
+      }
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -214,27 +223,58 @@
   </header>
 
   <!-- 控制列：檢索台與視角切換器 -->
-  <nav class="sticky top-0 z-40 bg-[#251710] border-b border-[#4f3521] shadow-xl py-3 px-4">
-    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+  <nav id="mainNav" class="sticky top-0 z-40 bg-[#251710] border-b border-[#4f3521] shadow-xl py-2 sm:py-2.5 px-3 sm:px-4 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 lg:gap-4">
       
-      <!-- 檢索與多條件選單 -->
-      <div class="flex flex-wrap items-center gap-2 flex-grow">
+      <!-- 行動版頂部首列 (含 檢索切換按鈕 與 視角切換器，在桌機版 lg: 透過 CSS order 重新排列) -->
+      <div class="flex items-center justify-between gap-2 w-full lg:w-auto lg:order-2">
+        <!-- 行動版叫出/收合檢索面板按鈕 -->
+        <button id="mobileFilterToggleBtn" type="button" class="lg:hidden flex items-center gap-1.5 px-2.5 py-1.5 bg-[#170e08] hover:bg-[#2d1b11] border border-[#5a3a24] text-[#f2e6cf] rounded text-xs font-sans-ui transition flex-shrink-0 shadow-sm active:scale-95">
+          <svg class="w-3.5 h-3.5 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <span id="mobileFilterBtnText">檢索與篩選</span>
+          <span id="mobileActiveBadge" class="hidden px-1.5 py-0.2 bg-[#8b4f23] text-[#fbf6ed] text-[10px] rounded-full font-mono font-bold">0</span>
+          <svg id="mobileFilterChevron" class="w-3 h-3 text-[#a88a6d] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <!-- 視角切換器 (行動版文字精簡縮寫，桌機版展開完整標籤) -->
+        <div class="flex items-center gap-0.5 sm:gap-1 bg-[#150d07] p-0.5 sm:p-1 border border-[#482d19] rounded font-sans-ui flex-shrink-0">
+          <button id="viewCardBtn" class="px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow">
+            <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <span class="hidden sm:inline">索書卡目錄</span><span class="sm:hidden">卡片</span>
+          </button>
+          <button id="viewShelfBtn" class="px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
+            <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <span class="hidden sm:inline">典藏原木書架</span><span class="sm:hidden">書架</span>
+          </button>
+          <button id="viewStatsBtn" class="px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
+            <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span class="hidden sm:inline">年度與學科分析</span><span class="sm:hidden">分析</span>
+          </button>
+          <button id="viewSeriesBtn" class="px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
+            <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <span class="hidden sm:inline">十大系列專題</span><span class="sm:hidden">專題</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 檢索與多條件選單主容器 (行動版預設折疊收合，桌機版固定橫排展開) -->
+      <div id="filterControlsWrapper" class="mobile-collapsed flex-wrap items-center gap-2 w-full lg:w-auto lg:flex-grow lg:order-1 pt-2.5 lg:pt-0 border-t border-[#3d2717] lg:border-t-0 transition-all duration-300">
         <!-- 搜尋輸入框 -->
-        <div class="relative flex-grow sm:flex-grow-0 sm:w-64">
+        <div class="relative w-full sm:w-64">
           <input type="text" id="searchInput" placeholder="檢索書名、作者、摘要..." class="w-full pl-9 pr-3 py-1.5 bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] placeholder-[#7d6751] rounded text-sm focus:outline-none focus:border-[#e2c585]">
           <svg class="w-4 h-4 text-[#8a6f52] absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
 
         <!-- 年度選單 -->
-        <select id="yearFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+        <select id="yearFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
           <option value="ALL">全部年度 (91 冊)</option>
           <option value="2026">2026 年度 (21 冊)</option>
           <option value="2025">2025 年度 (38 冊)</option>
           <option value="2024">2024 年度 (32 冊)</option>
         </select>
 
-                <!-- 領域學科分類 -->
-        <select id="categoryFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+        <!-- 領域學科分類 -->
+        <select id="categoryFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
           <option value="ALL">全部學科領域 (10 大類)</option>
           <option value="科幻與奇幻小說">科幻與奇幻小說 (29 冊)</option>
           <option value="哲學思辨、宗教與歷史社會">哲學思辨、宗教與社會 (8 冊)</option>
@@ -249,7 +289,7 @@
         </select>
 
         <!-- 系列作品篩選 -->
-        <select id="seriesFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+        <select id="seriesFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
           <option value="ALL">全部叢書系列</option>
           <option value="艾西莫夫：基地系列">艾西莫夫：基地系列 (7 冊)</option>
           <option value="艾西莫夫：機器人系列">艾西莫夫：機器人系列 (5 冊)</option>
@@ -264,41 +304,30 @@
         </select>
 
         <!-- 借閱狀態選單 -->
-        <select id="statusFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
+        <select id="statusFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
           <option value="ALL">全部流通狀態</option>
           <option value="completed">已完讀歸架 (90 冊)</option>
           <option value="reading">正在借閱中 (1 冊)</option>
         </select>
 
-        <!-- 只看已收藏 -->
-        <button id="btnFavOnly" class="px-3 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-sm font-sans-ui flex items-center gap-1.5">
-          <svg id="favIcon" class="w-4 h-4 text-[#8a6f52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-          <span>已標記珍藏 (<span id="favCount">0</span>)</span>
-        </button>
+        <!-- 操作按鈕列 -->
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start pt-1 sm:pt-0">
+          <button id="btnFavOnly" class="px-2.5 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-xs font-sans-ui flex items-center gap-1.5 shadow-sm">
+            <svg id="favIcon" class="w-3.5 h-3.5 text-[#8a6f52]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+            <span>珍藏 (<span id="favCount">0</span>)</span>
+          </button>
 
-        <button id="btnResetFilter" class="px-3 py-1.5 text-xs text-[#a88a6d] hover:text-[#f5ebd7] underline">
-          重設篩選
-        </button>
-      </div>
+          <button id="btnResetFilter" class="px-2.5 py-1.5 text-xs text-[#a88a6d] hover:text-[#f5ebd7] underline">
+            重設篩選
+          </button>
 
-      <!-- 視角切換器 -->
-      <div class="flex items-center gap-1 bg-[#150d07] p-1 border border-[#482d19] rounded self-start lg:self-auto font-sans-ui">
-        <button id="viewCardBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-          <span>索書卡目錄</span>
-        </button>
-        <button id="viewShelfBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-          <span>典藏原木書架</span>
-        </button>
-        <button id="viewStatsBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-          <span>年度與學科分析</span>
-        </button>
-        <button id="viewSeriesBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-          <span>十大系列專題</span>
-        </button>
+          <!-- 行動版主動收合按鈕 -->
+          <button id="btnMobileCollapse" type="button" class="lg:hidden ml-auto px-2.5 py-1 text-xs text-[#e2c585] hover:text-[#fff] bg-[#311e13] border border-[#5a3a24] rounded flex items-center gap-1 active:scale-95 transition">
+            <span>收合檢索</span>
+            <span>▲</span>
+          </button>
+        </div>
+
       </div>
 
     </div>
@@ -1958,25 +1987,25 @@
       statsView.classList.add('hidden');
       if (seriesView) seriesView.classList.add('hidden');
 
-      viewCardBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
-      viewShelfBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
-      viewStatsBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
-      if (viewSeriesBtn) viewSeriesBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      viewCardBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      viewShelfBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      viewStatsBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      if (viewSeriesBtn) viewSeriesBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
 
       if (viewName === 'card') {
         cardCatalogView.classList.remove('hidden');
-        viewCardBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        viewCardBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
       } else if (viewName === 'shelf') {
         bookshelfView.classList.remove('hidden');
-        viewShelfBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        viewShelfBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
         renderBookshelves();
       } else if (viewName === 'stats') {
         statsView.classList.remove('hidden');
-        viewStatsBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        viewStatsBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
         renderStats();
       } else if (viewName === 'series') {
         if (seriesView) seriesView.classList.remove('hidden');
-        if (viewSeriesBtn) viewSeriesBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        if (viewSeriesBtn) viewSeriesBtn.className = "px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs rounded transition flex items-center gap-1 sm:gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
         renderSeries();
       }
     }
@@ -2602,8 +2631,100 @@
       if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
     });
 
+    // 行動版檢索面板折疊與捲動縮小邏輯
+    const mobileFilterToggleBtn = document.getElementById('mobileFilterToggleBtn');
+    const filterControlsWrapper = document.getElementById('filterControlsWrapper');
+    const mobileFilterChevron = document.getElementById('mobileFilterChevron');
+    const mobileActiveBadge = document.getElementById('mobileActiveBadge');
+    const btnMobileCollapse = document.getElementById('btnMobileCollapse');
+
+    function setMobileFilterState(open) {
+      if (window.innerWidth >= 1024 || !filterControlsWrapper) return;
+      if (open) {
+        filterControlsWrapper.classList.remove('mobile-collapsed');
+        filterControlsWrapper.classList.add('mobile-expanded');
+        if (mobileFilterChevron) mobileFilterChevron.classList.add('rotate-180');
+      } else {
+        filterControlsWrapper.classList.add('mobile-collapsed');
+        filterControlsWrapper.classList.remove('mobile-expanded');
+        if (mobileFilterChevron) mobileFilterChevron.classList.remove('rotate-180');
+      }
+    }
+
+    if (mobileFilterToggleBtn) {
+      mobileFilterToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = filterControlsWrapper.classList.contains('mobile-expanded');
+        setMobileFilterState(!isOpen);
+      });
+    }
+
+    if (btnMobileCollapse) {
+      btnMobileCollapse.addEventListener('click', () => {
+        setMobileFilterState(false);
+      });
+    }
+
+    // 更新行動版啟動篩選計數標籤
+    function updateMobileFilterBadge() {
+      if (!mobileActiveBadge) return;
+      let count = 0;
+      if (searchInput && searchInput.value.trim()) count++;
+      if (yearFilter && yearFilter.value !== 'ALL') count++;
+      if (categoryFilter && categoryFilter.value !== 'ALL') count++;
+      if (seriesFilter && seriesFilter.value !== 'ALL') count++;
+      if (statusFilter && statusFilter.value !== 'ALL') count++;
+      if (onlyShowFavorites) count++;
+
+      if (count > 0) {
+        mobileActiveBadge.textContent = count;
+        mobileActiveBadge.classList.remove('hidden');
+        if (mobileFilterToggleBtn) {
+          mobileFilterToggleBtn.classList.add('border-[#e2c585]', 'text-[#f5ebd7]');
+        }
+      } else {
+        mobileActiveBadge.classList.add('hidden');
+        if (mobileFilterToggleBtn) {
+          mobileFilterToggleBtn.classList.remove('border-[#e2c585]', 'text-[#f5ebd7]');
+        }
+      }
+    }
+
+    // 往下滑動閱讀時自動縮小收合檢索區塊，避免遮擋螢幕
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      if (window.innerWidth < 1024) {
+        // 向下滑動位移超過 25px 且離開頂部時，自動收合展開的檢索面板
+        if (currentScrollY > lastScrollY + 25 && currentScrollY > 70) {
+          if (filterControlsWrapper && filterControlsWrapper.classList.contains('mobile-expanded')) {
+            setMobileFilterState(false);
+          }
+        }
+      }
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+
+    // 視圖切換或點擊系列目錄時亦自動關閉行動版面板
+    const origSetView = setView;
+    setView = function(viewName) {
+      origSetView(viewName);
+      setMobileFilterState(false);
+    };
+
+    // 監聽各項篩選異動更新計數標籤
+    [searchInput, yearFilter, categoryFilter, seriesFilter, statusFilter].forEach(el => {
+      if (el) {
+        el.addEventListener('change', updateMobileFilterBadge);
+        el.addEventListener('input', updateMobileFilterBadge);
+      }
+    });
+    if (btnFavOnly) btnFavOnly.addEventListener('click', () => setTimeout(updateMobileFilterBadge, 50));
+    if (btnResetFilter) btnResetFilter.addEventListener('click', () => setTimeout(updateMobileFilterBadge, 50));
+
     // 初始化渲染
     renderCardCatalog();
+    updateMobileFilterBadge();
   </script>
 
 </body>
