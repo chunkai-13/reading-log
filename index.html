@@ -351,6 +351,29 @@
 
     <!-- 視角二：典藏原木書架 (Bookshelf View) -->
     <section id="bookshelfView" class="hidden space-y-12">
+      <!-- 書架學科顏色與規格說明圖例 -->
+      <div class="bg-[#1f140d]/90 border border-[#442c1b] p-3.5 rounded-lg shadow-inner flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-sans-ui text-[#baa188]">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+          <span class="font-bold text-[#e2c585] font-serif whitespace-nowrap">書脊學科顏色圖例：</span>
+          <div class="flex flex-wrap items-center gap-2.5 text-[11px]">
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#2b4162]" style="background: linear-gradient(180deg, #1c2c44, #0e1724);"></span>科幻奇幻</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#5c3c28]" style="background: linear-gradient(180deg, #42291a, #24140a);"></span>哲學宗教</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#7d2e1f]" style="background: linear-gradient(180deg, #5c2014, #300c06);"></span>漫畫 (較低)</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#6b4f23]" style="background: linear-gradient(180deg, #4d3816, #261b09);"></span>商業自我</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#612e49]" style="background: linear-gradient(180deg, #441f32, #220d18);"></span>心理思維</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#204f5b]" style="background: linear-gradient(180deg, #14353d, #091a1f);"></span>海洋生態</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#7b4725]" style="background: linear-gradient(180deg, #593118, #311809);"></span>繪本 (較薄)</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#3e3b38]" style="background: linear-gradient(180deg, #242220, #11100f);"></span>世界文學</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#294d75]" style="background: linear-gradient(180deg, #1a334f, #0b1929);"></span>科普天文</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-[#2b5735]" style="background: linear-gradient(180deg, #1b3821, #0b1a0e);"></span>親職教育</span>
+          </div>
+        </div>
+        <div class="text-[11px] text-[#a4886e] font-serif flex items-center gap-2 whitespace-nowrap">
+          <span>• 同系列齊高</span>
+          <span>• 漫畫較低 (約215px)</span>
+          <span>• 繪本較薄 (約22px)</span>
+        </div>
+      </div>
       <!-- 2026 年度書架 -->
       <div>
         <div class="flex items-center justify-between mb-3 px-2">
@@ -1939,16 +1962,59 @@
       }
 ];
 
-    // 書脊色彩庫（皮革與布面圖書館經典色系）
-    const spineColors = [
-      { bg: "linear-gradient(180deg, #1d3323 0%, #102115 100%)", text: "#d4af37", border: "#2f573b" }, // 墨綠燙金
-      { bg: "linear-gradient(180deg, #5c1818 0%, #360a0a 100%)", text: "#e8c872", border: "#8c2727" }, // 勃根地紅
-      { bg: "linear-gradient(180deg, #192742 0%, #0d1627 100%)", text: "#e2c585", border: "#2d4470" }, // 普魯士藍
-      { bg: "linear-gradient(180deg, #4f331e 0%, #2e1c0e 100%)", text: "#f0d59e", border: "#734c2d" }, // 胡桃琥珀
-      { bg: "linear-gradient(180deg, #242220 0%, #121110 100%)", text: "#dfb76c", border: "#403d39" }, // 玄鐵黑
-      { bg: "linear-gradient(180deg, #614022 0%, #3d2511 100%)", text: "#f5e2be", border: "#8a5c32" }, // 赭石褐
-      { bg: "linear-gradient(180deg, #1b3d45 0%, #0d2126 100%)", text: "#d9be79", border: "#2c5b66" }  // 深湖藍
-    ];
+    // 依據學科學門分類之書脊經典色彩庫 (同類型書籍使用相同顏色)
+    const categorySpineColors = {
+      "科幻與奇幻小說": {
+        bg: "linear-gradient(180deg, #1c2c44 0%, #0e1724 100%)",
+        text: "#e5c687",
+        border: "#2b4162"
+      },
+      "哲學思辨、宗教與歷史社會": {
+        bg: "linear-gradient(180deg, #42291a 0%, #24140a 100%)",
+        text: "#eed4a6",
+        border: "#5c3c28"
+      },
+      "漫畫": {
+        bg: "linear-gradient(180deg, #5c2014 0%, #300c06 100%)",
+        text: "#fed7c8",
+        border: "#7d2e1f"
+      },
+      "商業理財、自我成長與生活哲學": {
+        bg: "linear-gradient(180deg, #4d3816 0%, #261b09 100%)",
+        text: "#fad896",
+        border: "#6b4f23"
+      },
+      "心理學、認知與決策思維": {
+        bg: "linear-gradient(180deg, #441f32 0%, #220d18 100%)",
+        text: "#f0d3e2",
+        border: "#612e49"
+      },
+      "海洋文學、鯨豚與自然生態": {
+        bg: "linear-gradient(180deg, #14353d 0%, #091a1f 100%)",
+        text: "#a8e5eb",
+        border: "#204f5b"
+      },
+      "繪本與圖文創作": {
+        bg: "linear-gradient(180deg, #593118 0%, #311809 100%)",
+        text: "#fedbb8",
+        border: "#7b4725"
+      },
+      "世界文學、小說與傳記": {
+        bg: "linear-gradient(180deg, #242220 0%, #11100f 100%)",
+        text: "#dfb76c",
+        border: "#3e3b38"
+      },
+      "科普、物理天文與生命科學": {
+        bg: "linear-gradient(180deg, #1a334f 0%, #0b1929 100%)",
+        text: "#c4ddfc",
+        border: "#294d75"
+      },
+      "親職教育與育兒家庭": {
+        bg: "linear-gradient(180deg, #1b3821 0%, #0b1a0e 100%)",
+        text: "#c8ebd0",
+        border: "#2b5735"
+      }
+    };
 
     // 本地最愛儲存機制
     let favoriteBookIds = new Set(JSON.parse(localStorage.getItem('lib_reading_favs') || '[]'));
@@ -2177,12 +2243,59 @@
           return `<div class="text-sm text-[#8c6b4e] font-sans-ui italic p-6">此架暫無符合條件之藏書</div>`;
         }
 
-        return books.map((book, idx) => {
-          const colorTheme = spineColors[book.id % spineColors.length];
+        // 同系列高度對照表（同一個系列的書籍，使用相同高度）
+        const seriesHeights = {
+          "艾西莫夫：基地系列": 265,
+          "艾西莫夫：機器人系列": 258,
+          "艾西莫夫：銀河帝國三部曲": 262,
+          "三體三部曲": 272,
+          "沙丘系列": 275,
+          "《地。-關於地球的運動-》": 215,
+          "monpoké 皮卡丘幼兒繪本": 235,
+          "40堂公開課系列": 252,
+          "艾西莫夫科普教室": 248,
+          "廖鴻基海洋尋鯨文學": 256,
+        };
+
+        return books.map((book) => {
+          // 1. 同類型的書籍使用相同顏色表示
+          const colorTheme = categorySpineColors[book.category] || {
+            bg: "linear-gradient(180deg, #3d2516 0%, #1f120a 100%)",
+            text: "#eed4a6",
+            border: "#5a3a22"
+          };
+
+          // 2. 高度計算：同系列齊高、漫畫類較低（約215px）、其餘維持自然微參差
+          let spineHeight;
+          if (book.series && seriesHeights[book.series]) {
+            spineHeight = seriesHeights[book.series];
+          } else if (book.series) {
+            let hash = 0;
+            for (let i = 0; i < book.series.length; i++) hash = (hash * 31 + book.series.charCodeAt(i)) & 0xfff;
+            spineHeight = book.category === '漫畫' ? 215 : (250 + (hash % 25));
+          } else if (book.category === '漫畫') {
+            spineHeight = 215; // 漫畫類高度較低
+          } else if (book.category === '繪本與圖文創作') {
+            spineHeight = 238; // 繪本高度
+          } else {
+            // 一般單行本自然參差感 (248px ~ 280px)
+            spineHeight = 248 + ((book.id * 13) % 33);
+          }
+
+          // 3. 厚度（寬度）計算：繪本類的厚度較薄（約20~24px）
+          let spineWidth;
+          const isPictureBook = book.category === '繪本與圖文創作';
+          if (isPictureBook) {
+            spineWidth = 21 + ((book.id * 3) % 4); // 21px ~ 24px: 繪本類厚度較薄
+          } else if (book.category === '漫畫') {
+            spineWidth = 31 + ((book.id * 5) % 6); // 31px ~ 36px: 漫畫開本
+          } else if (book.series) {
+            spineWidth = 36 + ((book.id * 3) % 8); // 36px ~ 43px: 系列專題
+          } else {
+            spineWidth = 34 + ((book.id * 7) % 15); // 34px ~ 48px: 一般書籍厚度
+          }
+
           const isReading = book.status === 'reading';
-          // 隨機計算書本寬度與高度以模擬真實書脊參差感
-          const spineWidth = 32 + ((book.id * 7) % 18); // 32px ~ 50px
-          const spineHeight = 240 + ((book.id * 11) % 45); // 240px ~ 285px
 
           return `
             <div class="book-spine" 
@@ -2191,21 +2304,21 @@
                  style="width: ${spineWidth}px; height: ${spineHeight}px; background: ${colorTheme.bg}; color: ${colorTheme.text}; border-left: 1px solid ${colorTheme.border}; border-right: 1px solid ${colorTheme.border};">
               
               <!-- 頂部裝飾金線 -->
-              <div class="w-full pt-2 flex flex-col items-center gap-1">
+              <div class="w-full pt-1.5 sm:pt-2 flex flex-col items-center gap-1">
                 <div class="spine-band"></div>
                 <div class="spine-band"></div>
-                ${isReading ? `<div class="w-full text-center py-1 bg-[#1a6e38] text-white text-[10px] font-sans-ui font-bold">在讀</div>` : ''}
+                ${isReading ? `<div class="w-full text-center py-0.5 bg-[#1a6e38] text-white text-[9px] font-sans-ui font-bold">在讀</div>` : ''}
               </div>
 
               <!-- 書脊垂直標題文字 -->
-              <div class="py-2 text-xs font-serif font-bold tracking-wider leading-none text-center truncate max-h-[160px] overflow-hidden" style="text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
+              <div class="py-2 ${isPictureBook ? 'text-[11px]' : 'text-xs'} font-serif font-bold tracking-wider leading-none text-center truncate max-h-[160px] overflow-hidden" style="text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
                 ${book.title}
               </div>
 
               <!-- 底部索書號標籤 -->
               <div class="w-full pb-2 flex flex-col items-center gap-1 font-mono text-[9px] text-center">
                 <div class="spine-band"></div>
-                <div class="bg-[#140e08]/80 text-[#e8caa0] px-1 py-0.5 rounded text-[8px] transform rotate-90 my-1">
+                <div class="bg-[#140e08]/85 text-[#e8caa0] px-0.5 py-0.5 rounded text-[8px] transform rotate-90 my-1 whitespace-nowrap">
                   ${book.callNo.split('-')[0]}
                 </div>
               </div>
