@@ -117,6 +117,8 @@ def parse_markdown():
                     category = "商業理財、自我成長與生活哲學"
                 elif "再次是個孩子" in title:
                     category = "親職教育與育兒家庭"
+                elif "地。" in title:
+                    category = "漫畫"
                 elif any(k in title for k in ["基地", "機器人", "帝國", "三體", "沙丘", "太空", "獵魔士", "人生副本", "美麗新世界", "神也鬥不過愚蠢", "FINAL FANTASY"]):
                     category = "科幻與奇幻小說"
                 elif any(k in title for k in ["繪本", "皮卡丘", "影子馬戲團", "情緒大飯店", "鯨鯊", "牆外的牆"]):
@@ -127,7 +129,7 @@ def parse_markdown():
                     category = "商業理財、自我成長與生活哲學"
                 elif any(k in title for k in ["心理", "思維", "真確", "魅力", "物質", "莫非定律", "象與騎象人"]):
                     category = "心理學、認知與決策思維"
-                elif any(k in title for k in ["哲學", "宗教", "尼采", "地。", "臺灣史", "政治", "武士道", "文明", "思辨讀本", "猶太"]):
+                elif any(k in title for k in ["哲學", "宗教", "尼采", "臺灣史", "政治", "武士道", "文明", "思辨讀本", "猶太"]):
                     category = "哲學思辨、宗教與歷史社會"
                 elif any(k in title for k in ["物理", "相對論", "生命是什麼", "宇宙", "科普"]):
                     category = "科普、物理天文與生命科學"
@@ -156,6 +158,7 @@ def parse_markdown():
             cat_code = {
                 "科幻與奇幻小說": "SF",
                 "哲學思辨、宗教與歷史社會": "PHI",
+                "漫畫": "COM",
                 "心理學、認知與決策思維": "PSY",
                 "商業理財、自我成長與生活哲學": "BIZ",
                 "海洋文學、鯨豚與自然生態": "OCE",
