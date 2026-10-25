@@ -46,6 +46,8 @@ def parse_markdown():
     
     for match in series_pattern.finditer(content):
         s_name = match.group(1).strip()
+        if s_name in ['2024', '2025', '2026', '累計'] or '年度' in s_name:
+            continue
         s_count = int(match.group(2).strip())
         s_author = match.group(3).strip().replace("<br>", " ").replace("*(", "(").replace(")*", "")
         s_books_raw = match.group(4).strip()

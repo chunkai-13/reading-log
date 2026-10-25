@@ -292,7 +292,11 @@
         </button>
         <button id="viewStatsBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-          <span>學科年報統計</span>
+          <span>年度與學科分析</span>
+        </button>
+        <button id="viewSeriesBtn" class="px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          <span>十大系列專題</span>
         </button>
       </div>
 
@@ -363,10 +367,92 @@
       </div>
     </section>
 
-    <!-- 視角三：學科與系列年報統計 (Analytics View) -->
+    <!-- 視角三：年度進度與學科年報統計 (Analytics View) -->
     <section id="statsView" class="hidden space-y-10">
       
-      <!-- 9 大領域分類比例板塊 -->
+      <!-- 區塊一：年度閱讀進度年報總覽 -->
+      <div class="parchment-card p-6 md:p-8 rounded-lg">
+        <div class="border-b border-[#dfd2be] pb-3 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 class="text-xl md:text-2xl font-bold text-[#2a1b11] font-serif">
+              年度閱讀進度與偏好年報
+            </h2>
+            <p class="text-sm text-[#735942] mt-1 font-sans-ui">
+              記錄三年間橫跨多元學門的閱讀歷程軌跡，紀錄各年度完讀率、進行中書目與主要思維偏好。
+            </p>
+          </div>
+          <span class="text-xs font-sans-ui font-bold px-3 py-1 bg-[#ecd9bd] text-[#5c3e23] rounded border border-[#dac7a8] self-start sm:self-auto">
+            累計典藏：92 冊
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 font-sans-ui" id="annualProgressCards">
+          <!-- 2026 年度卡片 -->
+          <div class="bg-[#fbf6ed] p-5 rounded-lg border border-[#dfcfb5] shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-bold text-[#24150b]">2026 年度</span>
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-[#dbece0] text-[#1b6b3a] font-bold border border-[#b8dec0]">進行中</span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[#2a170a] font-serif">22</span>
+                <span class="text-xs text-[#705238]">冊典藏 (20 完讀 / 2 在讀)</span>
+              </div>
+              <div class="w-full bg-[#e8dac5] rounded-full h-2 my-3 overflow-hidden border border-[#d2bea4]">
+                <div class="bg-gradient-to-r from-[#2e7d32] to-[#66bb6a] h-full rounded-full" style="width: 90.9%;"></div>
+              </div>
+              <div class="text-xs text-[#523824] leading-relaxed mt-2 bg-[#f4ebd9] p-2.5 rounded border border-[#e5d6be]">
+                <div class="font-bold text-[#3d2412] mb-1">主要閱讀偏好：</div>
+                經典科幻（沙丘3、基地與地球）、歷史哲學思辨（求生存的猶太歷史）、親職育兒、海洋尋鯨、幼兒繪本
+              </div>
+            </div>
+          </div>
+
+          <!-- 2025 年度卡片 -->
+          <div class="bg-[#fbf6ed] p-5 rounded-lg border border-[#dfcfb5] shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-bold text-[#24150b]">2025 年度</span>
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-[#ecdcc4] text-[#802424] font-bold border border-[#dfcca8]">已完讀</span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[#2a170a] font-serif">38</span>
+                <span class="text-xs text-[#705238]">冊全完讀 (完讀率 100%)</span>
+              </div>
+              <div class="w-full bg-[#e8dac5] rounded-full h-2 my-3 overflow-hidden border border-[#d2bea4]">
+                <div class="bg-gradient-to-r from-[#802424] to-[#c25454] h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div class="text-xs text-[#523824] leading-relaxed mt-2 bg-[#f4ebd9] p-2.5 rounded border border-[#e5d6be]">
+                <div class="font-bold text-[#3d2412] mb-1">主要閱讀偏好：</div>
+                艾西莫夫全集（機器人、帝國、基地前傳）、財經投資、科普物理、自我成長、經典繪本
+              </div>
+            </div>
+          </div>
+
+          <!-- 2024 年度卡片 -->
+          <div class="bg-[#fbf6ed] p-5 rounded-lg border border-[#dfcfb5] shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-bold text-[#24150b]">2024 年度</span>
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-[#ecdcc4] text-[#802424] font-bold border border-[#dfcca8]">已完讀</span>
+              </div>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[#2a170a] font-serif">32</span>
+                <span class="text-xs text-[#705238]">冊全完讀 (完讀率 100%)</span>
+              </div>
+              <div class="w-full bg-[#e8dac5] rounded-full h-2 my-3 overflow-hidden border border-[#d2bea4]">
+                <div class="bg-gradient-to-r from-[#802424] to-[#c25454] h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div class="text-xs text-[#523824] leading-relaxed mt-2 bg-[#f4ebd9] p-2.5 rounded border border-[#e5d6be]">
+                <div class="font-bold text-[#3d2412] mb-1">主要閱讀偏好：</div>
+                科幻經典（三體三部曲、基地三部曲）、漫畫《地。》全8集、心理哲學、海洋觀察
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 區塊二：館藏九大學科分類典藏佔比與分析 -->
       <div class="parchment-card p-6 md:p-8 rounded-lg">
         <h2 class="text-xl md:text-2xl font-bold text-[#2a1b11] mb-2 flex items-center justify-between border-b border-[#dfd2be] pb-3">
           <span>館藏九大學科分類典藏佔比與分析</span>
@@ -381,17 +467,27 @@
         </div>
       </div>
 
-      <!-- 10 大系列書籍專題典藏 -->
-      <div class="parchment-card p-6 md:p-8 rounded-lg">
-        <h2 class="text-xl md:text-2xl font-bold text-[#2a1b11] mb-2 flex items-center justify-between border-b border-[#dfd2be] pb-3">
-          <span>十大系列專題套書典藏進度表</span>
-          <span class="text-xs font-sans-ui font-normal px-2.5 py-1 bg-[#ecd9bd] text-[#5c3e23] rounded">成套率：37 冊 (40.7%)</span>
-        </h2>
-        <p class="text-sm text-[#735942] mb-6 font-sans-ui">
-          在您的 91 本閱讀紀錄中，共有 10 大專題具備成套脈絡與思想傳承。
-        </p>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans-ui" id="seriesStatsList">
+    <!-- 視角四：十大系列專題套書典藏進度表 (Series View 獨立項目) -->
+    <section id="seriesView" class="hidden space-y-6">
+      
+      <div class="parchment-card p-6 md:p-8 rounded-lg">
+        <div class="border-b border-[#dfd2be] pb-4 mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h2 class="text-xl md:text-2xl font-bold text-[#2a1b11] font-serif">
+              十大系列專題套書典藏進度表
+            </h2>
+            <span class="text-xs font-sans-ui font-bold px-3 py-1 bg-[#ecd9bd] text-[#5c3e23] rounded border border-[#dac7a8] self-start sm:self-auto">
+              成套專題：10 大系列 (共 38 冊，佔比 41.3%)
+            </span>
+          </div>
+          <p class="text-sm text-[#735942] mt-2 font-sans-ui">
+            在您的 92 冊閱讀紀錄中，精選出 10 大具備完整思想脈絡、世界觀與傳承體系的專題套書，各專題均展示該系列第一本（或後續遞補）之實體封面。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 font-sans-ui" id="seriesStatsList">
           <!-- 動態填入系列套書卡片 -->
         </div>
       </div>
@@ -1699,29 +1795,6 @@
     // 系列套書專題數據
     const seriesDatabase = [
       {
-            "name": "2024",
-            "author": "✅ 已完成",
-            "count": 32,
-            "books": [
-                  "地。"
-            ],
-            "desc": ""
-      },
-      {
-            "name": "2026",
-            "author": "📖 進行中",
-            "count": 20,
-            "books": [
-                  "經典科幻（沙丘",
-                  "基地與地球）",
-                  "哲學思辨",
-                  "親職育兒",
-                  "海洋尋鯨",
-                  "幼兒繪本"
-            ],
-            "desc": ""
-      },
-      {
             "name": "艾西莫夫：基地系列",
             "author": "艾薩克・艾西莫夫 (Isaac Asimov",
             "count": 7,
@@ -1774,10 +1847,11 @@
       {
             "name": "沙丘系列",
             "author": "法蘭克・赫伯特 (Frank Herbert",
-            "count": 2,
+            "count": 3,
             "books": [
                   "沙丘",
-                  "沙丘2：救世主"
+                  "沙丘2：救世主",
+                  "《沙丘3：沙丘之子》"
             ],
             "desc": "圍繞沙漠行星厄拉科斯與香料爭奪，融匯政治陰謀、生態哲學與救世主神話的太空史詩。"
       },
@@ -1880,10 +1954,12 @@
       cardCatalogView.classList.add('hidden');
       bookshelfView.classList.add('hidden');
       statsView.classList.add('hidden');
+      if (seriesView) seriesView.classList.add('hidden');
 
       viewCardBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
       viewShelfBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
       viewStatsBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
+      if (viewSeriesBtn) viewSeriesBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 text-[#a88d72] hover:text-[#f5ebd7]";
 
       if (viewName === 'card') {
         cardCatalogView.classList.remove('hidden');
@@ -1896,12 +1972,17 @@
         statsView.classList.remove('hidden');
         viewStatsBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
         renderStats();
+      } else if (viewName === 'series') {
+        if (seriesView) seriesView.classList.remove('hidden');
+        if (viewSeriesBtn) viewSeriesBtn.className = "px-3 py-1.5 text-xs rounded transition flex items-center gap-1.5 bg-[#4a2e1b] text-[#f5ebd7] font-medium shadow";
+        renderSeries();
       }
     }
 
     viewCardBtn.addEventListener('click', () => setView('card'));
     viewShelfBtn.addEventListener('click', () => setView('shelf'));
     viewStatsBtn.addEventListener('click', () => setView('stats'));
+    if (viewSeriesBtn) viewSeriesBtn.addEventListener('click', () => setView('series'));
 
     // 資料篩選核心邏輯
     function getFilteredBooks() {
@@ -2212,26 +2293,106 @@
         `;
       }).join('');
 
-      // 統計 10 大系列
-      seriesStatsList.innerHTML = seriesDatabase.map(ser => {
+    }
+
+    // 獨立渲染十大系列專題套書 (Series View)
+    function renderSeries() {
+      const seriesStatsList = document.getElementById('seriesStatsList');
+      if (!seriesStatsList) return;
+
+      // 嚴格篩除年度項目，保留真正的 10 大專題
+      const cleanSeries = seriesDatabase.filter(ser => 
+        !['2024', '2025', '2026', '累計'].includes(ser.name)
+      );
+
+      // 取得系列第一本（或後續遞補）封面函式
+      function getSeriesCover(ser) {
+        if (Array.isArray(ser.books)) {
+          for (const t of ser.books) {
+            const cleanT = t.replace(/[《》\s]/g, '');
+            for (const b of booksDatabase) {
+              const cleanB = b.title.replace(/[《》\s]/g, '');
+              if ((cleanB.includes(cleanT) || cleanT.includes(cleanB) || (cleanT.includes('第') && cleanB.includes(cleanT))) && b.coverUrl) {
+                return { coverUrl: b.coverUrl, title: b.title, id: b.id };
+              }
+            }
+          }
+        }
+        for (const b of booksDatabase) {
+          if ((b.series === ser.name || (b.series && ser.name.includes(b.series)) || (b.series && b.series.includes(ser.name))) && b.coverUrl) {
+            return { coverUrl: b.coverUrl, title: b.title, id: b.id };
+          }
+        }
+        return null;
+      }
+
+      seriesStatsList.innerHTML = cleanSeries.map(ser => {
+        const coverBook = getSeriesCover(ser);
         return `
-          <div class="bg-[#f3e9d8] p-4 rounded border border-[#dfcfb5] flex flex-col justify-between">
-            <div>
-              <div class="flex items-start justify-between">
-                <h4 class="font-bold text-[#221307] text-base">${ser.name}</h4>
-                <span class="text-xs px-2 py-0.5 rounded bg-[#e0ceb1] font-mono text-[#52351c] font-bold">${ser.count} 冊全</span>
+          <div class="bg-[#f5ebd9] hover:bg-[#ede0ca] transition p-4 sm:p-5 rounded-lg border border-[#dfcfb5] shadow-sm flex flex-col justify-between group">
+            <div class="flex flex-row gap-4 items-start">
+              <!-- 左側系列封面圖 -->
+              <div class="w-20 sm:w-24 flex-shrink-0 aspect-[2/3] rounded bg-[#ecdcc4] border border-[#d6c4a8] shadow-sm overflow-hidden flex items-center justify-center relative ${coverBook ? 'cursor-pointer' : ''}" ${coverBook ? `onclick="openBookModal(${coverBook.id})" title="調閱《${coverBook.title}》借閱卡"` : ''}>
+                ${coverBook && coverBook.coverUrl ? `
+                  <img 
+                    src="${coverBook.coverUrl}" 
+                    alt="《${coverBook.title}》封面" 
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');"
+                  >
+                  <div class="hidden flex-col items-center justify-center p-2 text-center text-[#8a6e55] w-full h-full bg-[#f4ecd8]">
+                    <svg class="w-8 h-8 opacity-60 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span class="text-[10px] font-serif text-[#785a3e]">專題套書</span>
+                  </div>
+                ` : `
+                  <div class="flex flex-col items-center justify-center p-2 text-center text-[#8a6e55] w-full h-full bg-[#f4ecd8]">
+                    <svg class="w-8 h-8 opacity-60 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span class="text-[10px] font-serif text-[#785a3e]">專題套書</span>
+                  </div>
+                `}
               </div>
-              <div class="text-xs text-[#705238] mt-0.5 font-medium">${ser.author}</div>
-              <p class="text-xs text-[#483321] mt-2 italic leading-relaxed bg-[#fbf6ed] p-2 rounded border border-[#e8dbc6]">
-                ${ser.desc}
-              </p>
+
+              <!-- 右側系列資訊 -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <h3 class="font-bold text-[#221307] text-base sm:text-lg font-serif">
+                    ${ser.name}
+                  </h3>
+                  <span class="text-xs px-2 py-0.5 rounded bg-[#e0ceb1] font-mono text-[#52351c] font-bold whitespace-nowrap border border-[#cfbd9f]">
+                    ${ser.count} 冊全
+                  </span>
+                </div>
+                <div class="text-xs text-[#705238] mt-0.5 font-medium font-sans-ui">
+                  ${ser.author}
+                </div>
+                <p class="text-xs text-[#483321] mt-2 italic leading-relaxed bg-[#fbf6ed] p-2.5 rounded border border-[#e8dbc6]">
+                  ${ser.desc}
+                </p>
+              </div>
             </div>
-            <div class="mt-3 pt-2 border-t border-[#dfcfb5] text-[11px] text-[#78593f]">
-              <span class="font-semibold">收錄書目：</span>${ser.books.join('、')}
+
+            <div class="mt-3.5 pt-2.5 border-t border-[#dfcfb5] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#78593f]">
+              <div class="truncate flex-1 min-w-0">
+                <span class="font-semibold text-[#5c3e23]">收錄書目：</span>${ser.books.join('、')}
+              </div>
+              <button onclick="filterBySeries('${ser.name}')" class="text-[#784e2a] hover:text-[#2d1b0f] font-semibold text-xs flex items-center gap-1 flex-shrink-0 transition">
+                <span>檢視套書目錄</span>
+                <span>→</span>
+              </button>
             </div>
           </div>
         `;
       }).join('');
+    }
+
+    // 快捷從系列卡切換至索書目錄篩選
+    function filterBySeries(seriesName) {
+      if (seriesFilter) {
+        seriesFilter.value = seriesName;
+      }
+      setView('card');
+      renderCardCatalog();
     }
 
     // 書目彈窗 Modal 控制
