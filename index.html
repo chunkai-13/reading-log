@@ -201,7 +201,7 @@
         <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow">
           <div class="text-[#967d64] text-xs font-medium">已完讀典藏</div>
           <div id="statCompleted" class="text-2xl font-bold text-[#e6c587] mt-1 font-serif">90 冊</div>
-          <div class="text-[11px] text-[#7d6751] mt-0.5">98.9% 完讀率</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">97.8% 完讀率</div>
         </div>
         <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow">
           <div class="text-[#967d64] text-xs font-medium">現正借閱中</div>
@@ -216,7 +216,7 @@
         <div class="bg-[#24170f] border border-[#442c1b] p-3 rounded shadow col-span-2 sm:col-span-1">
           <div class="text-[#967d64] text-xs font-medium">成套系列叢書</div>
           <div class="text-2xl font-bold text-[#f5ebd7] mt-1 font-serif">10 大系列</div>
-          <div class="text-[11px] text-[#7d6751] mt-0.5">共 37 冊傳承脈絡</div>
+          <div class="text-[11px] text-[#7d6751] mt-0.5">共 38 冊傳承脈絡</div>
         </div>
       </div>
     </div>
@@ -267,8 +267,8 @@
 
         <!-- 年度選單 -->
         <select id="yearFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
-          <option value="ALL">全部年度 (91 冊)</option>
-          <option value="2026">2026 年度 (21 冊)</option>
+          <option value="ALL">全部年度 (92 冊)</option>
+          <option value="2026">2026 年度 (22 冊)</option>
           <option value="2025">2025 年度 (38 冊)</option>
           <option value="2024">2024 年度 (32 冊)</option>
         </select>
@@ -290,7 +290,7 @@
 
         <!-- 系列作品篩選 -->
         <select id="seriesFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
-          <option value="ALL">全部叢書系列</option>
+          <option value="ALL">全部叢書系列 (10 大系列)</option>
           <option value="艾西莫夫：基地系列">艾西莫夫：基地系列 (7 冊)</option>
           <option value="艾西莫夫：機器人系列">艾西莫夫：機器人系列 (5 冊)</option>
           <option value="艾西莫夫：銀河帝國三部曲">艾西莫夫：銀河帝國三部曲 (3 冊)</option>
@@ -305,9 +305,9 @@
 
         <!-- 借閱狀態選單 -->
         <select id="statusFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
-          <option value="ALL">全部流通狀態</option>
+          <option value="ALL">全部流通狀態 (92 冊)</option>
           <option value="completed">已完讀歸架 (90 冊)</option>
-          <option value="reading">正在借閱中 (1 冊)</option>
+          <option value="reading">正在借閱中 (2 冊)</option>
         </select>
 
         <!-- 操作按鈕列 -->
@@ -339,7 +339,7 @@
     <!-- 篩選結果計數摘要 -->
     <div class="flex items-center justify-between text-xs text-[#aa9176] font-sans-ui mb-6 pb-2 border-b border-[#362215]">
       <div>
-        檢索比對結果：共檢出 <span id="filteredCount" class="font-bold text-[#f5ebd7] font-serif text-sm">91</span> 冊符合條件
+        檢索比對結果：共檢出 <span id="filteredCount" class="font-bold text-[#f5ebd7] font-serif text-sm">92</span> 冊符合條件
       </div>
       <div id="activeFilterTags" class="flex items-center gap-2"></div>
     </div>
@@ -380,7 +380,7 @@
           <div class="brass-plate px-4 py-1.5 rounded-t font-sans-ui text-xs font-bold tracking-wider inline-flex items-center gap-2">
             <span>SHELF I</span>
             <span>•</span>
-            <span>2026 年度進行中藏書 (共 21 冊)</span>
+            <span>2026 年度進行中藏書 (共 22 冊)</span>
           </div>
           <span class="text-xs text-[#a4886e] font-sans-ui">點擊書脊可抽出查看完整借閱記錄</span>
         </div>
@@ -645,7 +645,7 @@
 
   <!-- 資料與前端互動腳本 -->
   <script>
-    // 完整 91 冊圖書數據庫 (2024: 32本, 2025: 38本, 2026: 21本)
+    // 完整 92 冊圖書數據庫 (2024: 32本, 2025: 38本, 2026: 22本)
     const booksDatabase = [
       {
             "id": 1,
@@ -1867,6 +1867,7 @@
             "name": "艾西莫夫：機器人系列",
             "author": "艾薩克・艾西莫夫 (Isaac Asimov)",
             "count": 5,
+            "coverTitle": "",
             "books": [
                   "我，機器人",
                   "鋼穴",
@@ -1880,6 +1881,7 @@
             "name": "艾西莫夫：銀河帝國三部曲",
             "author": "艾薩克・艾西莫夫 (Isaac Asimov)",
             "count": 3,
+            "coverTitle": "",
             "books": [
                   "繁星若塵",
                   "星空暗流",
@@ -1891,6 +1893,7 @@
             "name": "三體三部曲",
             "author": "劉慈欣",
             "count": 3,
+            "coverTitle": "",
             "books": [
                   "三體",
                   "三體2：黑暗森林",
@@ -1900,12 +1903,13 @@
       },
       {
             "name": "沙丘系列",
-            "author": "法蘭克・赫伯特 (Frank Herbert",
+            "author": "法蘭克・赫伯特 (Frank Herbert)",
             "count": 3,
+            "coverTitle": "",
             "books": [
                   "沙丘",
                   "沙丘2：救世主",
-                  "《沙丘3：沙丘之子》"
+                  "沙丘3：沙丘之子"
             ],
             "desc": "圍繞沙漠行星厄拉科斯與香料爭奪，融匯政治陰謀、生態哲學與救世主神話的太空史詩。"
       },
@@ -1913,8 +1917,15 @@
             "name": "《地。-關於地球的運動-》",
             "author": "魚豊",
             "count": 8,
+            "coverTitle": "",
             "books": [
                   "第 1 集",
+                  "第 2 集",
+                  "第 3 集",
+                  "第 4 集",
+                  "第 5 集",
+                  "第 6 集",
+                  "第 7 集",
                   "第 8 集"
             ],
             "desc": "描繪15世紀歐洲先驅者跨越世代、賭上性命與宗教審判所對抗，追求「地動說」真理的動人篇章。"
@@ -1923,6 +1934,7 @@
             "name": "monpoké 皮卡丘幼兒繪本",
             "author": "松尾里佳子",
             "count": 3,
+            "coverTitle": "",
             "books": [
                   "皮卡丘的好朋友",
                   "皮卡丘的夜晚大冒險",
@@ -1934,6 +1946,7 @@
             "name": "40堂公開課系列",
             "author": "奈傑爾・華伯頓 理查・哈洛威",
             "count": 2,
+            "coverTitle": "",
             "books": [
                   "哲學的40堂公開課",
                   "宗教的40堂公開課"
@@ -1942,8 +1955,9 @@
       },
       {
             "name": "艾西莫夫科普教室",
-            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov)",
             "count": 2,
+            "coverTitle": "",
             "books": [
                   "科普教室（上）",
                   "科普教室（中）"
@@ -1954,6 +1968,7 @@
             "name": "廖鴻基海洋尋鯨文學",
             "author": "廖鴻基",
             "count": 2,
+            "coverTitle": "",
             "books": [
                   "座頭鯨赫連麼麼",
                   "黑潮尋鯨"
@@ -2848,7 +2863,108 @@
     if (btnFavOnly) btnFavOnly.addEventListener('click', () => setTimeout(updateMobileFilterBadge, 50));
     if (btnResetFilter) btnResetFilter.addEventListener('click', () => setTimeout(updateMobileFilterBadge, 50));
 
+    // 動態更新下拉選單數量與看板數據，確保各篩選項目永遠精確對齊資料庫
+    function updateFilterCounts() {
+      const total = booksDatabase.length;
+      const completed = booksDatabase.filter(b => b.status === 'completed').length;
+      const reading = booksDatabase.filter(b => b.status === 'reading').length;
+      const compRate = total > 0 ? ((completed / total) * 100).toFixed(1) : '0.0';
+
+      // 1. 看板統計更新
+      const statTotalEl = document.getElementById('statTotal');
+      const statCompletedEl = document.getElementById('statCompleted');
+      const statReadingEl = document.getElementById('statReading');
+      if (statTotalEl) statTotalEl.textContent = `${total} 冊`;
+      if (statCompletedEl) {
+        statCompletedEl.textContent = `${completed} 冊`;
+        const rateSub = statCompletedEl.nextElementSibling;
+        if (rateSub) rateSub.textContent = `${compRate}% 完讀率`;
+      }
+      if (statReadingEl) statReadingEl.textContent = `${reading} 冊`;
+
+      // 2. 年度下拉選單
+      if (yearFilter) {
+        const countsByYear = {};
+        booksDatabase.forEach(b => countsByYear[b.year] = (countsByYear[b.year] || 0) + 1);
+        Array.from(yearFilter.options).forEach(opt => {
+          if (opt.value === 'ALL') {
+            opt.textContent = `全部年度 (${total} 冊)`;
+          } else if (countsByYear[opt.value] !== undefined) {
+            opt.textContent = `${opt.value} 年度 (${countsByYear[opt.value]} 冊)`;
+          }
+        });
+      }
+
+      // 3. 流通狀態下拉選單
+      if (statusFilter) {
+        Array.from(statusFilter.options).forEach(opt => {
+          if (opt.value === 'ALL') {
+            opt.textContent = `全部流通狀態 (${total} 冊)`;
+          } else if (opt.value === 'completed') {
+            opt.textContent = `已完讀歸架 (${completed} 冊)`;
+          } else if (opt.value === 'reading') {
+            opt.textContent = `正在借閱中 (${reading} 冊)`;
+          }
+        });
+      }
+
+      // 4. 學科領域下拉選單
+      if (categoryFilter) {
+        const countsByCat = {};
+        booksDatabase.forEach(b => countsByCat[b.category] = (countsByCat[b.category] || 0) + 1);
+        const catLabels = {
+          "科幻與奇幻小說": "科幻與奇幻小說",
+          "哲學思辨、宗教與歷史社會": "哲學思辨、宗教與社會",
+          "漫畫": "漫畫",
+          "商業理財、自我成長與生活哲學": "商業理財與自我成長",
+          "心理學、認知與決策思維": "心理學與思維認知",
+          "海洋文學、鯨豚與自然生態": "海洋文學與生態自然",
+          "繪本與圖文創作": "繪本與圖文創作",
+          "世界文學、小說與傳記": "世界文學與傳記",
+          "科普、物理天文與生命科學": "科普與物理天文",
+          "親職教育與育兒家庭": "親職教育與家庭"
+        };
+        Array.from(categoryFilter.options).forEach(opt => {
+          if (opt.value === 'ALL') {
+            opt.textContent = `全部學科領域 (10 大類)`;
+          } else if (countsByCat[opt.value] !== undefined) {
+            const label = catLabels[opt.value] || opt.value;
+            opt.textContent = `${label} (${countsByCat[opt.value]} 冊)`;
+          }
+        });
+      }
+
+      // 5. 叢書系列下拉選單
+      if (seriesFilter) {
+        const countsBySeries = {};
+        booksDatabase.forEach(b => {
+          if (b.series) countsBySeries[b.series] = (countsBySeries[b.series] || 0) + 1;
+        });
+        const seriesLabels = {
+          "艾西莫夫：基地系列": "艾西莫夫：基地系列",
+          "艾西莫夫：機器人系列": "艾西莫夫：機器人系列",
+          "艾西莫夫：銀河帝國三部曲": "艾西莫夫：銀河帝國三部曲",
+          "三體三部曲": "三體三部曲",
+          "沙丘系列": "沙丘系列",
+          "《地。-關於地球的運動-》": "《地。-關於地球的運動-》",
+          "monpoké 皮卡丘幼兒繪本": "monpoké 皮卡丘繪本",
+          "40堂公開課系列": "40堂公開課系列",
+          "艾西莫夫科普教室": "艾西莫夫科普教室",
+          "廖鴻基海洋尋鯨文學": "廖鴻基海洋尋鯨文學"
+        };
+        Array.from(seriesFilter.options).forEach(opt => {
+          if (opt.value === 'ALL') {
+            opt.textContent = `全部叢書系列 (10 大系列)`;
+          } else if (countsBySeries[opt.value] !== undefined) {
+            const label = seriesLabels[opt.value] || opt.value;
+            opt.textContent = `${label} (${countsBySeries[opt.value]} 冊)`;
+          }
+        });
+      }
+    }
+
     // 初始化渲染
+    updateFilterCounts();
     renderCardCatalog();
     updateMobileFilterBadge();
   </script>

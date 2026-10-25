@@ -105,41 +105,44 @@ def parse_markdown():
                 desc = re.sub(r"^[📖\s\*在讀中｜]*", "", desc).strip()
 
             # 智能匹配分類
-            category = "世界文學、小說與傳記" # 預設
-            for cat_title, cat_name in category_map.items():
-                if cat_title in title or title in cat_title:
-                    category = cat_name
-                    break
+            if "簡單生活" in title:
+                category = "商業理財、自我成長與生活哲學"
+            elif "再次是個孩子" in title:
+                category = "親職教育與育兒家庭"
+            elif "我們為何相信" in title:
+                category = "科普、物理天文與生命科學"
+            elif "父產科" in title:
+                category = "科普、物理天文與生命科學"
+            elif title == "我們" or title.startswith("我們："):
+                category = "科幻與奇幻小說"
+            elif "地。" in title:
+                category = "漫畫"
             else:
-                # 關鍵字回退推斷
-                if title == "我們" or title.startswith("我們："):
-                    category = "科幻與奇幻小說"
-                elif "我們為何相信" in title:
-                    category = "科普、物理天文與生命科學"
-                elif "簡單生活" in title:
-                    category = "商業理財、自我成長與生活哲學"
-                elif "再次是個孩子" in title:
-                    category = "親職教育與育兒家庭"
-                elif "父產科" in title:
-                    category = "科普、物理天文與生命科學"
-                elif "地。" in title:
-                    category = "漫畫"
-                elif any(k in title for k in ["基地", "機器人", "帝國", "三體", "沙丘", "太空", "獵魔士", "人生副本", "美麗新世界", "神也鬥不過愚蠢", "FINAL FANTASY"]):
-                    category = "科幻與奇幻小說"
-                elif any(k in title for k in ["繪本", "皮卡丘", "影子馬戲團", "情緒大飯店", "鯨鯊", "牆外的牆"]):
-                    category = "繪本與圖文創作"
-                elif any(k in title for k in ["鯨", "海", "女子山海"]):
-                    category = "海洋文學、鯨豚與自然生態"
-                elif any(k in title for k in ["理財", "致富", "買進", "那瓦爾", "原則", "慢下來", "簡單生活", "第二座山", "大人"]):
-                    category = "商業理財、自我成長與生活哲學"
-                elif any(k in title for k in ["心理", "思維", "真確", "魅力", "物質", "莫非定律", "象與騎象人"]):
-                    category = "心理學、認知與決策思維"
-                elif any(k in title for k in ["哲學", "宗教", "尼采", "臺灣史", "政治", "武士道", "文明", "思辨讀本", "猶太"]):
-                    category = "哲學思辨、宗教與歷史社會"
-                elif any(k in title for k in ["物理", "相對論", "生命是什麼", "宇宙", "科普"]):
-                    category = "科普、物理天文與生命科學"
-                elif any(k in title for k in ["爸媽", "孩子", "教育", "PBL"]):
-                    category = "親職教育與育兒家庭"
+                category = "世界文學、小說與傳記" # 預設
+                for cat_title, cat_name in category_map.items():
+                    if cat_title in ["我", "我們"] and title != cat_title:
+                        continue
+                    if len(cat_title) >= 2 and (cat_title in title or title in cat_title):
+                        category = cat_name
+                        break
+                else:
+                    # 關鍵字回退推斷
+                    if any(k in title for k in ["基地", "機器人", "帝國", "三體", "沙丘", "太空", "獵魔士", "人生副本", "美麗新世界", "神也鬥不過愚蠢", "FINAL FANTASY"]):
+                        category = "科幻與奇幻小說"
+                    elif any(k in title for k in ["繪本", "皮卡丘", "影子馬戲團", "情緒大飯店", "鯨鯊", "牆外的牆"]):
+                        category = "繪本與圖文創作"
+                    elif any(k in title for k in ["鯨", "海", "女子山海"]):
+                        category = "海洋文學、鯨豚與自然生態"
+                    elif any(k in title for k in ["理財", "致富", "買進", "那瓦爾", "原則", "慢下來", "簡單生活", "第二座山", "大人"]):
+                        category = "商業理財、自我成長與生活哲學"
+                    elif any(k in title for k in ["心理", "思維", "真確", "魅力", "物質", "莫非定律", "象與騎象人"]):
+                        category = "心理學、認知與決策思維"
+                    elif any(k in title for k in ["哲學", "宗教", "尼采", "臺灣史", "政治", "武士道", "文明", "思辨讀本", "猶太"]):
+                        category = "哲學思辨、宗教與歷史社會"
+                    elif any(k in title for k in ["物理", "相對論", "生命是什麼", "宇宙", "科普"]):
+                        category = "科普、物理天文與生命科學"
+                    elif any(k in title for k in ["爸媽", "孩子", "教育", "PBL"]):
+                        category = "親職教育與育兒家庭"
 
             # 系列判斷
             series = ""
@@ -238,11 +241,16 @@ def update_html(books, series_database):
             flags=re.DOTALL
         )
 
-    # 3. 自動更新頂部看板統計數字
+    # 3. 自動更新頂部看板統計數字與文字
     total_count = len(books)
     completed_count = sum(1 for b in books if b["status"] == "completed")
     reading_count = sum(1 for b in books if b["status"] == "reading")
     completion_rate = f"{(completed_count / total_count * 100):.1f}%" if total_count > 0 else "0.0%"
+
+    count_2026 = sum(1 for b in books if b["year"] == 2026)
+    count_2025 = sum(1 for b in books if b["year"] == 2025)
+    count_2024 = sum(1 for b in books if b["year"] == 2024)
+    series_total_count = sum(s.get("count", len(s.get("books", []))) for s in series_database) if series_database else 38
 
     html = re.sub(
         r'<div id="statTotal"[^>]*>.*?</div>',
@@ -257,6 +265,68 @@ def update_html(books, series_database):
     html = re.sub(
         r'<div id="statReading"[^>]*>.*?</div>',
         f'<div id="statReading" class="text-2xl font-bold text-[#62c082] mt-1 font-serif">{reading_count} 冊</div>',
+        html
+    )
+    html = re.sub(
+        r'<div class="text-\[11px\] text-\[#7d6751\] mt-0\.5">\d+(\.\d+)?% 完讀率</div>',
+        f'<div class="text-[11px] text-[#7d6751] mt-0.5">{completion_rate} 完讀率</div>',
+        html
+    )
+    html = re.sub(
+        r'<div class="text-\[11px\] text-\[#7d6751\] mt-0\.5">共 \d+ 冊傳承脈絡</div>',
+        f'<div class="text-[11px] text-[#7d6751] mt-0.5">共 {series_total_count} 冊傳承脈絡</div>',
+        html
+    )
+
+    # 4. 自動更新靜態篩選下拉選單與看板計數
+    html = re.sub(
+        r'<option value="ALL">全部年度( \(\d+ 冊\))?</option>',
+        f'<option value="ALL">全部年度 ({total_count} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<option value="2026">2026 年度( \(\d+ 冊\))?</option>',
+        f'<option value="2026">2026 年度 ({count_2026} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<option value="2025">2025 年度( \(\d+ 冊\))?</option>',
+        f'<option value="2025">2025 年度 ({count_2025} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<option value="2024">2024 年度( \(\d+ 冊\))?</option>',
+        f'<option value="2024">2024 年度 ({count_2024} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<option value="ALL">全部流通狀態( \(\d+ 冊\))?</option>',
+        f'<option value="ALL">全部流通狀態 ({total_count} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<option value="completed">已完讀歸架( \(\d+ 冊\))?</option>',
+        f'<option value="completed">已完讀歸架 ({completed_count} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<option value="reading">正在借閱中( \(\d+ 冊\))?</option>',
+        f'<option value="reading">正在借閱中 ({reading_count} 冊)</option>',
+        html
+    )
+    html = re.sub(
+        r'<span>2026 年度進行中藏書 \(共 \d+ 冊\)</span>',
+        f'<span>2026 年度進行中藏書 (共 {count_2026} 冊)</span>',
+        html
+    )
+    html = re.sub(
+        r'共檢出 <span id="filteredCount"[^>]*>\d+</span> 冊符合條件',
+        f'共檢出 <span id="filteredCount" class="font-bold text-[#f5ebd7] font-serif text-sm">{total_count}</span> 冊符合條件',
+        html
+    )
+    html = re.sub(
+        r'// 完整 \d+ 冊圖書數據庫.*',
+        f'// 完整 {total_count} 冊圖書數據庫 (2024: {count_2024}本, 2025: {count_2025}本, 2026: {count_2026}本)',
         html
     )
 
