@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2c1a0e"/>
+      <stop offset="100%" stop-color="#140b05"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5e2a3"/>
+      <stop offset="50%" stop-color="#c89d58"/>
+      <stop offset="100%" stop-color="#8c6423"/>
+    </linearGradient>
+    <linearGradient id="pageGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#eee2cb"/>
+      <stop offset="15%" stop-color="#fcf9f2"/>
+      <stop offset="85%" stop-color="#fcf9f2"/>
+      <stop offset="100%" stop-color="#dfd0b5"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c42828"/>
+      <stop offset="100%" stop-color="#801414"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background Icon Tile -->
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <rect x="4" y="4" width="120" height="120" rx="24" fill="none" stroke="url(#gold)" stroke-width="3" opacity="0.85"/>
+
+  <!-- Book Container with shadow -->
+  <g filter="url(#shadow)">
+    <!-- Book Leather Cover base underneath pages -->
+    <path d="M 20 40 C 38 34, 56 36, 64 42 C 72 36, 90 34, 108 40 L 108 92 C 90 86, 72 88, 64 94 C 56 88, 38 86, 20 92 Z" fill="#4d2813" stroke="#8c5828" stroke-width="2"/>
+
+    <!-- Left Book Page Block -->
+    <path d="M 23 37 C 40 31, 57 33, 63 39 L 63 87 C 57 81, 40 79, 23 85 Z" fill="url(#pageGrad)" stroke="#c4b093" stroke-width="1.5"/>
+    <!-- Right Book Page Block -->
+    <path d="M 105 37 C 88 31, 71 33, 65 39 L 65 87 C 71 81, 88 79, 105 85 Z" fill="url(#pageGrad)" stroke="#c4b093" stroke-width="1.5"/>
+
+    <!-- Page Text Lines - Left Page -->
+    <path d="M 31 46 C 41 43, 50 44, 56 47" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 31 54 C 41 51, 50 52, 56 55" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 31 62 C 41 59, 50 60, 56 63" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 31 70 C 41 67, 50 68, 56 71" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Page Text Lines - Right Page -->
+    <path d="M 97 46 C 87 43, 78 44, 72 47" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 97 54 C 87 51, 78 52, 72 55" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 97 62 C 87 59, 78 60, 72 63" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 97 70 C 87 67, 78 68, 72 71" stroke="#b09679" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Center Book Spine Crease -->
+    <line x1="64" y1="38" x2="64" y2="92" stroke="#523218" stroke-width="3"/>
+
+    <!-- Crimson Silk Bookmark Ribbon -->
+    <path d="M 61 32 L 61 74 L 64 70 L 67 74 L 67 32 Z" fill="url(#ribbon)"/>
+  </g>
+</svg>
