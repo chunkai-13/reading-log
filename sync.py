@@ -120,6 +120,8 @@ def parse_markdown():
                     category = "商業理財、自我成長與生活哲學"
                 elif "再次是個孩子" in title:
                     category = "親職教育與育兒家庭"
+                elif "父產科" in title:
+                    category = "科普、物理天文與生命科學"
                 elif "地。" in title:
                     category = "漫畫"
                 elif any(k in title for k in ["基地", "機器人", "帝國", "三體", "沙丘", "太空", "獵魔士", "人生副本", "美麗新世界", "神也鬥不過愚蠢", "FINAL FANTASY"]):
@@ -136,7 +138,7 @@ def parse_markdown():
                     category = "哲學思辨、宗教與歷史社會"
                 elif any(k in title for k in ["物理", "相對論", "生命是什麼", "宇宙", "科普"]):
                     category = "科普、物理天文與生命科學"
-                elif any(k in title for k in ["爸媽", "孩子", "教育", "PBL", "父產科"]):
+                elif any(k in title for k in ["爸媽", "孩子", "教育", "PBL"]):
                     category = "親職教育與育兒家庭"
 
             # 系列判斷
