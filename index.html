@@ -2394,9 +2394,14 @@
 
     // 快捷從系列卡切換至索書目錄篩選
     function filterBySeries(seriesName) {
-      if (seriesFilter) {
-        seriesFilter.value = seriesName;
-      }
+      if (seriesFilter) seriesFilter.value = seriesName;
+      if (yearFilter) yearFilter.value = 'ALL';
+      if (categoryFilter) categoryFilter.value = 'ALL';
+      if (statusFilter) statusFilter.value = 'ALL';
+      if (searchInput) searchInput.value = '';
+      onlyShowFavorites = false;
+      const favBtn = document.getElementById('filterFavBtn');
+      if (favBtn) favBtn.classList.remove('bg-[#8b4f23]', 'text-[#fbf6ed]', 'border-[#8b4f23]');
       setView('card');
       renderCardCatalog();
     }
@@ -2575,6 +2580,9 @@
       if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
     });
     seriesFilter.addEventListener('change', () => {
+      if (seriesFilter.value !== 'ALL') {
+        if (yearFilter) yearFilter.value = 'ALL';
+      }
       renderCardCatalog();
       if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
     });
