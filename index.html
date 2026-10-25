@@ -233,17 +233,17 @@
           <option value="2024">2024 年度 (32 冊)</option>
         </select>
 
-        <!-- 領域學科分類 -->
+                <!-- 領域學科分類 -->
         <select id="categoryFilter" class="bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]">
           <option value="ALL">全部學科領域 (9 大類)</option>
           <option value="科幻與奇幻小說">科幻與奇幻小說 (29 冊)</option>
           <option value="哲學思辨、宗教與歷史社會">哲學思辨、宗教與社會 (16 冊)</option>
-          <option value="心理學、認知與決策思維">心理學與思維認知 (8 冊)</option>
           <option value="商業理財、自我成長與生活哲學">商業理財與自我成長 (8 冊)</option>
+          <option value="心理學、認知與決策思維">心理學與思維認知 (7 冊)</option>
           <option value="海洋文學、鯨豚與自然生態">海洋文學與生態自然 (7 冊)</option>
           <option value="繪本與圖文創作">繪本與圖文創作 (7 冊)</option>
-          <option value="世界文學、小說與傳記">世界文學與傳記 (6 冊)</option>
-          <option value="科普、物理天文與生命科學">科普與物理天文 (5 冊)</option>
+          <option value="世界文學、小說與傳記">世界文學與傳記 (7 冊)</option>
+          <option value="科普、物理天文與生命科學">科普與物理天文 (6 冊)</option>
           <option value="親職教育與育兒家庭">親職教育與家庭 (5 冊)</option>
         </select>
 
@@ -610,10 +610,10 @@
       {
             "id": 2,
             "year": 2026,
-            "callNo": "SF-2026-002",
+            "callNo": "BIZ-2026-002",
             "title": "我決定簡單生活：從斷捨離到極簡主義，丟東西後改變我的12件事！",
             "author": "佐佐木典士",
-            "category": "科幻與奇幻小說",
+            "category": "商業理財、自我成長與生活哲學",
             "series": "",
             "desc": "透過減物捨棄雜念，重獲心靈自由。",
             "status": "completed",
@@ -1091,10 +1091,10 @@
       {
             "id": 39,
             "year": 2025,
-            "callNo": "SF-2025-017",
+            "callNo": "EDU-2025-017",
             "title": "當我再次是個孩子：波蘭兒童文學之父選集",
             "author": "雅奴什・柯札克 Janusz Korczak",
-            "category": "科幻與奇幻小說",
+            "category": "親職教育與育兒家庭",
             "series": "",
             "desc": "波蘭教育大師柯札克溫柔且深邃的兒童文學。",
             "status": "completed",
@@ -1286,10 +1286,10 @@
       {
             "id": 54,
             "year": 2025,
-            "callNo": "SF-2025-032",
+            "callNo": "SCI-2025-032",
             "title": "我們為何相信",
             "author": "麥可・謝爾默 Michael Shermer",
-            "category": "科幻與奇幻小說",
+            "category": "科普、物理天文與生命科學",
             "series": "",
             "desc": "認知科學視角探討人類迷信與信念的成因。",
             "status": "completed",
@@ -2215,12 +2215,12 @@
         },
         "心理學、認知與決策思維": {
           icon: `<svg class="w-5 h-5 text-[#73432b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.54z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.54z"></path></svg>`,
-          desc: "真確、思維誤判、莫非定律、象與騎象人、內向心理學、大腦決策科學",
+          desc: "真確、思維誤判、莫非定律、象與騎象人、內向心理學、決策思維與認知",
           color: "from-[#73432b] to-[#b3704f]"
         },
         "商業理財、自我成長與生活哲學": {
           icon: `<svg class="w-5 h-5 text-[#7b521e]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"></path><polyline points="16 7 22 7 22 13"></polyline></svg>`,
-          desc: "持續買進、致富心態、納瓦爾寶典、原則筆記、生活哲學",
+          desc: "持續買進、致富心態、納瓦爾寶典、原則筆記、極簡生活與自我實現",
           color: "from-[#7b521e] to-[#ba8a45]"
         },
         "海洋文學、鯨豚與自然生態": {
@@ -2240,7 +2240,7 @@
         },
         "科普、物理天文與生命科學": {
           icon: `<svg class="w-5 h-5 text-[#30536b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2" fill="currentColor"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2"></path><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)"></ellipse><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-30 12 12)"></ellipse></svg>`,
-          desc: "時間的形狀相對論、多重宇宙、薛丁格生命是什麼、艾西莫夫科普教室",
+          desc: "我們為何相信、時間的形狀相對論、多重宇宙、薛丁格生命是什麼、艾西莫夫科普教室",
           color: "from-[#30536b] to-[#5a86a6]"
         },
         "親職教育與育兒家庭": {

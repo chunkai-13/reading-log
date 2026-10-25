@@ -109,7 +109,15 @@ def parse_markdown():
                     break
             else:
                 # 關鍵字回退推斷
-                if any(k in title for k in ["基地", "機器人", "帝國", "三體", "沙丘", "太空", "獵魔士", "人生副本", "美麗新世界", "我們", "神也鬥不過愚蠢", "FINAL FANTASY"]):
+                if title == "我們" or title.startswith("我們："):
+                    category = "科幻與奇幻小說"
+                elif "我們為何相信" in title:
+                    category = "科普、物理天文與生命科學"
+                elif "簡單生活" in title:
+                    category = "商業理財、自我成長與生活哲學"
+                elif "再次是個孩子" in title:
+                    category = "親職教育與育兒家庭"
+                elif any(k in title for k in ["基地", "機器人", "帝國", "三體", "沙丘", "太空", "獵魔士", "人生副本", "美麗新世界", "神也鬥不過愚蠢", "FINAL FANTASY"]):
                     category = "科幻與奇幻小說"
                 elif any(k in title for k in ["繪本", "皮卡丘", "影子馬戲團", "情緒大飯店", "鯨鯊", "牆外的牆"]):
                     category = "繪本與圖文創作"
@@ -117,13 +125,13 @@ def parse_markdown():
                     category = "海洋文學、鯨豚與自然生態"
                 elif any(k in title for k in ["理財", "致富", "買進", "那瓦爾", "原則", "慢下來", "簡單生活", "第二座山", "大人"]):
                     category = "商業理財、自我成長與生活哲學"
-                elif any(k in title for k in ["心理", "思維", "真確", "相信", "魅力", "物質", "莫非定律", "象與騎象人"]):
+                elif any(k in title for k in ["心理", "思維", "真確", "魅力", "物質", "莫非定律", "象與騎象人"]):
                     category = "心理學、認知與決策思維"
-                elif any(k in title for k in ["哲學", "宗教", "尼采", "地。", "臺灣史", "政治", "武士道", "文明", "思辨讀本"]):
+                elif any(k in title for k in ["哲學", "宗教", "尼采", "地。", "臺灣史", "政治", "武士道", "文明", "思辨讀本", "猶太"]):
                     category = "哲學思辨、宗教與歷史社會"
                 elif any(k in title for k in ["物理", "相對論", "生命是什麼", "宇宙", "科普"]):
                     category = "科普、物理天文與生命科學"
-                elif any(k in title for k in ["爸媽", "孩子", "教育", "PBL"]):
+                elif any(k in title for k in ["爸媽", "孩子", "教育", "PBL", "父產科"]):
                     category = "親職教育與育兒家庭"
 
             # 系列判斷
