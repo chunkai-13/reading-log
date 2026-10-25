@@ -1076,8 +1076,8 @@
             "series": "",
             "desc": "從科學與藝術視角回顧人類知識躍進史。",
             "status": "completed",
-            "coverUrl": "",
-            "booksUrl": "https://search.books.com.tw/search/query/key/%E6%96%87%E6%98%8E%E7%9A%84%E8%BA%8D%E6%98%87/cat/all"
+            "coverUrl": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681982135003/20210223060842206419.jpg",
+            "booksUrl": "https://www.eslite.com/product/1001128182681982135003"
       },
       {
             "id": 36,
@@ -2073,9 +2073,10 @@
                   <img 
                     src="${book.coverUrl}" 
                     alt="《${book.title}》封面" 
+                    referrerpolicy="no-referrer"
                     class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
-                    onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');"
+                    onerror="if(!this.dataset.triedProxy){this.dataset.triedProxy='1';this.src='https://images.weserv.nl/?url='+encodeURIComponent(this.src);}else{this.onerror=null;this.classList.add('hidden');this.nextElementSibling.classList.remove('hidden');}"
                   >
                   <div class="hidden flex-col items-center justify-center p-2 text-center text-[#8a6e55] w-full h-full bg-[#f4ecd8]">
                     <svg class="w-8 h-8 opacity-60 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2144,7 +2145,7 @@
                 <span>→</span>
               </button>
               <div class="flex items-center gap-2">
-                <a href="${book.booksUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded bg-[#7a4c28] hover:bg-[#5e381b] text-[#fbf6ed] text-[11px] font-medium inline-flex items-center gap-1 shadow-sm transition" title="前往博客來查看《${book.title}》詳細資料">
+                <a href="${book.booksUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded bg-[#7a4c28] hover:bg-[#5e381b] text-[#fbf6ed] text-[11px] font-medium inline-flex items-center gap-1 shadow-sm transition" title="${(book.booksUrl && book.booksUrl.includes('eslite')) ? '前往誠品線上查看' : '前往博客來查看'}《${book.title}》詳細資料">
                   <span>更多資訊</span>
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -2462,19 +2463,31 @@
       const modalBooksLink = document.getElementById('modalBooksLink');
       if (modalBooksLink) {
         modalBooksLink.href = book.booksUrl || `https://search.books.com.tw/search/query/key/${encodeURIComponent(book.title)}/cat/all`;
+        const isEslite = (book.booksUrl || '').includes('eslite');
+        modalBooksLink.title = isEslite ? '前往誠品線上查看書籍完整資訊' : '前往博客來查看書籍完整資訊';
+        const spanEl = modalBooksLink.querySelector('span');
+        if (spanEl) spanEl.textContent = isEslite ? '更多資訊 (誠品線上)' : '更多資訊 (博客來)';
       }
 
       const modalCoverImg = document.getElementById('modalCoverImg');
       const modalCoverPlaceholder = document.getElementById('modalCoverPlaceholder');
       if (modalCoverImg && modalCoverPlaceholder) {
+        modalCoverImg.dataset.triedProxy = '';
         if (book.coverUrl) {
           modalCoverImg.src = book.coverUrl;
           modalCoverImg.alt = `《${book.title}》封面`;
+          modalCoverImg.referrerPolicy = 'no-referrer';
           modalCoverImg.classList.remove('hidden');
           modalCoverPlaceholder.classList.add('hidden');
           modalCoverImg.onerror = () => {
-            modalCoverImg.classList.add('hidden');
-            modalCoverPlaceholder.classList.remove('hidden');
+            if (!modalCoverImg.dataset.triedProxy) {
+              modalCoverImg.dataset.triedProxy = '1';
+              modalCoverImg.src = 'https://images.weserv.nl/?url=' + encodeURIComponent(book.coverUrl);
+            } else {
+              modalCoverImg.onerror = null;
+              modalCoverImg.classList.add('hidden');
+              modalCoverPlaceholder.classList.remove('hidden');
+            }
           };
         } else {
           modalCoverImg.classList.add('hidden');
