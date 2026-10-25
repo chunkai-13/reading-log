@@ -180,6 +180,27 @@ def update_html(books, series_database):
     with open(HTML_PATH, "r", encoding="utf-8") as f:
         html = f.read()
 
+    # 保留現有書籍的 coverUrl 與 booksUrl
+    existing_map = {}
+    m_exist = re.search(r"const booksDatabase = (\[.*?\]);", html, re.DOTALL)
+    if m_exist:
+        try:
+            for eb in json.loads(m_exist.group(1)):
+                existing_map[eb.get("title")] = eb
+        except Exception:
+            pass
+
+    for b in books:
+        t = b["title"]
+        if t in existing_map:
+            b["coverUrl"] = existing_map[t].get("coverUrl", "")
+            b["booksUrl"] = existing_map[t].get("booksUrl", "")
+        else:
+            b["coverUrl"] = ""
+            import urllib.parse
+            clean_t = re.sub(r"（.*?）", "", t).split("：")[0].strip()
+            b["booksUrl"] = f"https://search.books.com.tw/search/query/key/{urllib.parse.quote(clean_t)}/cat/all"
+
     # 1. 替換 booksDatabase
     books_json = json.dumps(books, ensure_ascii=False, indent=6)
     html = re.sub(
