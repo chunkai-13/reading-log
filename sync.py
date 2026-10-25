@@ -49,7 +49,7 @@ def parse_markdown():
         if s_name in ['2024', '2025', '2026', '累計'] or '年度' in s_name:
             continue
         s_count = int(match.group(2).strip())
-        s_author = match.group(3).strip().replace("<br>", " ").replace("*(", "(").replace(")*", "")
+        s_author = match.group(3).strip().replace("<br>", " ").replace("*(", "(").replace(")*", ")")
         s_books_raw = match.group(4).strip()
         s_desc = match.group(5).strip()
         
@@ -63,10 +63,13 @@ def parse_markdown():
             if "第" in t and "集" in t:
                 series_map[f"地。-關於地球的運動- ({t})"] = s_name
 
+        cover_title = "基地" if "基地系列" in s_name else ""
+
         series_database.append({
             "name": s_name,
             "author": s_author,
             "count": s_count,
+            "coverTitle": cover_title,
             "books": s_titles,
             "desc": s_desc
         })

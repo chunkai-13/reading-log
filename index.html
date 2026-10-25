@@ -1797,8 +1797,9 @@
     const seriesDatabase = [
       {
             "name": "艾西莫夫：基地系列",
-            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov)",
             "count": 7,
+            "coverTitle": "基地",
             "books": [
                   "基地前奏",
                   "基地締造者",
@@ -1812,7 +1813,7 @@
       },
       {
             "name": "艾西莫夫：機器人系列",
-            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov)",
             "count": 5,
             "books": [
                   "我，機器人",
@@ -1825,7 +1826,7 @@
       },
       {
             "name": "艾西莫夫：銀河帝國三部曲",
-            "author": "艾薩克・艾西莫夫 (Isaac Asimov",
+            "author": "艾薩克・艾西莫夫 (Isaac Asimov)",
             "count": 3,
             "books": [
                   "繁星若塵",
@@ -2311,8 +2312,18 @@
         !['2024', '2025', '2026', '累計'].includes(ser.name)
       );
 
-      // 取得系列第一本（或後續遞補）封面函式
+      // 取得系列代表封面函式
       function getSeriesCover(ser) {
+        // 自訂優先代表封面（基地系列指定使用本傳首部曲《基地》取代前傳《基地前奏》）
+        const preferredTitles = {
+          "艾西莫夫：基地系列": "基地"
+        };
+        const targetTitle = ser.coverTitle || preferredTitles[ser.name];
+        if (targetTitle) {
+          const found = booksDatabase.find(b => b.title === targetTitle && b.coverUrl);
+          if (found) return { coverUrl: found.coverUrl, title: found.title, id: found.id };
+        }
+
         if (Array.isArray(ser.books)) {
           for (const t of ser.books) {
             const cleanT = t.replace(/[《》\s]/g, '');
