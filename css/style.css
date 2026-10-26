@@ -1,0 +1,159 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   靜謐藏書閣 (Private Library Archive) - 核心擬真質感樣式庫
+   ========================================================================== */
+
+:root {
+  --wood-dark: #23160e;
+  --wood-mid: #3a2518;
+  --wood-light: #523623;
+  --brass: #c89d58;
+  --brass-light: #e6c587;
+  --parchment: #f9f5ea;
+  --parchment-card: #fdfbf7;
+  --ink: #1f1d1a;
+  --ink-muted: #696259;
+  --stamp-red: #a82020;
+  --stamp-green: #1b6b3a;
+}
+
+body {
+  background-color: #170e08;
+  color: var(--ink);
+  font-family: 'Songti TC', 'Noto Serif TC', 'Baskerville', 'Georgia', serif;
+  margin: 0;
+  padding: 0;
+  background-image: radial-gradient(circle at 50% 20%, #2f1d13 0%, #170e08 100%);
+  min-height: 100vh;
+}
+
+.font-sans-ui {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 書架擬真木紋與陰影 */
+.bookshelf-row {
+  background: linear-gradient(180deg, #442a1b 0%, #2e1b11 75%, #1f120b 100%);
+  box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.6), 0 10px 20px rgba(0, 0, 0, 0.5);
+  border-bottom: 14px solid #1a0f0a;
+  position: relative;
+}
+
+.bookshelf-row::after {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #b38848 0%, #ecd093 50%, #b38848 100%);
+  opacity: 0.85;
+}
+
+/* 書脊設計 */
+.book-spine {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.4), inset -2px 0 4px rgba(255, 255, 255, 0.1), inset 2px 0 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 3px 3px 1px 1px;
+}
+
+.book-spine:hover {
+  transform: translateY(-24px) scale(1.03);
+  box-shadow: -6px 12px 18px rgba(0, 0, 0, 0.7), inset -2px 0 5px rgba(255, 255, 255, 0.25);
+  z-index: 30;
+}
+
+/* 書脊肋紋 (Raised Bands) */
+.spine-band {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 215, 0, 0.45);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* 借閱戳印風格 */
+.library-stamp {
+  border: 2px dashed var(--stamp-red);
+  color: var(--stamp-red);
+  transform: rotate(-4deg);
+  mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0.7) 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.library-stamp-reading {
+  border: 2px dashed var(--stamp-green);
+  color: var(--stamp-green);
+  transform: rotate(3deg);
+}
+
+/* 羊皮紙索引卡片質感 */
+.parchment-card {
+  background-color: var(--parchment-card);
+  border: 1px solid #dfd5c3;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 0 40px rgba(210, 190, 160, 0.18);
+  position: relative;
+}
+
+.parchment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #c5a059, #e2c992, #c5a059);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+/* 黃銅金屬銘牌 */
+.brass-plate {
+  background: linear-gradient(135deg, #a47c36 0%, #e2c585 50%, #8e6826 100%);
+  color: #241505;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 3px 6px rgba(0, 0, 0, 0.5);
+  border: 1px solid #735118;
+}
+
+/* 捲軸自訂美化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e130c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5a3821;
+  border-radius: 4px;
+  border: 1px solid #7a4f30;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7a4f30;
+}
+
+/* 行動版檢索面板折疊與過渡控制 */
+@media (max-width: 1023px) {
+  #filterControlsWrapper.mobile-collapsed {
+    display: none !important;
+  }
+  #filterControlsWrapper.mobile-expanded {
+    display: flex !important;
+  }
+}

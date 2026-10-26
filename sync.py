@@ -349,7 +349,7 @@ def push_to_github():
         return True
 
     print("偵測到書目變更，執行 git commit 與 git push...")
-    subprocess.run(["git", "add", "index.html", "favicon.svg"], cwd=SCRIPT_DIR, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=SCRIPT_DIR, check=True)
     msg = f"自動同步閱讀書目：{time.strftime('%Y-%m-%d %H:%M:%S')}"
     subprocess.run(["git", "commit", "-m", msg], cwd=SCRIPT_DIR, check=True)
     res = subprocess.run(["git", "push", "origin", "main"], cwd=SCRIPT_DIR)
