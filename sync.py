@@ -11,7 +11,6 @@ NOTES_DIR = os.path.dirname(SCRIPT_DIR) # Notes folder
 MD_PATH = os.path.join(NOTES_DIR, "Reading log.md")
 HTML_PATH = os.path.join(SCRIPT_DIR, "index.html")
 DATA_PATH = os.path.join(SCRIPT_DIR, "js", "books-data.js")
-OBSIDIAN_DATA_PATH = os.path.join(NOTES_DIR, "js", "books-data.js")
 
 def parse_markdown():
     if not os.path.exists(MD_PATH):
@@ -258,10 +257,6 @@ const seriesDatabase = {series_json};
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         f.write(books_data_content)
 
-    os.makedirs(os.path.dirname(OBSIDIAN_DATA_PATH), exist_ok=True)
-    with open(OBSIDIAN_DATA_PATH, "w", encoding="utf-8") as f:
-        f.write(books_data_content)
-
     # 2. 自動更新 HTML 輕量靜態看板與初始備用計數標籤
 
     html = re.sub(
@@ -343,11 +338,6 @@ const seriesDatabase = {series_json};
     )
 
     with open(HTML_PATH, "w", encoding="utf-8") as f:
-        f.write(html)
-
-    # 同步複製回 Obsidian 根目錄以保持雙向一致
-    obsidian_html = os.path.join(NOTES_DIR, "reading_log_library.html")
-    with open(obsidian_html, "w", encoding="utf-8") as f:
         f.write(html)
 
     print(f"✅ 典藏資料庫 (js/books-data.js) 與 HTML 更新成功！解析書籍總數：{total_count} 冊（完讀：{completed_count}，在讀：{reading_count}）。")
