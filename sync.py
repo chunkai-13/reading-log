@@ -10,6 +10,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 NOTES_DIR = os.path.dirname(SCRIPT_DIR) # Notes folder
 MD_PATH = os.path.join(NOTES_DIR, "Reading log.md")
 HTML_PATH = os.path.join(SCRIPT_DIR, "index.html")
+DATA_PATH = os.path.join(SCRIPT_DIR, "js", "books-data.js")
+OBSIDIAN_DATA_PATH = os.path.join(NOTES_DIR, "js", "books-data.js")
 
 def parse_markdown():
     if not os.path.exists(MD_PATH):
@@ -201,15 +203,19 @@ def update_html(books, series_database):
     with open(HTML_PATH, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # 保留現有書籍的 coverUrl 與 booksUrl
+    # 保留現有書籍的 coverUrl 與 booksUrl (優先自 js/books-data.js 讀取)
     existing_map = {}
-    m_exist = re.search(r"const booksDatabase = (\[.*?\]);", html, re.DOTALL)
-    if m_exist:
-        try:
-            for eb in json.loads(m_exist.group(1)):
-                existing_map[eb.get("title")] = eb
-        except Exception:
-            pass
+    source_to_check = DATA_PATH if os.path.exists(DATA_PATH) else HTML_PATH
+    if os.path.exists(source_to_check):
+        with open(source_to_check, "r", encoding="utf-8") as f_src:
+            src_content = f_src.read()
+        m_exist = re.search(r"const booksDatabase = (\[.*?\]);", src_content, re.DOTALL)
+        if m_exist:
+            try:
+                for eb in json.loads(m_exist.group(1)):
+                    existing_map[eb.get("title")] = eb
+            except Exception:
+                pass
 
     for b in books:
         t = b["title"]
@@ -222,26 +228,10 @@ def update_html(books, series_database):
             clean_t = re.sub(r"（.*?）", "", t).split("：")[0].strip()
             b["booksUrl"] = f"https://search.books.com.tw/search/query/key/{urllib.parse.quote(clean_t)}/cat/all"
 
-    # 1. 替換 booksDatabase
+    # 1. 寫入獨立資料庫檔案 js/books-data.js
     books_json = json.dumps(books, ensure_ascii=False, indent=6)
-    html = re.sub(
-        r"const booksDatabase = \[.*?\];",
-        f"const booksDatabase = {books_json};",
-        html,
-        flags=re.DOTALL
-    )
+    series_json = json.dumps(series_database, ensure_ascii=False, indent=6) if series_database else "[]"
 
-    # 2. 替換 seriesDatabase
-    if series_database:
-        series_json = json.dumps(series_database, ensure_ascii=False, indent=6)
-        html = re.sub(
-            r"const seriesDatabase = \[.*?\];",
-            f"const seriesDatabase = {series_json};",
-            html,
-            flags=re.DOTALL
-        )
-
-    # 3. 自動更新頂部看板統計數字與文字
     total_count = len(books)
     completed_count = sum(1 for b in books if b["status"] == "completed")
     reading_count = sum(1 for b in books if b["status"] == "reading")
@@ -251,6 +241,28 @@ def update_html(books, series_database):
     count_2025 = sum(1 for b in books if b["year"] == 2025)
     count_2024 = sum(1 for b in books if b["year"] == 2024)
     series_total_count = sum(s.get("count", len(s.get("books", []))) for s in series_database) if series_database else 38
+
+    books_data_content = f"""/**
+ * 靜謐藏書閣 (Private Library Archive) - 典藏書目與系列專題套書數據庫
+ * 此檔案由 sync.py 自「Reading log.md」自動同步生成，請勿手動直接編輯。
+ */
+
+// 完整 {total_count} 冊圖書數據庫 (2024: {count_2024}本, 2025: {count_2025}本, 2026: {count_2026}本)
+const booksDatabase = {books_json};
+
+// 系列套書專題數據
+const seriesDatabase = {series_json};
+"""
+
+    os.makedirs(os.path.dirname(DATA_PATH), exist_ok=True)
+    with open(DATA_PATH, "w", encoding="utf-8") as f:
+        f.write(books_data_content)
+
+    os.makedirs(os.path.dirname(OBSIDIAN_DATA_PATH), exist_ok=True)
+    with open(OBSIDIAN_DATA_PATH, "w", encoding="utf-8") as f:
+        f.write(books_data_content)
+
+    # 2. 自動更新 HTML 輕量靜態看板與初始備用計數標籤
 
     html = re.sub(
         r'<div id="statTotal"[^>]*>.*?</div>',
@@ -338,7 +350,7 @@ def update_html(books, series_database):
     with open(obsidian_html, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"✅ HTML 更新成功！解析書籍總數：{total_count} 冊（完讀：{completed_count}，在讀：{reading_count}）。")
+    print(f"✅ 典藏資料庫 (js/books-data.js) 與 HTML 更新成功！解析書籍總數：{total_count} 冊（完讀：{completed_count}，在讀：{reading_count}）。")
     return True
 
 def push_to_github():
