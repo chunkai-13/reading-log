@@ -135,6 +135,17 @@ function renderCardCatalog() {
 
 // 渲染統計年報分析 (Stats View)
 function renderStats() {
+  // 1. 渲染純 SVG 閱讀趨勢走勢圖
+  if (typeof renderReadingTrendChart === 'function') {
+    renderReadingTrendChart('readingTrendChartContainer');
+  }
+
+  // 2. 渲染純 SVG 十大學門分佈甜甜圈圖
+  if (typeof renderCategoryDonutChart === 'function') {
+    renderCategoryDonutChart('donutChartSvgContainer', 'donutCenterInfo');
+  }
+
+  // 3. 渲染學科分佈列表長條
   const categoryStatsList = document.getElementById('categoryStatsList');
   if (!categoryStatsList) return;
 

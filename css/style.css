@@ -232,4 +232,46 @@ body {
   text-align: center;
 }
 
+/* 純 SVG 視覺化圖表樣式 (SVG Data Visualizations) */
+.donut-segment {
+  transition: transform 0.25s ease, opacity 0.2s ease, filter 0.25s ease;
+  cursor: pointer;
+  transform-origin: 160px 160px;
+}
+
+.donut-segment:hover {
+  filter: brightness(1.22) drop-shadow(0 0 8px rgba(226, 197, 133, 0.55));
+  opacity: 1;
+}
+
+.trend-area {
+  fill: url(#trendGoldGrad);
+  opacity: 0.22;
+}
+
+.trend-line {
+  stroke: #e2c585;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
+}
+
+.trend-point {
+  fill: #f5ebd7;
+  stroke: #8a5726;
+  stroke-width: 2.5;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.trend-point:hover {
+  r: 7;
+  fill: #fff;
+  stroke: #e2c585;
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 6px rgba(226, 197, 133, 0.8));
+}
+
+
 
