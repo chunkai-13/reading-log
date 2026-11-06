@@ -51,14 +51,18 @@
         </div>
 
         <!-- 快速功能鍵 -->
-        <div class="flex flex-wrap items-center gap-3">
-          <button id="btnRandomPick" class="px-4 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-2">
-            <svg class="w-4 h-4 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-            <span>館員隨機薦讀</span>
+        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+          <button id="btnShortcutsHelp" class="px-3 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-1.5" title="鍵盤快捷鍵指南 (可按 ? 叫出)">
+            <kbd class="px-1.5 py-0.5 text-[10px] bg-[#1a0f08] border border-[#5a3a24] rounded text-[#e2c585] font-mono">?</kbd>
+            <span class="hidden sm:inline">快捷鍵</span>
           </button>
-          <button id="btnExportList" class="px-4 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-2">
+          <button id="btnRandomPick" class="px-3 sm:px-4 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-1.5 sm:gap-2">
+            <svg class="w-4 h-4 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            <span>隨機薦讀</span>
+          </button>
+          <button id="btnExportList" class="px-3 sm:px-4 py-2 bg-[#2d1b11] hover:bg-[#43291a] text-[#f2e6cf] border border-[#785133] rounded shadow text-sm font-sans-ui transition flex items-center gap-1.5 sm:gap-2">
             <svg class="w-4 h-4 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            <span>複製書目報表</span>
+            <span>匯出報表</span>
           </button>
         </div>
       </div>
@@ -133,8 +137,9 @@
       <div id="filterControlsWrapper" class="mobile-collapsed flex-wrap items-center gap-2 w-full lg:w-auto lg:flex-grow lg:order-1 pt-2.5 lg:pt-0 border-t border-[#3d2717] lg:border-t-0 transition-all duration-300">
         <!-- 搜尋輸入框 -->
         <div class="relative w-full sm:w-64">
-          <input type="text" id="searchInput" placeholder="檢索書名、作者、摘要..." class="w-full pl-9 pr-3 py-1.5 bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] placeholder-[#7d6751] rounded text-sm focus:outline-none focus:border-[#e2c585]">
-          <svg class="w-4 h-4 text-[#8a6f52] absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="searchInput" placeholder="檢索書名、作者、摘要..." class="w-full pl-9 pr-8 py-1.5 bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] placeholder-[#7d6751] rounded text-sm focus:outline-none focus:border-[#e2c585]">
+          <svg class="w-4 h-4 text-[#8a6f52] absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <kbd class="hidden sm:inline-block absolute right-2.5 top-2 text-[10px] font-mono text-[#8a6f52] bg-[#22140b] px-1.5 py-0.5 rounded border border-[#4d321d] pointer-events-none">/</kbd>
         </div>
 
         <!-- 年度選單 -->
@@ -180,6 +185,15 @@
           <option value="ALL">全部流通狀態 (92 冊)</option>
           <option value="completed">已完讀歸架 (90 冊)</option>
           <option value="reading">正在借閱中 (2 冊)</option>
+        </select>
+
+        <!-- 排序維度選單 -->
+        <select id="sortFilter" class="w-full sm:w-auto bg-[#170e08] border border-[#5a3a24] text-[#f2e6cf] py-1.5 px-3 rounded text-sm focus:outline-none focus:border-[#e2c585]" title="選擇書目排序方式">
+          <option value="DEFAULT">預設排序 (登錄原序)</option>
+          <option value="YEAR_DESC">閱讀年度 (新 → 舊)</option>
+          <option value="YEAR_ASC">閱讀年度 (舊 → 新)</option>
+          <option value="PAGES_DESC">冊本厚度 (頁數多至寡)</option>
+          <option value="TITLE_ASC">書名字母筆劃 (A → Z)</option>
         </select>
 
         <!-- 操作按鈕列 -->
@@ -425,10 +439,18 @@
   <div id="bookModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="relative w-full max-w-2xl parchment-card rounded-lg p-6 md:p-8 shadow-2xl border-2 border-[#b5925a] max-h-[90vh] overflow-y-auto">
       
-      <!-- 關閉按鈕 -->
-      <button id="modalCloseBtn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#dfd2be] text-[#3e2717] hover:bg-[#c9b79d] flex items-center justify-center font-bold font-sans-ui">
-        ✕
-      </button>
+      <!-- 頂部視窗控制群 (上一冊 / 下一冊 / 關閉) -->
+      <div class="absolute top-4 right-4 flex items-center gap-1.5 z-20">
+        <button id="modalPrevBtn" class="w-8 h-8 rounded-full bg-[#dfd2be] text-[#3e2717] hover:bg-[#c9b79d] flex items-center justify-center font-bold text-base transition shadow-sm leading-none" title="上一冊 (鍵盤 ← 或 J)">
+          ‹
+        </button>
+        <button id="modalNextBtn" class="w-8 h-8 rounded-full bg-[#dfd2be] text-[#3e2717] hover:bg-[#c9b79d] flex items-center justify-center font-bold text-base transition shadow-sm leading-none" title="下一冊 (鍵盤 → 或 K)">
+          ›
+        </button>
+        <button id="modalCloseBtn" class="w-8 h-8 rounded-full bg-[#dfd2be] text-[#3e2717] hover:bg-[#c9b79d] flex items-center justify-center font-bold font-sans-ui transition shadow-sm ml-1" title="關閉借閱憑證 (Esc)">
+          ✕
+        </button>
+      </div>
 
       <!-- 借閱卡頂部裝飾 -->
       <div class="text-center pb-4 border-b-2 border-[#3b2414] mb-6">
@@ -515,6 +537,60 @@
     </div>
   </div>
 
+  <!-- 鍵盤快捷鍵指南彈窗 (Keyboard Shortcuts Modal) -->
+  <div id="shortcutsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="relative w-full max-w-md parchment-card rounded-lg p-6 shadow-2xl border-2 border-[#b5925a]">
+      <button id="shortcutsModalCloseBtn" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-[#dfd2be] text-[#3e2717] hover:bg-[#c9b79d] flex items-center justify-center font-bold text-xs" title="關閉指南 (Esc)">
+        ✕
+      </button>
+      <div class="text-center pb-3 border-b border-[#dfd2be] mb-4">
+        <h3 class="text-xl font-bold text-[#24150b] font-serif">全域鍵盤快捷鍵指南</h3>
+        <p class="text-xs text-[#7d6044] font-sans-ui mt-0.5">KEYBOARD NAVIGATION SHORTCUTS</p>
+      </div>
+      <div class="space-y-2.5 text-xs font-sans-ui text-[#3e2617]">
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#ebdcc4]">
+          <span>聚焦檢索輸入框</span>
+          <kbd class="px-2 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">/</kbd>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#ebdcc4]">
+          <span>切換四大視角 (卡片/書架/年報/專題)</span>
+          <div class="flex gap-1">
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">1</kbd>
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">2</kbd>
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">3</kbd>
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">4</kbd>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#ebdcc4]">
+          <span>借閱憑證內：翻閱上一冊 / 下一冊</span>
+          <div class="flex gap-1 font-mono font-bold">
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded">←</kbd>
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded">→</kbd>
+            <span class="text-[#8c6b4b] self-center">或</span>
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded">J</kbd>
+            <kbd class="px-1.5 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded">K</kbd>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#ebdcc4]">
+          <span>借閱憑證內：切換珍藏典藏</span>
+          <kbd class="px-2 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">F</kbd>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#ebdcc4]">
+          <span>借閱憑證內：複製標準書目引文</span>
+          <kbd class="px-2 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">C</kbd>
+        </div>
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#ebdcc4]">
+          <span>開啟 / 關閉快捷鍵指南</span>
+          <kbd class="px-2 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">?</kbd>
+        </div>
+        <div class="flex items-center justify-between">
+          <span>關閉目前彈窗 / 清除搜尋</span>
+          <kbd class="px-2 py-0.5 bg-[#f5ebd7] border border-[#cfbd9f] rounded font-mono font-bold">Esc</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 全域浮動提示通知 (Toast Notification) -->
   <div id="libraryToast" role="status" aria-live="polite" class="fixed top-5 right-5 z-50 pointer-events-none transform -translate-y-4 opacity-0 transition-all duration-300 ease-out">
     <div class="library-toast shadow-2xl rounded px-4 py-2.5 flex items-center gap-3 border border-[#c5a059]">
@@ -537,7 +613,13 @@
   <!-- 視角渲染與彈窗模組 (包含索書卡、年度分析、系列專題與書目詳情) -->
   <script src="js/views.js"></script>
 
-  <!-- 核心控制器模組 (包含狀態管理、篩選邏輯、快捷鍵與事件監聽) -->
+  <!-- 檢索與多維排序過濾模組 (包含關鍵字、年度、學科、排序演算法、條件膠囊) -->
+  <script src="js/filters.js"></script>
+
+  <!-- 鍵盤快捷鍵與互動控制器模組 (包含全域鍵盤導航、翻頁、行動版折疊) -->
+  <script src="js/shortcuts.js"></script>
+
+  <!-- 應用程式核心控制器 (包含狀態管理、視角導覽、操作事件與生命週期) -->
   <script src="js/app.js"></script>
 
 </body>
