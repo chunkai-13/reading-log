@@ -157,3 +157,24 @@ body {
     display: flex !important;
   }
 }
+
+/* 全域浮動提示 (Toast) */
+.library-toast {
+  background: rgba(29, 18, 10, 0.96);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(197, 160, 89, 0.25);
+}
+
+/* 篩選標籤膠囊 (Filter Pill) */
+.filter-pill {
+  background: #25170f;
+  border: 1px solid #5a3821;
+  color: #f2e6cf;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  border-color: #a87449;
+  background: #311e13;
+}
+

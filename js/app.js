@@ -114,6 +114,43 @@ const filteredCount = document.getElementById('filteredCount');
 const favCountSpan = document.getElementById('favCount');
 const favIcon = document.getElementById('favIcon');
 
+const activeFilterTags = document.getElementById('activeFilterTags');
+const libraryToast = document.getElementById('libraryToast');
+const toastMessage = document.getElementById('toastMessage');
+const toastIcon = document.getElementById('toastIcon');
+let toastTimeoutId = null;
+
+// 全域古典質感浮動提示 (Toast Notification)
+function showToast(message, type = 'success') {
+  if (!libraryToast || !toastMessage) return;
+
+  if (toastTimeoutId) {
+    clearTimeout(toastTimeoutId);
+    toastTimeoutId = null;
+  }
+
+  toastMessage.textContent = message;
+
+  if (type === 'info') {
+    if (toastIcon) {
+      toastIcon.innerHTML = `<svg class="w-4 h-4 text-[#e2c585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+    }
+  } else {
+    if (toastIcon) {
+      toastIcon.innerHTML = `<svg class="w-4 h-4 text-[#78d197]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+    }
+  }
+
+  libraryToast.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
+  libraryToast.classList.add('opacity-100', 'translate-y-0');
+
+  toastTimeoutId = setTimeout(() => {
+    libraryToast.classList.remove('opacity-100', 'translate-y-0');
+    libraryToast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+    toastTimeoutId = null;
+  }, 2600);
+}
+
 const cardCatalogView = document.getElementById('cardCatalogView');
 const bookshelfView = document.getElementById('bookshelfView');
 const statsView = document.getElementById('statsView');
@@ -190,11 +227,138 @@ function getFilteredBooks() {
   });
 }
 
+// 動態渲染已生效條件膠囊標籤
+function renderActiveFilterPills() {
+  if (!activeFilterTags) return;
+
+  const pills = [];
+
+  // 1. 搜尋關鍵字
+  const query = searchInput.value.trim();
+  if (query) {
+    const displayQuery = query.length > 14 ? query.slice(0, 14) + '…' : query;
+    pills.push({
+      label: `檢索: 「${escapeHtml(displayQuery)}」`,
+      onClear: () => {
+        searchInput.value = '';
+        triggerFilterUpdate();
+      }
+    });
+  }
+
+  // 2. 閱讀年度
+  if (yearFilter.value !== 'ALL') {
+    pills.push({
+      label: `${escapeHtml(yearFilter.value)} 年度`,
+      onClear: () => {
+        yearFilter.value = 'ALL';
+        triggerFilterUpdate();
+      }
+    });
+  }
+
+  // 3. 學科分類
+  if (categoryFilter.value !== 'ALL') {
+    pills.push({
+      label: escapeHtml(categoryFilter.value),
+      onClear: () => {
+        categoryFilter.value = 'ALL';
+        triggerFilterUpdate();
+      }
+    });
+  }
+
+  // 4. 系列叢書
+  if (seriesFilter.value !== 'ALL') {
+    pills.push({
+      label: `系列: ${escapeHtml(seriesFilter.value)}`,
+      onClear: () => {
+        seriesFilter.value = 'ALL';
+        triggerFilterUpdate();
+      }
+    });
+  }
+
+  // 5. 流通狀態
+  if (statusFilter.value !== 'ALL') {
+    const statusText = statusFilter.value === 'reading' ? '現正借閱中' : '已完讀歸架';
+    pills.push({
+      label: statusText,
+      onClear: () => {
+        statusFilter.value = 'ALL';
+        triggerFilterUpdate();
+      }
+    });
+  }
+
+  // 6. 珍藏書目
+  if (onlyShowFavorites) {
+    pills.push({
+      label: '僅看珍藏',
+      onClear: () => {
+        btnFavOnly.click();
+      }
+    });
+  }
+
+  if (pills.length === 0) {
+    activeFilterTags.innerHTML = '';
+    return;
+  }
+
+  let html = pills.map((p, idx) => `
+    <span class="filter-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-sans-ui shadow-sm">
+      <span class="text-[#f5ebd7]">${p.label}</span>
+      <button type="button" data-pill-idx="${idx}" class="text-[#a4886e] hover:text-[#fff] p-0.5 rounded transition focus:outline-none" title="移除此篩選條件" aria-label="移除此篩選條件">
+        <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </span>
+  `).join('');
+
+  if (pills.length > 1) {
+    html += `
+      <button type="button" id="btnClearAllPills" class="text-[11px] text-[#e2c585] hover:text-[#fff] underline ml-1 font-sans-ui transition" title="清除所有生效篩選">
+        清除全部 (${pills.length})
+      </button>
+    `;
+  }
+
+  activeFilterTags.innerHTML = html;
+
+  // 綁定個別條件移除按鈕
+  pills.forEach((p, idx) => {
+    const btn = activeFilterTags.querySelector(`button[data-pill-idx="${idx}"]`);
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        p.onClear();
+      });
+    }
+  });
+
+  const clearAllBtn = document.getElementById('btnClearAllPills');
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetAllFilters();
+    });
+  }
+}
+
+// 統一觸發篩選更新函式
+function triggerFilterUpdate() {
+  renderCardCatalog();
+  if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+  updateMobileFilterBadge();
+}
+
 // 渲染索書卡目錄 (Card Catalog View)
 function renderCardCatalog() {
   const filtered = getFilteredBooks();
   filteredCount.textContent = filtered.length;
   favCountSpan.textContent = favoriteBookIds.size;
+  renderActiveFilterPills();
 
   if (filtered.length === 0) {
     cardCatalogView.innerHTML = `
@@ -755,10 +919,15 @@ bookModal.addEventListener('click', (e) => {
 function toggleFavorite(bookId) {
   const numericId = Number(bookId);
   if (!Number.isInteger(numericId) || numericId <= 0) return;
+  const book = booksDatabase.find(b => b.id === numericId);
+  const bookTitle = book ? `《${book.title}》` : '此書目';
+
   if (favoriteBookIds.has(numericId)) {
     favoriteBookIds.delete(numericId);
+    showToast(`已將 ${bookTitle} 自珍藏名單移除`, 'info');
   } else {
     favoriteBookIds.add(numericId);
+    showToast(`已將 ${bookTitle} 收入珍藏典藏`, 'success');
   }
   localStorage.setItem('lib_reading_favs', JSON.stringify([...favoriteBookIds]));
   favCountSpan.textContent = favoriteBookIds.size;
@@ -782,22 +951,28 @@ document.getElementById('modalFavBtn').addEventListener('click', () => {
 btnFavOnly.addEventListener('click', () => {
   onlyShowFavorites = !onlyShowFavorites;
   if (onlyShowFavorites) {
-    btnFavOnly.className = "px-3 py-1.5 bg-[#6b4528] text-[#fbf6ed] border border-[#a87449] rounded text-sm font-sans-ui flex items-center gap-1.5 shadow";
-    favIcon.className = "w-4 h-4 text-[#ffd17d] fill-current";
+    btnFavOnly.className = "px-2.5 py-1.5 bg-[#6b4528] text-[#fbf6ed] border border-[#a87449] rounded text-xs font-sans-ui flex items-center gap-1.5 shadow";
+    favIcon.className = "w-3.5 h-3.5 text-[#ffd17d] fill-current";
+    showToast('已切換為僅顯示珍藏書目', 'info');
   } else {
-    btnFavOnly.className = "px-3 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-sm font-sans-ui flex items-center gap-1.5";
-    favIcon.className = "w-4 h-4 text-[#8a6f52]";
+    btnFavOnly.className = "px-2.5 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-xs font-sans-ui flex items-center gap-1.5 shadow-sm";
+    favIcon.className = "w-3.5 h-3.5 text-[#8a6f52]";
   }
   renderCardCatalog();
   if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+  updateMobileFilterBadge();
 });
 
 // 館員隨機薦讀
 btnRandomPick.addEventListener('click', () => {
   const candidates = getFilteredBooks();
-  if (candidates.length === 0) return;
+  if (candidates.length === 0) {
+    showToast('當前篩選條件下無符合之書目可推薦', 'info');
+    return;
+  }
   const randomBook = candidates[Math.floor(Math.random() * candidates.length)];
   openBookModal(randomBook.id);
+  showToast(`館員為您薦讀：《${randomBook.title}》`, 'info');
 });
 
 // 引文複製功能 (型別安全)
@@ -807,7 +982,9 @@ function copyCitation(bookId) {
   if (!book) return;
   const citation = `《${book.title}》（${book.author}）—— ${book.desc} [${book.category}，${book.year} 年度讀物]`;
   navigator.clipboard.writeText(citation).then(() => {
-    alert(`已複製書目引文至剪貼簿：\n\n${citation}`);
+    showToast(`已複製《${book.title}》引文至剪貼簿！`, 'success');
+  }).catch(() => {
+    showToast('複製失敗，請手動複製文字。', 'info');
   });
 }
 
@@ -823,7 +1000,9 @@ btnExportList.addEventListener('click', () => {
     text += `${i+1}. 《${b.title}》（${b.author}）- ${b.category} (${b.year}年，狀態：${b.status === 'reading' ? '閱覽中' : '已完讀'})\n   提要：${b.desc}\n\n`;
   });
   navigator.clipboard.writeText(text).then(() => {
-    alert(`已成功匯出當前篩選之 ${list.length} 冊書目清單至剪貼簿！`);
+    showToast(`已成功匯出當前篩選之 ${list.length} 冊書目清單至剪貼簿！`, 'success');
+  }).catch(() => {
+    showToast('匯出失敗，請手動複製文字。', 'info');
   });
 });
 
@@ -835,10 +1014,12 @@ function resetAllFilters() {
   seriesFilter.value = 'ALL';
   statusFilter.value = 'ALL';
   onlyShowFavorites = false;
-  btnFavOnly.className = "px-3 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-sm font-sans-ui flex items-center gap-1.5";
-  favIcon.className = "w-4 h-4 text-[#8a6f52]";
+  btnFavOnly.className = "px-2.5 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-xs font-sans-ui flex items-center gap-1.5 shadow-sm";
+  favIcon.className = "w-3.5 h-3.5 text-[#8a6f52]";
   renderCardCatalog();
   if (!bookshelfView.classList.contains('hidden')) renderBookshelves();
+  updateMobileFilterBadge();
+  showToast('已重設所有檢索與篩選條件', 'info');
 }
 btnResetFilter.addEventListener('click', resetAllFilters);
 

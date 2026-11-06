@@ -208,12 +208,12 @@
   <!-- 主內容呈現區 -->
   <main class="max-w-7xl mx-auto px-4 py-8">
 
-    <!-- 篩選結果計數摘要 -->
-    <div class="flex items-center justify-between text-xs text-[#aa9176] font-sans-ui mb-6 pb-2 border-b border-[#362215]">
-      <div>
-        檢索比對結果：共檢出 <span id="filteredCount" class="font-bold text-[#f5ebd7] font-serif text-sm">92</span> 冊符合條件
+    <!-- 篩選結果計數摘要與已套用條件膠囊 -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-[#aa9176] font-sans-ui mb-6 pb-2.5 border-b border-[#362215]">
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <span>檢索比對結果：共檢出 <span id="filteredCount" class="font-bold text-[#f5ebd7] font-serif text-sm">92</span> 冊符合條件</span>
       </div>
-      <div id="activeFilterTags" class="flex items-center gap-2"></div>
+      <div id="activeFilterTags" class="flex flex-wrap items-center gap-1.5 min-h-[24px]"></div>
     </div>
 
     <!-- 視角一：索書卡目錄 (Card Catalog View) -->
@@ -512,6 +512,16 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- 全域浮動提示通知 (Toast Notification) -->
+  <div id="libraryToast" role="status" aria-live="polite" class="fixed top-5 right-5 z-50 pointer-events-none transform -translate-y-4 opacity-0 transition-all duration-300 ease-out">
+    <div class="library-toast shadow-2xl rounded px-4 py-2.5 flex items-center gap-3 border border-[#c5a059]">
+      <div id="toastIcon" class="flex-shrink-0 text-[#78d197]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+      </div>
+      <div id="toastMessage" class="text-xs md:text-sm font-sans-ui text-[#f5ebd7] font-medium tracking-wide"></div>
     </div>
   </div>
 
