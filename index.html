@@ -390,16 +390,16 @@
           </div>
         </div>
 
-        <!-- 純 SVG 歷年閱讀量與節奏趨勢走勢圖 -->
+        <!-- 歷年閱讀量與節奏趨勢走勢圖 -->
         <div class="mt-8 pt-6 border-t border-[#dfd2be]">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
             <span class="text-xs font-bold font-sans-ui text-[#5c3e23] flex items-center gap-1.5">
               <svg class="w-4 h-4 text-[#8a5726]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
-              <span>歷年典藏總量與閱讀走勢曲線 (純 SVG 原生繪製)</span>
+              <span>歷年典藏總量與閱讀走勢曲線</span>
             </span>
             <span class="text-[11px] text-[#7d6044] font-sans-ui">點擊年度節點可切換視角篩選</span>
           </div>
-          <div id="readingTrendChartContainer" class="bg-[#fcf9f2] rounded-lg p-3 sm:p-4 border border-[#dfcfb5] shadow-inner">
+          <div id="readingTrendChartContainer" class="bg-[#fcf9f2] rounded-lg p-3 sm:p-4 border border-[#dfcfb5] shadow-inner min-h-[220px]">
             <!-- 由 charts.js 動態渲染純 SVG 趨勢走勢圖 -->
           </div>
         </div>
@@ -418,8 +418,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <!-- 左側：純 SVG 互動甜甜圈環形圖 (佔 5 格) -->
-          <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-[#fcf9f2] rounded-lg border border-[#dfcfb5] shadow-inner relative">
-            <div id="donutChartSvgContainer" class="w-full flex justify-center">
+          <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-[#fcf9f2] rounded-lg border border-[#dfcfb5] shadow-inner relative min-h-[340px]">
+            <div id="donutChartSvgContainer" class="w-full flex justify-center items-center min-h-[280px]">
               <!-- 由 charts.js 動態渲染純 SVG 甜甜圈 -->
             </div>
             <!-- 環心資訊浮層 -->

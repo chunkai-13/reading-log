@@ -186,9 +186,11 @@ if (bookModal) {
   });
 }
 
-// 應用程式初始化
+// 應用程式初始化 (預先渲染各視角內容，杜絕延遲與未定義狀態)
 updateFilterCounts();
 renderCardCatalog();
+if (typeof renderStats === 'function') renderStats();
+if (typeof renderSeries === 'function') renderSeries();
 if (typeof updateMobileFilterBadge === 'function') {
   updateMobileFilterBadge();
 }

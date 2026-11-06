@@ -118,14 +118,26 @@
 * `Notes/js/` 目錄（移入 `reading-log/js/`）
 
 ### 3. 重要故障排查與修復記錄
-* **問題回報**：館藏十大學科分類典藏佔比與分析內容沒有顯示出來。
-* **狀態（Status）**：已徹底排查並修復，學科佔比甜甜圈圖、環心資訊與細項長條清單已全數正常渲染。
-* **原因（Root Cause）**：
-  在 `renderStats()` 函式執行時，子模組 `renderCategoryDonutChart` 與清單長條渲染直接讀取常數 `categoriesDef`。然而該變數未在資料庫或工具層中宣告，引發瀏覽器拋出 `ReferenceError: categoriesDef is not defined`，造成整段 JavaScript 呼叫鏈中斷，致使 SVG 甜甜圈圖與右側長條清單皆無法生成。
-* **解法（Suggested Fix）**：
-  1. 於 [`reading-log/js/utils.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/utils.js) 定義館藏十大學科分類標準陣列 `categoriesDef`。
-  2. 於 [`reading-log/js/charts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/charts.js) 與 [`reading-log/js/views.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/views.js) 導入防禦性回退機制（`activeCategories`），優先使用 `categoriesDef`，若未定義則自動自 `categorySpineColors` 鍵值即時映射，確保永不拋出例外中斷執行。
-  3. 於 `renderStats()` 同步更新 `statsCategoryTotalBadge` 總量動態標籤。
+* **問題回報一**：館藏十大學科分類典藏佔比與分析內容沒有顯示出來。
+  * **狀態（Status）**：已徹底排查並修復，學科佔比甜甜圈圖、環心資訊與細項長條清單已全數正常渲染。
+  * **原因（Root Cause）**：在 `renderStats()` 函式執行時，子模組 `renderCategoryDonutChart` 與清單長條渲染直接讀取常數 `categoriesDef`。然而該變數未在資料庫或工具層中宣告，引發瀏覽器拋出 `ReferenceError: categoriesDef is not defined`，造成整段 JavaScript 呼叫鏈中斷，致使 SVG 甜甜圈圖與右側長條清單皆無法生成。
+  * **解法（Suggested Fix）**：
+    1. 於 [`reading-log/js/utils.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/utils.js) 定義館藏十大學科分類標準陣列 `categoriesDef`。
+    2. 於 [`reading-log/js/charts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/charts.js) 與 [`reading-log/js/views.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/views.js) 導入防禦性回退機制（`activeCategories`），優先使用 `categoriesDef`，若未定義則自動自 `categorySpineColors` 鍵值即時映射，確保永不拋出例外中斷執行。
+    3. 於 `renderStats()` 同步更新 `statsCategoryTotalBadge` 總量動態標籤。
+
+* **問題回報二**：歷年閱讀走勢曲線未顯示、文字不需顯示「(純 SVG 原生繪製)」、學科佔比仍未見圖表。
+  * **狀態（Status）**：已徹底排查並修復，標題冗餘文字已移除，走勢曲線、歷史巔峰徽章、甜甜圈圖與環心文字已無延遲完整呈現。
+  * **原因（Root Cause）**：
+    1. `index.html` 走勢圖標題帶有未精簡之括號備註字樣。
+    2. 走勢圖的「歷史巔峰」徽章與「38 冊」數值文字在同一垂直高度座標產生層疊遮蔽；且曲線線條與漸層使用極淺金色，在米白底羊皮紙背景上對比度過低。
+    3. SVG 容器未設定固定或最小尺寸（`min-height` 與 `aspect-ratio`），在 WebKit / Safari 核心的 Flexbox 排版中易發生高度塌陷為 0px 的問題；且原本甜甜圈包含的 `<feDropShadow>` 濾鏡在特定版本核心中導致圖元隱形。
+    4. 統計年報視角原本僅在點擊切換時才延遲渲染，初次載入未預熱 DOM。
+  * **解法（Suggested Fix）**：
+    1. 移除 `index.html` 中的「 (純 SVG 原生繪製)」字串。
+    2. 調整 `charts.js` 中 `renderReadingTrendChart` 垂直排版座標，將「歷史巔峰」紅色膠囊標籤移至最頂端（`p.y - 37`），數值置於其下（`p.y - 10`），走勢曲線提高對比至深琥珀金（`#8a5726`）與半透明漸層。
+    3. 於 `donutChartSvgContainer` 與 `readingTrendChartContainer` 加入明確最小高度與 `aspect-ratio: 1/1` 防塌陷宣告；移除脆弱的 SVG 陰影濾鏡改以標準描邊呈現。
+    4. 於 [`reading-log/js/app.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/app.js) 初始化階段預先執行 `renderStats()` 與 `renderSeries()`，達成 0 延遲即時呈現。
 
 ---
 

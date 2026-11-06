@@ -8,18 +8,24 @@ function renderReadingTrendChart(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  const count2024 = booksDatabase.filter(b => b.year === 2024).length || 32;
+  const count2025 = booksDatabase.filter(b => b.year === 2025).length || 38;
+  const count2026 = booksDatabase.filter(b => b.year === 2026).length || 22;
+  const reading2026 = booksDatabase.filter(b => b.year === 2026 && b.status === 'reading').length;
+  const completed2026 = count2026 - reading2026;
+
   const data = [
-    { label: "2024 年度", count: 32, status: "完讀 32 冊", completed: 32, reading: 0 },
-    { label: "2025 年度", count: 38, status: "完讀 38 冊 (巔峰)", completed: 38, reading: 0, peak: true },
-    { label: "2026 年度", count: 22, status: "完讀 20 / 在讀 2", completed: 20, reading: 2 }
+    { label: "2024 年度", count: count2024, status: `完讀 ${count2024} 冊`, peak: false },
+    { label: "2025 年度", count: count2025, status: `完讀 ${count2025} 冊 (歷史巔峰)`, peak: true },
+    { label: "2026 年度", count: count2026, status: `完讀 ${completed2026} / 在讀 ${reading2026}`, peak: false }
   ];
 
   const width = 640;
-  const height = 220;
+  const height = 230;
   const padLeft = 55;
   const padRight = 55;
-  const padTop = 35;
-  const padBottom = 40;
+  const padTop = 50;
+  const padBottom = 38;
 
   const maxVal = 40;
   const plotWidth = width - padLeft - padRight;
@@ -60,23 +66,27 @@ function renderReadingTrendChart(containerId) {
     `;
   }).join('');
 
-  // 節點標記
-  const nodeMarkers = points.map((p, idx) => `
+  // 節點標記 (文字與標籤嚴格垂直分層，徹底避免重疊)
+  const nodeMarkers = points.map((p) => `
     <g class="trend-node-group" style="cursor: pointer;" onclick="filterByYear('${p.label.slice(0, 4)}')">
       <!-- 垂直輔助對齊虛線 -->
-      <line x1="${p.x}" y1="${p.y}" x2="${p.x}" y2="${padTop + plotHeight}" stroke="#c5a059" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.5"/>
+      <line x1="${p.x}" y1="${p.y}" x2="${p.x}" y2="${padTop + plotHeight}" stroke="#b8860b" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.45"/>
       <!-- 資料圓點 -->
-      <circle class="trend-point" cx="${p.x}" cy="${p.y}" r="5.5" />
+      <circle class="trend-point" cx="${p.x}" cy="${p.y}" r="6" stroke="#683d1c" stroke-width="2.5" fill="#fdf8ee" />
+      
+      <!-- 歷史巔峰標籤 (置於數值上方) -->
+      ${p.peak ? `
+        <rect x="${p.x - 30}" y="${p.y - 37}" width="60" height="15" rx="3" fill="#802424" />
+        <text x="${p.x}" y="${p.y - 26}" fill="#ffffff" font-size="9" font-family="sans-serif" font-weight="bold" text-anchor="middle">歷史巔峰</text>
+      ` : ''}
+
       <!-- 數量標籤 -->
-      <text x="${p.x}" y="${p.y - 12}" fill="#24150b" font-size="12" font-family="serif" font-weight="bold" text-anchor="middle">
+      <text x="${p.x}" y="${p.y - 10}" fill="#24150b" font-size="13" font-family="serif" font-weight="bold" text-anchor="middle">
         ${p.count} 冊
       </text>
-      ${p.peak ? `
-        <rect x="${p.x - 28}" y="${p.y - 30}" width="56" height="14" rx="3" fill="#802424" />
-        <text x="${p.x}" y="${p.y - 19}" fill="#fff" font-size="9" font-family="sans-serif" font-weight="bold" text-anchor="middle">歷史巔峰</text>
-      ` : ''}
+
       <!-- X 軸年度標記 -->
-      <text x="${p.x}" y="${height - 12}" fill="#3d2412" font-size="12" font-family="serif" font-weight="bold" text-anchor="middle">
+      <text x="${p.x}" y="${height - 13}" fill="#3d2412" font-size="12" font-family="serif" font-weight="bold" text-anchor="middle">
         ${p.label}
       </text>
       <text x="${p.x}" y="${height - 1}" fill="#7d6044" font-size="9" font-family="sans-serif" text-anchor="middle">
@@ -86,20 +96,20 @@ function renderReadingTrendChart(containerId) {
   `).join('');
 
   container.innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" class="w-full h-auto select-none" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}" style="min-height: 200px; display: block;" class="w-full h-auto select-none" preserveAspectRatio="xMidYMid meet">
       <defs>
-        <linearGradient id="trendGoldGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#c5a059" stop-opacity="0.8"/>
-          <stop offset="60%" stop-color="#e2c585" stop-opacity="0.3"/>
+        <linearGradient id="trendAmberGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8a5726" stop-opacity="0.32"/>
+          <stop offset="60%" stop-color="#b8860b" stop-opacity="0.12"/>
           <stop offset="100%" stop-color="#ecd093" stop-opacity="0.0"/>
         </linearGradient>
       </defs>
       <!-- 背景格線與刻度 -->
       ${gridLines}
       <!-- 趨勢面積填充 -->
-      <path d="${pathArea}" class="trend-area" />
+      <path d="${pathArea}" fill="url(#trendAmberGrad)" />
       <!-- 趨勢平滑曲線 -->
-      <path d="${pathLine}" fill="none" class="trend-line" />
+      <path d="${pathLine}" fill="none" stroke="#8a5726" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="trend-line" />
       <!-- 資料節點與標籤 -->
       ${nodeMarkers}
     </svg>
@@ -151,7 +161,7 @@ function renderCategoryDonutChart(containerId, centerId) {
     const fraction = count / total;
     const angleDelta = fraction * 2 * Math.PI;
 
-    // 留微小扇面縫隙 (0.015 弧度)
+    // 留微小扇面縫隙 (0.012 弧度)
     const gap = 0.012;
     const startA = currentAngle + gap;
     const endA = currentAngle + angleDelta - gap;
@@ -204,13 +214,8 @@ function renderCategoryDonutChart(containerId, centerId) {
   `).join('');
 
   container.innerHTML = `
-    <svg viewBox="0 0 ${size} ${size}" class="w-full max-w-[280px] sm:max-w-[320px] h-auto select-none mx-auto">
-      <defs>
-        <filter id="donutShadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.35"/>
-        </filter>
-      </defs>
-      <g filter="url(#donutShadow)">
+    <svg viewBox="0 0 ${size} ${size}" width="100%" height="100%" style="max-width: 300px; max-height: 300px; min-height: 260px; aspect-ratio: 1 / 1; display: block;" class="select-none mx-auto" preserveAspectRatio="xMidYMid meet">
+      <g>
         ${pathsSvg}
       </g>
     </svg>
