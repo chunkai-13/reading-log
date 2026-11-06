@@ -119,8 +119,12 @@ function renderCategoryDonutChart(containerId, centerId) {
   const centerInfo = document.getElementById(centerId);
   if (!container) return;
 
+  const activeCategories = (typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef) && categoriesDef.length > 0)
+    ? categoriesDef
+    : Object.keys(categorySpineColors || {}).map(name => ({ name }));
+
   const catCounts = {};
-  categoriesDef.forEach(c => { catCounts[c.name] = 0; });
+  activeCategories.forEach(c => { catCounts[c.name] = 0; });
   booksDatabase.forEach(b => {
     if (catCounts[b.category] !== undefined) {
       catCounts[b.category]++;
@@ -130,7 +134,7 @@ function renderCategoryDonutChart(containerId, centerId) {
   });
 
   const total = booksDatabase.length || 1;
-  const sortedCategories = [...categoriesDef].sort((a, b) => (catCounts[b.name] || 0) - (catCounts[a.name] || 0));
+  const sortedCategories = [...activeCategories].sort((a, b) => (catCounts[b.name] || 0) - (catCounts[a.name] || 0));
 
   const size = 320;
   const cx = size / 2;

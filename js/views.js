@@ -149,8 +149,12 @@ function renderStats() {
   const categoryStatsList = document.getElementById('categoryStatsList');
   if (!categoryStatsList) return;
 
+  const activeCategories = (typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef) && categoriesDef.length > 0)
+    ? categoriesDef
+    : Object.keys(categorySpineColors || {}).map(name => ({ name }));
+
   const catCounts = {};
-  categoriesDef.forEach(c => { catCounts[c.name] = 0; });
+  activeCategories.forEach(c => { catCounts[c.name] = 0; });
   booksDatabase.forEach(b => {
     if (catCounts[b.category] !== undefined) {
       catCounts[b.category]++;
@@ -160,7 +164,13 @@ function renderStats() {
   });
 
   const total = booksDatabase.length || 1;
-  const sortedCategories = [...categoriesDef].sort((a, b) => (catCounts[b.name] || 0) - (catCounts[a.name] || 0));
+  const sortedCategories = [...activeCategories].sort((a, b) => (catCounts[b.name] || 0) - (catCounts[a.name] || 0));
+
+  // 動態更新典藏學科總量徽章
+  const statsCategoryTotalBadge = document.getElementById('statsCategoryTotalBadge');
+  if (statsCategoryTotalBadge) {
+    statsCategoryTotalBadge.textContent = `總量：${total} 冊 (${activeCategories.length} 大領域)`;
+  }
 
   categoryStatsList.innerHTML = sortedCategories.map(cat => {
     const count = catCounts[cat.name] || 0;

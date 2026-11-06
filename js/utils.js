@@ -57,6 +57,20 @@ const categorySpineColors = {
   }
 };
 
+// 館藏十大學科領域標準定義清單
+const categoriesDef = [
+  { name: "科幻與奇幻小說" },
+  { name: "哲學思辨、宗教與歷史社會" },
+  { name: "漫畫" },
+  { name: "商業理財、自我成長與生活哲學" },
+  { name: "心理學、認知與決策思維" },
+  { name: "海洋文學、鯨豚與自然生態" },
+  { name: "繪本與圖文創作" },
+  { name: "世界文學、小說與傳記" },
+  { name: "科普、物理天文與生命科學" },
+  { name: "親職教育與育兒家庭" }
+];
+
 // 安全防禦輔助函式：HTML 實體跳脫防範 DOM-based XSS
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
