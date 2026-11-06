@@ -75,13 +75,15 @@
 
 | 模組名稱 | 檔案路徑 | 行數 | 核心職責與實現細節 |
 | :--- | :--- | :--- | :--- |
-| **頁面骨架層** | [`reading-log/index.html`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/index.html) | 544 | 1. 部署嚴格 CSP 與 Frame Busting 防禦腳本。<br>2. 語意化容器：抽屜卡台、原木書架、系列展架、數據牌匾、條件膠囊與 Toast 通知。<br>3. 典藏書目詳細資訊彈窗（Modal）與無障礙宣告。 |
+| **頁面骨架層** | [`reading-log/index.html`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/index.html) | 626 | 1. 部署嚴格 CSP 與 Frame Busting 防禦腳本。<br>2. 語意化容器：抽屜卡台、原木書架、系列展架、數據牌匾、條件膠囊、Toast 通知與快捷鍵指南彈窗。<br>3. 典藏書目借閱憑證彈窗（支援連貫翻閱按鈕）與無障礙宣告。 |
 | **樣式質感層** | [`reading-log/css/style.css`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/css/style.css) | 235 | 1. 古典圖書館視覺樣式、胡桃木紋材質、羊皮紙底色與黃銅金屬銘牌。<br>2. 物理書架演算樣式：抽出懸停微互動（`translateY(-24px) scale(1.03) rotate(-1deg)`）、原木層板倒角與深層縱深陰影。<br>3. 封面流光骨架屏（Shimmer）與典藏精裝燙金封面降級樣式。 |
 | **靜態資料層** | [`reading-log/js/books-data.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/books-data.js) | 1,336 | 1. 包含由同步工具自 Markdown 解析導出的完整書籍資料陣列 `BOOKS_DATABASE`（共 92 冊）。<br>2. 定義十大主題學門與分類規則陣列 `CATEGORIES_DEF`。<br>3. 定義成套系列叢書資料結構 `SERIES_DATABASE`。 |
 | **工具資安層** | [`reading-log/js/utils.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/utils.js) | 188 | 1. 嚴格 XSS 轉義（`escapeHtml`）與 URL 協定消毒（`sanitizeUrl`）。<br>2. LocalStorage 安全讀寫與格式驗證。<br>3. 全域浮動通知控制器（`showToast`）。<br>4. 典藏精裝燙金封面佔位符動態生成器（`generateCoverFallbackHtml`）與破圖降級處理（`handleCoverError`）。 |
 | **書架排架層** | [`reading-log/js/bookshelf.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/bookshelf.js) | 120 | 1. 原木書架年度層板渲染（`renderBookshelves`）。<br>2. 書脊學科色彩映射、系列齊高（`seriesHeights`）、漫畫低矮與繪本輕薄厚度計算。 |
 | **視角渲染層** | [`reading-log/js/views.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/views.js) | 391 | 1. 索書卡目錄渲染（`renderCardCatalog`），整合流光載入與優雅降級。<br>2. 統計年報分析渲染（`renderStats`）。<br>3. 成套系列專題展架渲染（`renderSeries`）。<br>4. 書目借閱憑證彈窗控制（`openBookModal`、`closeModal`、`updateModalFavBtnState`）。 |
-| **核心控制層** | [`reading-log/js/app.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/app.js) | 600 | 1. 全域狀態管理與 DOM 元素快取。<br>2. 多維即時檢索篩選（年度、流通狀態、主題類別、關鍵字）。<br>3. 動態生效條件膠囊生成與單一移除（`renderActiveFilterPills`）。<br>4. 全域快捷鍵支援（`/` 檢索、`Esc` 關閉、`1~4` 切換視角）。<br>5. 隨機薦讀、清單匯出、收藏切換、行動版折疊與應用初始化。 |
+| **篩選排序層** | [`reading-log/js/filters.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/filters.js) | 349 | 1. 多維條件過濾（年度、學科、系列、流通狀態、關鍵字、珍藏）。<br>2. 多維度排序演算法（年度新舊、厚度頁數、書名筆劃 A-Z）。<br>3. 動態生效條件膠囊生成與個別撤銷（`renderActiveFilterPills`）。<br>4. 下拉選單冊數即時盤點與條件重設（`resetAllFilters`）。 |
+| **快捷導覽層** | [`reading-log/js/shortcuts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/shortcuts.js) | 210 | 1. 全域鍵盤監聽（`/` 檢索、`Esc` 關閉、`1~4` 切換視角、`?` 說明面板）。<br>2. 借閱憑證連貫翻閱控制器（`←/→`、`J/K` 翻閱、`F` 珍藏、`C` 引文）。<br>3. 行動端篩選面板折疊與捲動自動收合控制。 |
+| **核心控制層** | [`reading-log/js/app.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/app.js) | 194 | 1. 全域狀態管理與 DOM 元素快取。<br>2. 視角切換狀態機（`setView`）。<br>3. 珍藏標記切換（`toggleFavorite`）、館員隨機薦讀、清單匯出。<br>4. 生命週期啟動與初始化協調。 |
 | **自動同步器** | [`reading-log/sync.py`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/sync.py) | 369 | 1. 正則解析 [`Notes/Reading log.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/Reading%20log.md) 之清單語法與 Frontmatter。<br>2. 欄位正規化並自動覆蓋寫入 `js/books-data.js`。<br>3. 整合 Git 變更偵測與自動提交命令。 |
 | **中文說明書** | [`reading-log/README.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/README.md) | 144 | 完整繁體中文專案手冊，涵蓋系統架構、視覺規範、安全指南、維護流程與檔案結構。 |
 
@@ -90,12 +92,15 @@
 ## 四、 檔案變更歷程與清單
 
 ### 1. 新增與重構檔案
-* [`reading-log/index.html`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/index.html)：更新模組化外鏈載入順序；新增條件膠囊與 Toast 容器。
+* [`reading-log/index.html`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/index.html)：新增排序選單（`sortFilter`）、快捷鍵徽章、彈窗翻閱控制群與全域快捷鍵指南彈窗（`shortcutsModal`）。
 * [`reading-log/css/style.css`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/css/style.css)：新增書脊抽取立體動態、原木層架倒角深度、流光骨架屏（Shimmer）與精裝封面佔位符樣式。
 * [`reading-log/js/utils.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/utils.js)：拆分通用資安與提示模組，封裝精裝封面生成器與圖片錯誤優雅降級。
 * [`reading-log/js/bookshelf.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/bookshelf.js)：拆分原木書架排架運算與動態標籤生成。
 * [`reading-log/js/views.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/views.js)：拆分三大視角（卡片、統計、系列）與彈窗控制。
-* [`reading-log/js/app.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/app.js)：收斂為純控制器，精簡至 600 行，新增全域快捷鍵與膠囊過濾。
+* [`reading-log/js/filters.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/filters.js)：獨立多維檢索、條件過濾、排序演算法與生效膠囊控制器。
+* [`reading-log/js/shortcuts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/shortcuts.js)：獨立全域鍵盤快捷鍵、彈窗連貫翻閱與行動端面板控制。
+* [`reading-log/js/app.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/app.js)：收斂為主控制器，精簡至 194 行。
+* [`reading-log/js/books-data.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/books-data.js)：純資料陣列，由同步腳本自動維護。
 * [`reading-log/js/books-data.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/books-data.js)：純資料陣列，由同步腳本自動維護。
 * [`reading-log/sync.py`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/sync.py)：修改來源檔案讀取路徑指向 `../Reading log.md`，輸出路徑指向 `./js/books-data.js`。
 * [`reading-log/README.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/README.md)：新建完整專案繁體中文說明文件。
