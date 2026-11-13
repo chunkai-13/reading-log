@@ -47,3 +47,15 @@
   * 盤點計算各分類、年度與狀態之 `Facet Counts`。
 * **隱藏實作**：字串正規化、多維度條件交集過濾、自訂排序權重矩陣、預處理索引。
 * **適配器（Adapter）**：`reading-log/js/filters.js`（負責將 DOM 輸入事件轉換為 Criteria，並將結果投射至視角）。
+
+### 2. 典藏儲存庫（Archive Repository）
+* **角色**：深模組（Deep Module）。
+* **接縫位置（Seam）**：`reading-log/js/archive-repository.js`。
+* **介面責任**：
+  * 全館書目之單一真實來源（Single Source of Truth），提供 O(1) 索引查詢（`getBook(id)`、`getAllBooks()`）。
+  * 珍藏狀態持久化管理（`isFavorite(id)`、`toggleFavorite(id)`、`getFavoriteIds()`）。
+  * 整合或委託 `CatalogQueryEngine` 執行複合多維查詢（`query(criteria)`、`getFacetCounts()`）。
+* **隱藏實作**：
+  * 封裝 `localStorage` 之序列化安全防禦、正則校驗與錯誤回退。
+  * 封裝書籍母體資料快取與 ID 雜湊對照表。
+* **收益（Wins）**：移除各處直接操作 `window.favoriteBookIds` 與 `localStorage` 的滲漏，達成高內聚局部性（Locality）。

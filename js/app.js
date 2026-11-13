@@ -3,8 +3,7 @@
  * 包含：全域狀態定義、視角導覽狀態機、珍藏與薦讀業務行為、生命週期啟動
  */
 
-// 全域狀態管理
-let favoriteBookIds = getSafeFavoriteIds();
+// 全域狀態管理 (珍藏狀態全面委託 ArchiveRepository 深模組)
 let currentActiveBook = null;
 let onlyShowFavorites = false;
 
@@ -84,22 +83,25 @@ if (viewShelfBtn) viewShelfBtn.addEventListener('click', () => setView('shelf'))
 if (viewStatsBtn) viewStatsBtn.addEventListener('click', () => setView('stats'));
 if (viewSeriesBtn) viewSeriesBtn.addEventListener('click', () => setView('series'));
 
-// 收藏書目邏輯 (具備嚴格整數型別校驗)
+// 收藏書目邏輯 (透過 ArchiveRepository 深模組持久化)
 function toggleFavorite(bookId) {
   const numericId = Number(bookId);
   if (!Number.isInteger(numericId) || numericId <= 0) return;
-  const book = booksDatabase.find(b => b.id === numericId);
+
+  const repo = window.archiveRepository;
+  const book = repo ? repo.getBook(numericId) : (typeof booksDatabase !== 'undefined' ? booksDatabase.find(b => b.id === numericId) : null);
   const bookTitle = book ? `《${book.title}》` : '此書目';
 
-  if (favoriteBookIds.has(numericId)) {
-    favoriteBookIds.delete(numericId);
-    showToast(`已將 ${bookTitle} 自珍藏名單移除`, 'info');
-  } else {
-    favoriteBookIds.add(numericId);
-    showToast(`已將 ${bookTitle} 收入珍藏典藏`, 'success');
+  if (repo) {
+    const res = repo.toggleFavorite(numericId);
+    if (res.isFavorite) {
+      showToast(`已將 ${bookTitle} 收入珍藏典藏`, 'success');
+    } else {
+      showToast(`已將 ${bookTitle} 自珍藏名單移除`, 'info');
+    }
+    if (favCountSpan) favCountSpan.textContent = res.count;
   }
-  localStorage.setItem('lib_reading_favs', JSON.stringify([...favoriteBookIds]));
-  if (favCountSpan) favCountSpan.textContent = favoriteBookIds.size;
+
   renderCardCatalog();
   if (bookshelfView && !bookshelfView.classList.contains('hidden')) renderBookshelves();
   if (currentActiveBook && currentActiveBook.id === numericId) updateModalFavBtnState();
@@ -187,6 +189,9 @@ if (bookModal) {
 }
 
 // 應用程式初始化 (預先渲染各視角內容，杜絕延遲與未定義狀態)
+if (favCountSpan && window.archiveRepository) {
+  favCountSpan.textContent = window.archiveRepository.getFavoriteCount();
+}
 updateFilterCounts();
 renderCardCatalog();
 if (typeof renderStats === 'function') renderStats();

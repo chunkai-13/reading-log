@@ -7,7 +7,10 @@
 function renderCardCatalog() {
   const filtered = getFilteredBooks();
   if (filteredCount) filteredCount.textContent = filtered.length;
-  if (favCountSpan) favCountSpan.textContent = favoriteBookIds.size;
+  if (favCountSpan) {
+    const favCount = window.archiveRepository ? window.archiveRepository.getFavoriteCount() : 0;
+    favCountSpan.textContent = favCount;
+  }
   if (typeof renderActiveFilterPills === 'function') renderActiveFilterPills();
 
   if (!cardCatalogView) return;
@@ -24,7 +27,7 @@ function renderCardCatalog() {
   }
 
   cardCatalogView.innerHTML = filtered.map(book => {
-    const isFav = favoriteBookIds.has(book.id);
+    const isFav = window.archiveRepository ? window.archiveRepository.isFavorite(book.id) : false;
     const isReading = book.status === 'reading';
     const safeTitle = escapeHtml(book.title);
     const safeAuthor = escapeHtml(book.author);
@@ -321,7 +324,8 @@ function filterBySeries(seriesName) {
 // 書目彈窗 Modal 控制
 function openBookModal(bookId) {
   const numericId = Number(bookId);
-  const book = booksDatabase.find(b => b.id === numericId);
+  const repo = window.archiveRepository;
+  const book = repo ? repo.getBook(numericId) : (typeof booksDatabase !== 'undefined' ? booksDatabase.find(b => b.id === numericId) : null);
   if (!book) return;
   currentActiveBook = book;
 
@@ -406,7 +410,8 @@ function closeModal() {
 
 function updateModalFavBtnState() {
   if (!currentActiveBook) return;
-  const isFav = favoriteBookIds.has(currentActiveBook.id);
+  const repo = window.archiveRepository;
+  const isFav = repo ? repo.isFavorite(currentActiveBook.id) : false;
   const text = document.getElementById('modalFavBtnText');
   if (text) text.textContent = isFav ? "已收藏（點擊取消）" : "加入珍藏標記";
 }

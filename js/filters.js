@@ -3,14 +3,9 @@
  * 職責：負責將 DOM 輸入事件轉換為查詢參數物件，調用 CatalogQueryEngine，並更新視角與膠囊標籤。
  */
 
-// 資料篩選與排序轉發適配器 (呼叫 CatalogQueryEngine 深模組)
+// 資料篩選與排序轉發適配器 (呼叫 ArchiveRepository / CatalogQueryEngine 深模組)
 function getFilteredBooks() {
-  const engine = window.catalogEngine;
-  if (!engine) {
-    // 降級保護：若引擎尚未就緒，傳回原始資料庫副本
-    return typeof booksDatabase !== 'undefined' ? [...booksDatabase] : [];
-  }
-
+  const repo = window.archiveRepository;
   const criteria = {
     text: searchInput ? searchInput.value : '',
     year: yearFilter ? yearFilter.value : 'ALL',
@@ -18,11 +13,16 @@ function getFilteredBooks() {
     series: seriesFilter ? seriesFilter.value : 'ALL',
     status: statusFilter ? statusFilter.value : 'ALL',
     sortBy: sortFilter ? sortFilter.value : 'DEFAULT',
-    favoriteIds: typeof favoriteBookIds !== 'undefined' ? favoriteBookIds : new Set(),
     onlyFavorites: typeof onlyShowFavorites !== 'undefined' ? onlyShowFavorites : false
   };
 
-  return engine.query(criteria);
+  if (repo) {
+    return repo.query(criteria);
+  }
+  if (window.catalogEngine) {
+    return window.catalogEngine.query(criteria);
+  }
+  return typeof booksDatabase !== 'undefined' ? [...booksDatabase] : [];
 }
 
 // 動態渲染已生效條件膠囊標籤
@@ -230,12 +230,12 @@ if (sortFilter) {
   });
 }
 
-// 動態更新下拉選單數量與看板數據 (自 CatalogQueryEngine 提取標準盤點結果)
+// 動態更新下拉選單數量與看板數據 (自 ArchiveRepository / CatalogQueryEngine 提取標準盤點結果)
 function updateFilterCounts() {
-  const engine = window.catalogEngine;
-  if (!engine) return;
+  const repo = window.archiveRepository || window.catalogEngine;
+  if (!repo) return;
 
-  const summary = engine.getFacetCounts();
+  const summary = repo.getFacetCounts();
 
   const statTotal = document.getElementById('statTotal');
   const statCompleted = document.getElementById('statCompleted');
