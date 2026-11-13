@@ -7,7 +7,7 @@
 function createArchiveRepository(config = {}) {
   const rawBooks = Array.isArray(config.books) ? config.books : [];
   const rawSeries = Array.isArray(config.series) ? config.series : [];
-  const STORAGE_KEY = config.storageKey || 'favoriteBookIds';
+  const STORAGE_KEY = config.storageKey || 'lib_reading_favs';
 
   // 1. 內部建立 O(1) 索引查找表
   const byIdIndex = new Map();
@@ -23,11 +23,19 @@ function createArchiveRepository(config = {}) {
     }
   });
 
-  // 2. 封裝 LocalStorage 珍藏狀態安全讀取與校驗
+  // 2. 封裝 LocalStorage 珍藏狀態安全讀取與校驗（支援舊鍵遷移）
   function loadSafeFavorites() {
     try {
       if (typeof window === 'undefined' || !window.localStorage) return new Set();
-      const raw = window.localStorage.getItem(STORAGE_KEY);
+      let raw = window.localStorage.getItem(STORAGE_KEY);
+      // 若標準鍵尚無資料，嘗試相容讀取舊鍵並完成平滑遷移
+      if (!raw) {
+        const legacy = window.localStorage.getItem('favoriteBookIds');
+        if (legacy) {
+          raw = legacy;
+          window.localStorage.setItem(STORAGE_KEY, legacy);
+        }
+      }
       if (!raw) return new Set();
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) return new Set();

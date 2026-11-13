@@ -100,7 +100,24 @@
 * **成效**：
   1. 幾何座標與三角函數演算法具備獨立單元測試性，不依賴任何外部資料庫。
   2. 圖表模組純化為純粹視覺適配器，徹底杜絕資料結構異常導致的繪圖崩潰。
-  3. 檔案行數維持於 331 行，符合單檔精簡約束。
+  3. 檔案行數維持於 330 行，符合單檔精簡約束。
+
+#### ADR-0007: Code Review 瑕疵收斂與向後相容性修復
+* **背景與問題**：
+  經由雙軸程式碼審查（Standards 與 Spec），發現以下結構與相容性缺陷：
+  1. `ArchiveRepository` 預設 LocalStorage 鍵名變更為 `'favoriteBookIds'`，與原系統規範 `'lib_reading_favs'` 不符，導致既有珍藏遺失。
+  2. `views.js` 與 `app.js` 仍殘留對全域 `booksDatabase` 的直接遍歷與線性搜尋，違背單一真實來源原則。
+  3. `views.js` 與 `charts.js` 出現學門清單容錯重複邏輯；`query-engine.js` 包含冗餘之 `getById` 與 `getAllBooks`（Speculative Generality）。
+  4. 多關鍵字檢索註解誤植為「聯集比對」，但程式碼實為交集比對（AND）。
+* **決策**：
+  1. 將 `ArchiveRepository` 預設鍵名修正為 `'lib_reading_favs'`，並內建平滑遷移回退機制，相容讀取舊鍵並無縫轉存。
+  2. 於 `utils.js` 封裝共用輔助函式 `getActiveCategories()`，並讓 `getSafeFavoriteIds()` 優先委託 `ArchiveRepository`。
+  3. 全面收斂 `views.js` 與 `app.js`，將學門統計、系列查找與引文複製改由 `archiveRepository.getFacetCounts()`、`archiveRepository.getAll()` 與 `archiveRepository.getById()` 取得。
+  4. 移除 `queryEngine` 冗餘的 `byIdIndex` 與實體提取介面，純化為純運算引擎；修正多詞交集比對註解。
+* **成效**：
+  1. 解決珍藏書目讀取相容性中斷問題，舊資料 100% 完整保留並自動遷移。
+  2. 徹底消滅全域集合直讀，嚴格貫徹單一真實來源。
+  3. 消滅重複邏輯與過度設計，全數通過 WebKit JavaScriptCore 單元測試。
 
 ---
 

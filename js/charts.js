@@ -278,10 +278,9 @@ function renderReadingTrendChart(containerId) {
 function renderCategoryDonutChart(containerId, centerId) {
   const repo = window.archiveRepository;
   const facets = repo ? repo.getFacetCounts() : null;
-
-  const activeCats = (typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef) && categoriesDef.length > 0)
-    ? categoriesDef
-    : Object.keys(typeof categorySpineColors !== 'undefined' ? categorySpineColors : {}).map(name => ({ name }));
+  const activeCats = typeof getActiveCategories === 'function'
+    ? getActiveCategories()
+    : ((typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef)) ? categoriesDef : []);
 
   const segments = activeCats.map(cat => {
     let count = 0;

@@ -145,10 +145,11 @@ if (btnRandomPick) {
   });
 }
 
-// 引文複製功能 (型別安全)
+// 引文複製功能 (型別安全，依循單一真實來源)
 function copyCitation(bookId) {
   const numericId = Number(bookId);
-  const book = booksDatabase.find(b => b.id === numericId);
+  const repo = window.archiveRepository;
+  const book = repo ? repo.getById(numericId) : (typeof booksDatabase !== 'undefined' ? booksDatabase.find(b => b.id === numericId) : null);
   if (!book) return;
   const citation = `《${book.title}》（${book.author}）—— ${book.desc} [${book.category}，${book.year} 年度讀物]`;
   navigator.clipboard.writeText(citation).then(() => {

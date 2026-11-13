@@ -94,8 +94,11 @@ function sanitizeUrl(url) {
 
 // 安全防禦儲存函式：安全解析 localStorage 防止格式損毀或惡意污染
 function getSafeFavoriteIds() {
+  if (typeof window !== 'undefined' && window.archiveRepository) {
+    return window.archiveRepository.getFavoriteIds();
+  }
   try {
-    const raw = localStorage.getItem('lib_reading_favs');
+    const raw = localStorage.getItem('lib_reading_favs') || localStorage.getItem('favoriteBookIds');
     if (!raw) return new Set();
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
@@ -109,6 +112,15 @@ function getSafeFavoriteIds() {
     console.warn('最愛紀錄解析失敗，重設為空集合。', e);
   }
   return new Set();
+}
+
+// 取得十大學科領域定義清單（具備回退容錯）
+function getActiveCategories() {
+  if (typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef) && categoriesDef.length > 0) {
+    return categoriesDef;
+  }
+  const colorKeys = typeof categorySpineColors !== 'undefined' ? Object.keys(categorySpineColors) : [];
+  return colorKeys.map(name => ({ name }));
 }
 
 // 全域古典質感浮動提示 (Toast Notification)

@@ -152,21 +152,20 @@ function renderStats() {
   const categoryStatsList = document.getElementById('categoryStatsList');
   if (!categoryStatsList) return;
 
-  const activeCategories = (typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef) && categoriesDef.length > 0)
-    ? categoriesDef
-    : Object.keys(categorySpineColors || {}).map(name => ({ name }));
+  const repo = window.archiveRepository;
+  const facets = repo ? repo.getFacetCounts() : null;
+  const activeCategories = typeof getActiveCategories === 'function'
+    ? getActiveCategories()
+    : ((typeof categoriesDef !== 'undefined' && Array.isArray(categoriesDef)) ? categoriesDef : []);
 
   const catCounts = {};
-  activeCategories.forEach(c => { catCounts[c.name] = 0; });
-  booksDatabase.forEach(b => {
-    if (catCounts[b.category] !== undefined) {
-      catCounts[b.category]++;
-    } else {
-      catCounts[b.category] = 1;
-    }
+  activeCategories.forEach(c => {
+    catCounts[c.name] = (facets && facets.byCategory && facets.byCategory[c.name] !== undefined)
+      ? facets.byCategory[c.name]
+      : (typeof booksDatabase !== 'undefined' ? booksDatabase.filter(b => b.category === c.name).length : 0);
   });
 
-  const total = booksDatabase.length || 1;
+  const total = repo ? repo.size : ((typeof booksDatabase !== 'undefined' && booksDatabase.length) ? booksDatabase.length : 1);
   const sortedCategories = [...activeCategories].sort((a, b) => (catCounts[b.name] || 0) - (catCounts[a.name] || 0));
 
   // 動態更新典藏學科總量徽章
@@ -213,22 +212,24 @@ function renderSeries() {
   const seriesStatsList = document.getElementById('seriesStatsList');
   if (!seriesStatsList) return;
 
-  const validSeries = seriesDatabase || [];
+  const repo = window.archiveRepository;
+  const validSeries = repo ? repo.getAllSeries() : (typeof seriesDatabase !== 'undefined' ? seriesDatabase : []);
   const cleanSeries = validSeries.filter(s => 
     s.name && !s.name.includes("【註】") && !s.name.includes("艾西莫夫全集總覽") && s.count > 1
   );
 
   function getSeriesCover(ser) {
+    const allBooks = repo ? repo.getAll() : (typeof booksDatabase !== 'undefined' ? booksDatabase : []);
     const preferredTitles = { "艾西莫夫：基地系列": "基地" };
     const targetTitle = ser.coverTitle || preferredTitles[ser.name];
     if (targetTitle) {
-      const found = booksDatabase.find(b => b.title === targetTitle && b.coverUrl);
+      const found = allBooks.find(b => b.title === targetTitle && b.coverUrl);
       if (found) return found;
     }
     if (Array.isArray(ser.books)) {
       for (const t of ser.books) {
         const cleanT = t.replace(/[《》\s]/g, '');
-        for (const b of booksDatabase) {
+        for (const b of allBooks) {
           const cleanB = b.title.replace(/[《》\s]/g, '');
           if ((cleanB.includes(cleanT) || cleanT.includes(cleanB) || (cleanT.includes('第') && cleanB.includes(cleanT))) && b.coverUrl) {
             return b;
@@ -236,7 +237,7 @@ function renderSeries() {
         }
       }
     }
-    for (const b of booksDatabase) {
+    for (const b of allBooks) {
       if ((b.series === ser.name || (b.series && ser.name.includes(b.series)) || (b.series && b.series.includes(ser.name))) && b.coverUrl) {
         return b;
       }

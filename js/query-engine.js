@@ -4,15 +4,11 @@
  */
 
 function createCatalogQueryEngine(books = []) {
-  // 防禦性拷貝並建立 O(1) 索引與搜尋字串快取
+  // 防禦性拷貝並預先建立搜尋字串快取，大幅提升過濾效能
   const sourceBooks = Array.isArray(books) ? [...books] : [];
-  const byIdIndex = new Map();
   const searchCorpus = [];
 
   sourceBooks.forEach(book => {
-    if (book && typeof book.id !== 'undefined') {
-      byIdIndex.set(Number(book.id), book);
-    }
     // 預先拼接正規化檢索文字，大幅提升模糊比對效能
     const corpusStr = [
       book.title || '',
@@ -59,7 +55,7 @@ function createCatalogQueryEngine(books = []) {
       if (st !== 'ALL' && book.status !== st) return false;
 
       if (q) {
-        // 支援多關鍵字以空白切分之聯集比對
+        // 支援多關鍵字以空白切分之交集比對（AND 邏輯，所有關鍵字皆須吻合）
         const terms = q.split(/\s+/).filter(Boolean);
         const matchAll = terms.every(term => corpusStr.includes(term));
         if (!matchAll) return false;
@@ -129,28 +125,9 @@ function createCatalogQueryEngine(books = []) {
     return summary;
   }
 
-  /**
-   * 依典藏序號快速查詢單一書目 (O(1))
-   * @param {number|string} id - 書目序號
-   * @returns {Object|null}
-   */
-  function getById(id) {
-    return byIdIndex.get(Number(id)) || null;
-  }
-
-  /**
-   * 取得母體書目清單陣列副本
-   * @returns {Array}
-   */
-  function getAllBooks() {
-    return [...sourceBooks];
-  }
-
   return {
     query,
     getFacetCounts,
-    getById,
-    getAllBooks,
     size: sourceBooks.length
   };
 }
