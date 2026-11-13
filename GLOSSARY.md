@@ -59,3 +59,15 @@
   * 封裝 `localStorage` 之序列化安全防禦、正則校驗與錯誤回退。
   * 封裝書籍母體資料快取與 ID 雜湊對照表。
 * **收益（Wins）**：移除各處直接操作 `window.favoriteBookIds` 與 `localStorage` 的滲漏，達成高內聚局部性（Locality）。
+
+### 3. 純幾何圖表渲染器（SVG Chart Engine）
+* **角色**：深模組（Deep Module）。
+* **接縫位置（Seam）**：`reading-log/js/charts.js`。
+* **介面責任**：
+  * 接收純數值資料序列（Data Series / Segments），生成高對比、防塌陷之 SVG 幾何路徑與互動標記。
+  * 支援平滑走勢折線面積圖（`renderTrendChart`）與環形甜甜圈佔比圖（`renderDonutChart`）。
+* **隱藏實作**：
+  * 平滑三次貝茲曲線控制點座標計算。
+  * 環形扇面極座標至笛卡兒座標轉換（三角函數運算與扇形間隙隙縫補償）。
+  * 避免文字與標籤重疊之垂直座標排版演算。
+* **收益（Wins）**：完全脫離具體書目資料庫模型，避免全域變數未定義引發之繪圖崩潰；達成純幾何演算法 100% 獨立單元測試性。

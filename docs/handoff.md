@@ -89,6 +89,19 @@
   2. 呼叫端統一對接單一資料門戶，消除跨模組狀態滲漏。
   3. 檔案行數控制於 209 行，各模組職責邊界清晰。
 
+### 8. 圖表模組解耦為純幾何 SvgChartEngine 深模組（ADR-0006）
+* **背景與問題**：
+  原 `charts.js` 模組將「書目資料統計聚合（遍歷計算各年度/分類冊數）」與「SVG 幾何路徑運算」混合，直接依賴全域 `booksDatabase` 與 `categoriesDef`。一旦資料架構或全域常數稍有變動即引發未捕獲例外，中斷圖表生成。
+* **決策方案**：
+  重構 [`reading-log/js/charts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/charts.js) 為三層深模組：
+  1. 底層：純幾何字串生成函式（`generateTrendChartSvg`, `generateDonutChartSvg`），100% 脫離 DOM 與全域資料模型。
+  2. 中層：DOM 掛載與互動事件適配器（`mountTrendChart`, `mountDonutChart`）。
+  3. 頂層：藏書閣業務視覺適配器（`renderReadingTrendChart`, `renderCategoryDonutChart`），向後相容對接 `ArchiveRepository`。
+* **成效**：
+  1. 幾何座標與三角函數演算法具備獨立單元測試性，不依賴任何外部資料庫。
+  2. 圖表模組純化為純粹視覺適配器，徹底杜絕資料結構異常導致的繪圖崩潰。
+  3. 檔案行數維持於 331 行，符合單檔精簡約束。
+
 ---
 
 ## 三、 已完成模組清單
@@ -103,11 +116,11 @@
 | **典藏儲存庫** | [`reading-log/js/archive-repository.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/archive-repository.js) | 209 | 1. 全館書目與系列專題單一真實來源深模組（`createArchiveRepository`）。<br>2. 封裝 O(1) 雜湊查找索引（`getBook`, `getBookByCallNo`）。<br>3. 封裝珍藏狀態 LocalStorage 安全序列化與防禦（`toggleFavorite`, `isFavorite`）。<br>4. 統一資料查詢門戶，委託檢索引擎執行查詢。 |
 | **篩選適配層** | [`reading-log/js/filters.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/filters.js) | 303 | 1. DOM 篩選適配器：將輸入事件轉發至 `ArchiveRepository`（`getFilteredBooks`）。<br>2. 動態生效條件膠囊生成與個別撤銷（`renderActiveFilterPills`）。<br>3. 下拉選單冊數即時盤點與條件重設（`resetAllFilters`、`updateFilterCounts`）。 |
 | **書架排架層** | [`reading-log/js/bookshelf.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/bookshelf.js) | 120 | 1. 原木書架年度層板渲染（`renderBookshelves`）。<br>2. 書脊學科色彩映射、系列齊高（`seriesHeights`）、漫畫低矮與繪本輕薄厚度計算。 |
-| **視覺圖表層** | [`reading-log/js/charts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/charts.js) | 258 | 1. 純 SVG 歷年閱讀趨勢走勢圖（`renderReadingTrendChart`），具備平滑貝茲曲線與深琥珀金漸層。<br>2. 純 SVG 十大學門分佈甜甜圈環形圖（`renderCategoryDonutChart`），支援即時扇面懸停數值動態切換與點擊篩選。<br>3. 具備容器最小尺寸宣告與防塌陷樣式。 |
+| **視覺圖表層** | [`reading-log/js/charts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/charts.js) | 331 | 1. 純幾何 SVG 渲染深模組（`SvgChartEngine`），無 DOM 依賴。<br>2. 封裝三次貝茲曲線平滑化、高對比琥珀流動漸層與無遮蔽座標分層（`generateTrendChartSvg`）。<br>3. 封裝三角函數極座標扇面弧線與防塌陷樣式（`generateDonutChartSvg`）。<br>4. 頂層向後相容業務適配器（`renderReadingTrendChart`, `renderCategoryDonutChart`）。 |
 | **視角渲染層** | [`reading-log/js/views.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/views.js) | 417 | 1. 索書卡目錄渲染（`renderCardCatalog`），整合流光載入與優雅降級。<br>2. 統計年報分析渲染（`renderStats`，調用趨勢圖、甜甜圈圖與分類長條清單）。<br>3. 成套系列專題展架渲染（`renderSeries`）。<br>4. 書目借閱憑證彈窗控制（`openBookModal`、`closeModal`、`updateModalFavBtnState`）。 |
 | **快捷導覽層** | [`reading-log/js/shortcuts.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/shortcuts.js) | 210 | 1. 全域鍵盤監聽（`/` 檢索、`Esc` 關閉、`1~4` 切換視角、`?` 說明面板）。<br>2. 借閱憑證連貫翻閱控制器（`←/→`、`J/K` 翻閱、`F` 珍藏、`C` 引文）。<br>3. 行動端篩選面板折疊與捲動自動收合控制。 |
 | **核心控制層** | [`reading-log/js/app.js`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/js/app.js) | 201 | 1. 全域狀態管理與 DOM 元素快取。<br>2. 視角切換狀態機（`setView`）。<br>3. 珍藏標記切換（`toggleFavorite`）、館員隨機薦讀、清單匯出。<br>4. 生命週期啟動與各視角預渲染熱機。 |
-| **領域術語表** | [`reading-log/GLOSSARY.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/GLOSSARY.md) | 68 | 記錄典藏書目、檢索條件矩陣、多面體盤點、典藏儲存庫與檢索引擎角色之領域語境。 |
+| **領域術語表** | [`reading-log/GLOSSARY.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/GLOSSARY.md) | 80 | 記錄典藏書目、檢索條件矩陣、多面體盤點、典藏儲存庫、檢索引擎與純幾何圖表引擎之領域語境。 |
 | **自動同步器** | [`reading-log/sync.py`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/sync.py) | 369 | 1. 正則解析 [`Notes/Reading log.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/Reading%20log.md) 之清單語法與 Frontmatter。<br>2. 欄位正規化並自動覆蓋寫入 `js/books-data.js`。<br>3. 整合 Git 變更偵測與自動提交命令。 |
 | **中文說明書** | [`reading-log/README.md`](file:///Users/ckchang/Library/Mobile%20Documents/iCloud~md~obsidian/Documents/Notes/reading-log/README.md) | 144 | 完整繁體中文專案手冊，涵蓋系統架構、視覺規範、安全指南、維護流程與檔案結構。 |
 
