@@ -1,58 +1,28 @@
 /**
- * 靜謐藏書閣 (Private Library Archive) - 多維檢索、條件過濾與排序演算法模組
- * 包含：複合條件過濾、多維度書目排序、已生效條件膠囊標籤與下拉選項即時盤點
+ * 靜謐藏書閣 (Private Library Archive) - 多維檢索 UI 控制與條件膠囊適配器模組 (Filters UI Adapter)
+ * 職責：負責將 DOM 輸入事件轉換為查詢參數物件，調用 CatalogQueryEngine，並更新視角與膠囊標籤。
  */
 
-// 資料篩選與排序核心邏輯
+// 資料篩選與排序轉發適配器 (呼叫 CatalogQueryEngine 深模組)
 function getFilteredBooks() {
-  const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-  const yr = yearFilter ? yearFilter.value : 'ALL';
-  const cat = categoryFilter ? categoryFilter.value : 'ALL';
-  const ser = seriesFilter ? seriesFilter.value : 'ALL';
-  const st = statusFilter ? statusFilter.value : 'ALL';
-  const sortBy = sortFilter ? sortFilter.value : 'DEFAULT';
+  const engine = window.catalogEngine;
+  if (!engine) {
+    // 降級保護：若引擎尚未就緒，傳回原始資料庫副本
+    return typeof booksDatabase !== 'undefined' ? [...booksDatabase] : [];
+  }
 
-  // 第一階段：多維條件過濾
-  const matched = booksDatabase.filter(book => {
-    if (onlyShowFavorites && !favoriteBookIds.has(book.id)) return false;
-    if (yr !== 'ALL' && book.year.toString() !== yr) return false;
-    if (cat !== 'ALL' && book.category !== cat) return false;
-    if (ser !== 'ALL' && book.series !== ser) return false;
-    if (st !== 'ALL' && book.status !== st) return false;
+  const criteria = {
+    text: searchInput ? searchInput.value : '',
+    year: yearFilter ? yearFilter.value : 'ALL',
+    category: categoryFilter ? categoryFilter.value : 'ALL',
+    series: seriesFilter ? seriesFilter.value : 'ALL',
+    status: statusFilter ? statusFilter.value : 'ALL',
+    sortBy: sortFilter ? sortFilter.value : 'DEFAULT',
+    favoriteIds: typeof favoriteBookIds !== 'undefined' ? favoriteBookIds : new Set(),
+    onlyFavorites: typeof onlyShowFavorites !== 'undefined' ? onlyShowFavorites : false
+  };
 
-    if (q) {
-      const matchTitle = (book.title || '').toLowerCase().includes(q);
-      const matchAuthor = (book.author || '').toLowerCase().includes(q);
-      const matchDesc = (book.desc || '').toLowerCase().includes(q);
-      const matchCallNo = (book.callNo || '').toLowerCase().includes(q);
-      const matchSeries = (book.series || '').toLowerCase().includes(q);
-      return matchTitle || matchAuthor || matchDesc || matchCallNo || matchSeries;
-    }
-
-    return true;
-  });
-
-  // 第二階段：多維度排序演算法 (防禦性處理缺失值)
-  return matched.sort((a, b) => {
-    if (sortBy === 'YEAR_DESC') {
-      const yearDiff = Number(b.year) - Number(a.year);
-      return yearDiff !== 0 ? yearDiff : Number(b.id) - Number(a.id);
-    }
-    if (sortBy === 'YEAR_ASC') {
-      const yearDiff = Number(a.year) - Number(b.year);
-      return yearDiff !== 0 ? yearDiff : Number(a.id) - Number(b.id);
-    }
-    if (sortBy === 'PAGES_DESC') {
-      const pA = Number(a.pages) || 0;
-      const pB = Number(b.pages) || 0;
-      return pB !== pA ? pB - pA : Number(a.id) - Number(b.id);
-    }
-    if (sortBy === 'TITLE_ASC') {
-      return (a.title || '').localeCompare(b.title || '', 'zh-Hant');
-    }
-    // DEFAULT：維持典藏庫原始登錄序號
-    return Number(a.id) - Number(b.id);
-  });
+  return engine.query(criteria);
 }
 
 // 動態渲染已生效條件膠囊標籤
@@ -137,7 +107,7 @@ function renderActiveFilterPills() {
   }
 
   // 7. 珍藏書目
-  if (onlyShowFavorites) {
+  if (typeof onlyShowFavorites !== 'undefined' && onlyShowFavorites) {
     pills.push({
       label: '僅看珍藏',
       onClear: () => {
@@ -151,54 +121,39 @@ function renderActiveFilterPills() {
     return;
   }
 
-  let html = pills.map((p, idx) => `
-    <span class="filter-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-sans-ui shadow-sm">
-      <span class="text-[#f5ebd7]">${p.label}</span>
-      <button type="button" data-pill-idx="${idx}" class="text-[#a4886e] hover:text-[#fff] p-0.5 rounded transition focus:outline-none" title="移除此條件" aria-label="移除此條件">
-        <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+  activeFilterTags.innerHTML = `
+    <div class="flex items-center gap-1.5 flex-wrap font-sans-ui text-xs">
+      <span class="text-[#8c6b4b] text-[11px] font-medium mr-1 flex items-center gap-1">
+        <svg class="w-3 h-3 text-[#c5a059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+        <span>已套用條件：</span>
+      </span>
+      ${pills.map((p, idx) => `
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#311f14] text-[#f2e6cf] border border-[#6b472a] shadow-sm text-[11px] animate-fadeIn">
+          <span>${p.label}</span>
+          <button type="button" data-pill-idx="${idx}" class="pill-remove-btn text-[#a88a6d] hover:text-[#f8d794] transition-colors ml-0.5" aria-label="移除此條件">
+            <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </span>
+      `).join('')}
+      <button type="button" onclick="resetAllFilters()" class="text-[11px] text-[#c5a059] hover:text-[#f3e3ba] hover:underline ml-1">
+        全部清空
       </button>
-    </span>
-  `).join('');
+    </div>
+  `;
 
-  if (pills.length > 1) {
-    html += `
-      <button type="button" id="btnClearAllPills" class="text-[11px] text-[#e2c585] hover:text-[#fff] underline ml-1 font-sans-ui transition" title="清除所有生效條件">
-        清除全部 (${pills.length})
-      </button>
-    `;
-  }
-
-  activeFilterTags.innerHTML = html;
-
-  // 綁定個別條件移除按鈕
-  pills.forEach((p, idx) => {
-    const btn = activeFilterTags.querySelector(`button[data-pill-idx="${idx}"]`);
-    if (btn) {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        p.onClear();
-      });
-    }
-  });
-
-  const clearAllBtn = document.getElementById('btnClearAllPills');
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      resetAllFilters();
+  // 綁定個別撤除事件
+  activeFilterTags.querySelectorAll('.pill-remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = Number(btn.getAttribute('data-pill-idx'));
+      if (pills[idx] && typeof pills[idx].onClear === 'function') {
+        pills[idx].onClear();
+      }
     });
-  }
+  });
 }
 
-// 統一觸發篩選與視角重繪函式
-function triggerFilterUpdate() {
-  renderCardCatalog();
-  if (bookshelfView && !bookshelfView.classList.contains('hidden')) renderBookshelves();
-  updateMobileFilterBadge();
-}
-
-// 重設所有篩選與排序條件
+// 重設所有檢索與排序條件
 function resetAllFilters() {
   if (searchInput) searchInput.value = '';
   if (yearFilter) yearFilter.value = 'ALL';
@@ -206,7 +161,8 @@ function resetAllFilters() {
   if (seriesFilter) seriesFilter.value = 'ALL';
   if (statusFilter) statusFilter.value = 'ALL';
   if (sortFilter) sortFilter.value = 'DEFAULT';
-  onlyShowFavorites = false;
+  if (typeof onlyShowFavorites !== 'undefined') onlyShowFavorites = false;
+
   if (btnFavOnly) {
     btnFavOnly.className = "px-2.5 py-1.5 bg-[#170e08] hover:bg-[#311f14] border border-[#5a3a24] text-[#f2e6cf] rounded text-xs font-sans-ui flex items-center gap-1.5 shadow-sm";
     if (favIcon) favIcon.className = "w-3.5 h-3.5 text-[#8a6f52]";
@@ -215,6 +171,13 @@ function resetAllFilters() {
   if (bookshelfView && !bookshelfView.classList.contains('hidden')) renderBookshelves();
   updateMobileFilterBadge();
   showToast('已重設所有檢索與排序條件', 'info');
+}
+
+// 統一觸發篩選與視角重繪函式
+function triggerFilterUpdate() {
+  renderCardCatalog();
+  if (bookshelfView && !bookshelfView.classList.contains('hidden')) renderBookshelves();
+  updateMobileFilterBadge();
 }
 
 // 篩選與排序變更事件綁定
@@ -267,36 +230,27 @@ if (sortFilter) {
   });
 }
 
-// 動態更新下拉選單數量與看板數據
+// 動態更新下拉選單數量與看板數據 (自 CatalogQueryEngine 提取標準盤點結果)
 function updateFilterCounts() {
-  const total = booksDatabase.length;
-  const completed = booksDatabase.filter(b => b.status === 'completed').length;
-  const reading = booksDatabase.filter(b => b.status === 'reading').length;
+  const engine = window.catalogEngine;
+  if (!engine) return;
+
+  const summary = engine.getFacetCounts();
 
   const statTotal = document.getElementById('statTotal');
   const statCompleted = document.getElementById('statCompleted');
   const statReading = document.getElementById('statReading');
 
-  if (statTotal) statTotal.textContent = `${total} 冊`;
-  if (statCompleted) statCompleted.textContent = `${completed} 冊`;
-  if (statReading) statReading.textContent = `${reading} 冊`;
-
-  const countsByYear = {};
-  const countsByCategory = {};
-  const countsBySeries = {};
-
-  booksDatabase.forEach(b => {
-    countsByYear[b.year] = (countsByYear[b.year] || 0) + 1;
-    countsByCategory[b.category] = (countsByCategory[b.category] || 0) + 1;
-    if (b.series) countsBySeries[b.series] = (countsBySeries[b.series] || 0) + 1;
-  });
+  if (statTotal) statTotal.textContent = `${summary.total} 冊`;
+  if (statCompleted) statCompleted.textContent = `${summary.completed} 冊`;
+  if (statReading) statReading.textContent = `${summary.reading} 冊`;
 
   if (yearFilter) {
     Array.from(yearFilter.options).forEach(opt => {
       if (opt.value === 'ALL') {
-        opt.textContent = `全部年度 (${total} 冊)`;
-      } else if (countsByYear[opt.value] !== undefined) {
-        opt.textContent = `${opt.value} 年度 (${countsByYear[opt.value]} 冊)`;
+        opt.textContent = `全部年度 (${summary.total} 冊)`;
+      } else if (summary.byYear[opt.value] !== undefined) {
+        opt.textContent = `${opt.value} 年度 (${summary.byYear[opt.value]} 冊)`;
       }
     });
   }
@@ -317,9 +271,9 @@ function updateFilterCounts() {
     Array.from(categoryFilter.options).forEach(opt => {
       if (opt.value === 'ALL') {
         opt.textContent = `全部學科領域 (10 大類)`;
-      } else if (countsByCategory[opt.value] !== undefined) {
+      } else if (summary.byCategory[opt.value] !== undefined) {
         const label = categoryLabels[opt.value] || opt.value;
-        opt.textContent = `${label} (${countsByCategory[opt.value]} 冊)`;
+        opt.textContent = `${label} (${summary.byCategory[opt.value]} 冊)`;
       }
     });
   }
@@ -340,9 +294,9 @@ function updateFilterCounts() {
     Array.from(seriesFilter.options).forEach(opt => {
       if (opt.value === 'ALL') {
         opt.textContent = `全部叢書系列 (10 大系列)`;
-      } else if (countsBySeries[opt.value] !== undefined) {
+      } else if (summary.bySeries[opt.value] !== undefined) {
         const label = seriesLabels[opt.value] || opt.value;
-        opt.textContent = `${label} (${countsBySeries[opt.value]} 冊)`;
+        opt.textContent = `${label} (${summary.bySeries[opt.value]} 冊)`;
       }
     });
   }
